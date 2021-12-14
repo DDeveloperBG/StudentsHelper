@@ -20,5 +20,11 @@
     "inputFiles": [
       "wwwroot/css/error.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/videoChat.min.js",
+    "inputFiles": [
+      "wwwroot/js/videoChat.js"
+    ]
   }
 ]

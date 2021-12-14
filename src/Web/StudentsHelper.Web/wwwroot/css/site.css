@@ -7,7 +7,8 @@
 
 #app-icon {
     height: 3rem;
-    margin-right: 3rem;
+    margin-right: 2rem;
+    margin-left: 1rem;
 }
 
 #cookieConsent {
@@ -20,6 +21,7 @@
 
 #imp_content {
     background: linear-gradient(90deg, rgba(150,240,182,0.31976540616246496) 0%, rgba(150,240,182,0.908000700280112) 0%), url('/img/imp_content_bg.jpeg'), no-repeat;
+    text-align: center;
 }
 
 #imp_content h1 {
@@ -27,7 +29,7 @@
     padding: 3rem;
 }
 
-#imp_content button {
+#imp_content .btn-primary {
     font-size: 1.6rem;
     font-weight: 700;
     margin: 2rem;
@@ -40,12 +42,20 @@ a.navbar-brand {
 }
 
 .navbar {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     background-color: black!important;
+}
+
+.navbar button {
+    font-size: 1.2rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
     color: #1A275E;
+}
+
+.auth-form {
+    margin-top: 2rem;
 }
 
 footer {
