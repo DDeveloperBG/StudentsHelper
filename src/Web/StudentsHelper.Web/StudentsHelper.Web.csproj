@@ -31,12 +31,9 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.312" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Twilio" Version="5.68.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\StudentsHelper.Services.VideoChat\StudentsHelper.Services.VideoChat.csproj" />
-    <ProjectReference Include="..\..\Services\StudentsHelper.Services.Video\StudentsHelper.Services.Video.csproj" />
     <ProjectReference Include="..\..\StudentsHelper.Common\StudentsHelper.Common.csproj" />
     <ProjectReference Include="..\..\Data\StudentsHelper.Data.Models\StudentsHelper.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\StudentsHelper.Data\StudentsHelper.Data.csproj" />

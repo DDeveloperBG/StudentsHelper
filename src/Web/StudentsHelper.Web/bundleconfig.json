@@ -22,9 +22,9 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/videoChat.min.js",
+    "outputFileName": "wwwroot/js/videoChat.min.mjs",
     "inputFiles": [
-      "wwwroot/js/videoChat.js"
+      "wwwroot/js/videoChat.mjs"
     ]
   }
 ]

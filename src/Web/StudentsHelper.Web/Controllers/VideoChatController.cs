@@ -9,26 +9,34 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using StudentsHelper.Services.VideoChat;
+    using StudentsHelper.Web.ViewModels.VideoChat;
 
+    [Authorize]
     public class VideoChatController : Controller
     {
-        private readonly ITwilioVideoChat twilioVideoChat;
+        private readonly IVideoChat videoChat;
 
-        public VideoChatController(ITwilioVideoChat twilioVideoChat)
+        public VideoChatController(IVideoChat videoChat)
         {
-            this.twilioVideoChat = twilioVideoChat;
+            this.videoChat = videoChat;
         }
 
-        public ActionResult VideoChat()
+        public ActionResult VideoChat(string meetingId)
         {
+            if (meetingId == null)
+            {
+                meetingId = Guid.NewGuid().ToString();
+                return this.Redirect($"/VideoChat/VideoChat?{nameof(meetingId)}={meetingId}");
+            }
+
             return this.View();
         }
 
-        public ActionResult GetRoomAuthTocken()
+        public ActionResult UserConfig(string meetingId)
         {
-            string userId = this.User.Identity.Name;
+            string userName = this.User.Identity.Name;
 
-            return this.Json(this.twilioVideoChat.CreateAccessTocken(userId));
+            return this.Json(this.videoChat.GetUserConfigurations(userName, meetingId));
         }
     }
 }

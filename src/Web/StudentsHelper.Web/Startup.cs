@@ -66,11 +66,9 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<ITwilioVideoChat>(_
-                => new TwilioVideoChat(
-                        this.configuration["Twilio:AccountSid"],
-                        this.configuration["Twilio:APIKeySid"],
-                        this.configuration["Twilio:Secret"]));
+            services.AddTransient<IVideoChat>(_
+                => new VideoChat(
+                        this.configuration["Twilio:APIKeySid"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
