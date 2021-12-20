@@ -1,13 +1,20 @@
 ﻿@using StudentsHelper.Common
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="author" content="Daniel Yordanov">
+    <meta name="description" content="Students Helper се цели да помогне на учениците с техните домашни, уроци, и тн. Чрез мигновенни консултации на конкретна тема от учител, специалист по темата.">
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
-    <link rel="icon" href="~/img/logo.png" />
+    <partial name="_Favicons" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    @await this.RenderSectionAsync("Css", required: false)
 </head>
 <body>
     <header>

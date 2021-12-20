@@ -41,6 +41,12 @@
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
+            });
+
             services.Configure<CookiePolicyOptions>(
                 options =>
                     {
@@ -68,7 +74,7 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IVideoChat>(_
                 => new VideoChat(
-                        this.configuration["Twilio:APIKeySid"]));
+                        this.configuration["VideoSDK:APIKeySid"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,6 +100,8 @@
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

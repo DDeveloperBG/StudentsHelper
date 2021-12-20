@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Web.ViewModels.VideoChat
+﻿namespace StudentsHelper.Services.Data.VideoChat
 {
     public class UserPermissions
     {

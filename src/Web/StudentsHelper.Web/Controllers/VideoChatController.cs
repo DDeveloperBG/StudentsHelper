@@ -9,7 +9,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using StudentsHelper.Services.VideoChat;
-    using StudentsHelper.Web.ViewModels.VideoChat;
 
     [Authorize]
     public class VideoChatController : Controller
@@ -36,7 +35,7 @@
         {
             string userName = this.User.Identity.Name;
 
-            return this.Json(this.videoChat.GetUserConfigurations(userName, meetingId));
+            return this.Json(this.videoChat.GetUserConfigurations(userName, meetingId, this.Request.Host.Value));
         }
     }
 }

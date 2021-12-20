@@ -58,6 +58,20 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 2rem;
 }
 
+.auth-type-button {
+    background-color: transparent;
+    border: none;
+}
+
+.auth-type-button:hover {
+    transform: scale(.90);
+}
+
+.auth-type-image {
+    height: 54px;
+    width: 54px;
+}
+
 footer {
     background-color: black;
 }

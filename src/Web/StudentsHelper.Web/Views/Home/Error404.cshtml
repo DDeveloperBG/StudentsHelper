@@ -1,0 +1,17 @@
+﻿@model ErrorViewModel
+@{
+    this.ViewData["Title"] = "404 Error";
+}
+
+@section Css 
+{
+    <link rel="stylesheet" href="~/css/error404.min.css" asp-append-version="true" />
+} 
+
+<img class="img-fluid mx-auto" id="errorGif" src="~/gif/404error.gif" alt="404 error" />
+<div id="content">
+    <h1>Страницата не бе намерена</h1>
+    <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">
+        Начало
+    </a>
+</div>

@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Web.ViewModels.VideoChat
+﻿namespace StudentsHelper.Services.Data.VideoChat
 {
     public class UserConfiguration
     {
@@ -41,5 +41,7 @@
         public UserPermissions Permissions { get; set; }
 
         public JoinScreenConf JoinScreen { get; set; }
+
+        public PinConf Pin { get; set; }
     }
 }
