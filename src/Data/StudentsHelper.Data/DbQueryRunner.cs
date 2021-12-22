@@ -3,9 +3,9 @@
     using System;
     using System.Threading.Tasks;
 
-    using StudentsHelper.Data.Common;
-
     using Microsoft.EntityFrameworkCore;
+
+    using StudentsHelper.Data.Common;
 
     public class DbQueryRunner : IDbQueryRunner
     {

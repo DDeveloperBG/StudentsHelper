@@ -4,11 +4,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using StudentsHelper.Common;
-    using StudentsHelper.Data.Models;
-
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
+
+    using StudentsHelper.Common;
+    using StudentsHelper.Data.Models;
 
     internal class RolesSeeder : ISeeder
     {

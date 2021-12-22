@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentsHelper.Data;
 
 namespace StudentsHelper.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211222133111_AddedSchoolType")]
+    partial class AddedSchoolType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,43 +340,18 @@ namespace StudentsHelper.Data.Migrations
                     b.Property<int>("PopulatedAreaId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("PopulatedAreaId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Schools");
-                });
-
-            modelBuilder.Entity("StudentsHelper.Data.Models.SchoolSubject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("StudentsHelper.Data.Models.Setting", b =>
@@ -437,6 +414,36 @@ namespace StudentsHelper.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("StudentsHelper.Data.Models.Subject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("StudentsHelper.Data.Models.Teacher", b =>
@@ -521,6 +528,36 @@ namespace StudentsHelper.Data.Migrations
                     b.ToTable("Townships");
                 });
 
+            modelBuilder.Entity("StudentsHelper.Data.Models.Type", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("Type");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("StudentsHelper.Data.Models.ApplicationRole", null)
@@ -591,7 +628,15 @@ namespace StudentsHelper.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("StudentsHelper.Data.Models.Type", "Type")
+                        .WithMany("Schools")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("PopulatedArea");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("StudentsHelper.Data.Models.Student", b =>
@@ -619,7 +664,7 @@ namespace StudentsHelper.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudentsHelper.Data.Models.SchoolSubject", "Subject")
+                    b.HasOne("StudentsHelper.Data.Models.Subject", "Subject")
                         .WithMany("Teachers")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -667,7 +712,7 @@ namespace StudentsHelper.Data.Migrations
                     b.Navigation("Teachers");
                 });
 
-            modelBuilder.Entity("StudentsHelper.Data.Models.SchoolSubject", b =>
+            modelBuilder.Entity("StudentsHelper.Data.Models.Subject", b =>
                 {
                     b.Navigation("Teachers");
                 });
@@ -675,6 +720,11 @@ namespace StudentsHelper.Data.Migrations
             modelBuilder.Entity("StudentsHelper.Data.Models.Township", b =>
                 {
                     b.Navigation("PopulatedAreas");
+                });
+
+            modelBuilder.Entity("StudentsHelper.Data.Models.Type", b =>
+                {
+                    b.Navigation("Schools");
                 });
 #pragma warning restore 612, 618
         }

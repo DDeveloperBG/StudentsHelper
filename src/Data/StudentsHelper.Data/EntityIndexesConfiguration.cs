@@ -2,9 +2,9 @@
 {
     using System.Linq;
 
-    using StudentsHelper.Data.Common.Models;
-
     using Microsoft.EntityFrameworkCore;
+
+    using StudentsHelper.Data.Common.Models;
 
     internal static class EntityIndexesConfiguration
     {

@@ -21,7 +21,7 @@
         [ForeignKey(nameof(Subject))]
         public int SubjectId { get; set; }
 
-        public Subject Subject { get; set; }
+        public SchoolSubject Subject { get; set; }
 
         [ForeignKey(nameof(School))]
         public int SchoolId { get; set; }

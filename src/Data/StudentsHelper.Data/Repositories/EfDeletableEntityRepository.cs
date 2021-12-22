@@ -3,10 +3,10 @@
     using System;
     using System.Linq;
 
+    using Microsoft.EntityFrameworkCore;
+
     using StudentsHelper.Data.Common.Models;
     using StudentsHelper.Data.Common.Repositories;
-
-    using Microsoft.EntityFrameworkCore;
 
     public class EfDeletableEntityRepository<TEntity> : EfRepository<TEntity>, IDeletableEntityRepository<TEntity>
         where TEntity : class, IDeletableEntity

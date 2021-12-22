@@ -5,9 +5,9 @@
 
     using StudentsHelper.Data.Common.Models;
 
-    public class Subject : BaseDeletableModel<int>
+    public class SchoolSubject : BaseDeletableModel<int>
     {
-        public Subject()
+        public SchoolSubject()
         {
             this.Teachers = new HashSet<Teacher>();
         }

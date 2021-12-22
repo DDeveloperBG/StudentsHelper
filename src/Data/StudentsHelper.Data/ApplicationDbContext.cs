@@ -6,11 +6,11 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using StudentsHelper.Data.Common.Models;
-    using StudentsHelper.Data.Models;
-
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+
+    using StudentsHelper.Data.Common.Models;
+    using StudentsHelper.Data.Models;
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -36,7 +36,7 @@
 
         public DbSet<Teacher> Teachers { get; set; }
 
-        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<SchoolSubject> Subjects { get; set; }
 
         public DbSet<Student> Students { get; set; }
 
