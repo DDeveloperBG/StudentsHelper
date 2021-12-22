@@ -26,6 +26,20 @@
 
         public DbSet<Setting> Settings { get; set; }
 
+        public DbSet<Region> Regions { get; set; }
+
+        public DbSet<Township> Townships { get; set; }
+
+        public DbSet<PopulatedArea> PopulatedAreas { get; set; }
+
+        public DbSet<School> Schools { get; set; }
+
+        public DbSet<Teacher> Teachers { get; set; }
+
+        public DbSet<Subject> Subjects { get; set; }
+
+        public DbSet<Student> Students { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

@@ -3,7 +3,9 @@
     this.ViewData["Title"] = "Home Page";
 }
 
-<h1>Hi</h1>
+@section Css {
+    <link rel="stylesheet" href="~/css/homePage.min.css" asp-append-version="true" />
+}
 
 @if (!User.Identity.IsAuthenticated)
 {

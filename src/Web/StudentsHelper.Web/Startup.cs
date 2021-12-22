@@ -45,6 +45,7 @@
             {
                 facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
                 facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
+                facebookOptions.AccessDeniedPath = "/Home/Error";
             });
 
             services.Configure<CookiePolicyOptions>(

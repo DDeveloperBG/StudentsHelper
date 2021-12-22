@@ -26,5 +26,17 @@
     "inputFiles": [
       "wwwroot/js/videoChat.mjs"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/homePage.min.css",
+    "inputFiles": [
+      "wwwroot/css/homePage.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/VideoChat/videoChat.min.js",
+    "inputFiles": [
+      "wwwroot/js/VideoChat/videoChat.js"
+    ]
   }
 ]

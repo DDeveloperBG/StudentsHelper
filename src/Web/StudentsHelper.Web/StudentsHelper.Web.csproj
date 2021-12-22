@@ -9,6 +9,10 @@
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\homePage.min.css" />
+  </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>
@@ -44,5 +48,12 @@
     <ProjectReference Include="..\..\Services\StudentsHelper.Services\StudentsHelper.Services.csproj" />
     <ProjectReference Include="..\StudentsHelper.Web.Infrastructure\StudentsHelper.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\StudentsHelper.Web.ViewModels\StudentsHelper.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Identity\Pages\Error.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

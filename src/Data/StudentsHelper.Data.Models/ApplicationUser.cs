@@ -3,10 +3,11 @@ namespace StudentsHelper.Data.Models
 {
     using System;
     using System.Collections.Generic;
-
-    using StudentsHelper.Data.Common.Models;
+    using System.ComponentModel.DataAnnotations;
 
     using Microsoft.AspNetCore.Identity;
+
+    using StudentsHelper.Data.Common.Models;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
@@ -17,6 +18,9 @@ namespace StudentsHelper.Data.Models
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
+
+        [Required]
+        public string Name { get; set; }
 
         // Audit info
         public DateTime CreatedOn { get; set; }

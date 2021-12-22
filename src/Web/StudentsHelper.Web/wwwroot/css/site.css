@@ -1,5 +1,5 @@
 ﻿body {
-    background-color: #96F0B6;
+    background-color: white;
 }
 
 /*darker = #1A275E*/
@@ -61,6 +61,10 @@ h1, h2, h3, h4, h5, h6 {
 .auth-type-button {
     background-color: transparent;
     border: none;
+}
+
+.btn-primary:hover {
+    transform: scale(.90);
 }
 
 .auth-type-button:hover {
