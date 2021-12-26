@@ -43,15 +43,17 @@ namespace StudentsHelper.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Display(Name = "Имейл")]
+            [Required(ErrorMessage = "Полето {0} е задължително.")]
+            [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
             public string Email { get; set; }
 
-            [Required]
+            [Display(Name = "Парола")]
             [DataType(DataType.Password)]
+            [Required(ErrorMessage = "Полето {0} е задължително.")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Запомни ме")]
             public bool RememberMe { get; set; }
         }
 

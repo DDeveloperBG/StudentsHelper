@@ -1,17 +1,16 @@
 ﻿@page
 @model ExternalLoginModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Регистрация";
 }
 
 <h1>@ViewData["Title"]</h1>
-<h4 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h4>
+<h4 id="external-login-title">Свържете вашия @Model.ProviderDisplayName акаунт.</h4>
 <hr />
 
 <p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
+    Влязохте успешно, чрез <strong>@Model.ProviderDisplayName</strong>.<br />
+    Моля въведете валиден имейл адрес за този сайт и трите ви имена отдолу.
 </p>
 
 <div class="row">
@@ -23,7 +22,7 @@
                 <input asp-for="Input.Email" class="form-control" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Регистрация</button>
         </form>
     </div>
 </div>

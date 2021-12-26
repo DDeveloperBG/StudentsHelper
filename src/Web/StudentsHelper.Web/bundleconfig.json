@@ -38,5 +38,11 @@
     "inputFiles": [
       "wwwroot/js/VideoChat/videoChat.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Auth/register.min.js",
+    "inputFiles": [
+      "wwwroot/js/Auth/register.js"
+    ]
   }
 ]

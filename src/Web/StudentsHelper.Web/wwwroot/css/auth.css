@@ -1,0 +1,82 @@
+﻿.hidden {
+    display: none;
+}
+
+main {
+    box-shadow: 0 1px 1px 0 rgb(0 0 0 / 14%), 0 2px 1px -1px rgb(0 0 0 / 12%), 0 1px 3px 0 rgb(0 0 0 / 20%);
+}
+
+.auth-form {
+    margin: 3rem;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.form-header {
+    padding-top: 1rem;
+}
+
+label {
+    color: #565656;
+}
+
+.auth-type-button {
+    background-color: white;
+    color: #565656;
+    font-weight: 500;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px 0 rgb(0 0 0 / 14%), 0 2px 1px -1px rgb(0 0 0 / 12%), 0 1px 3px 0 rgb(0 0 0 / 20%);
+    height: 3rem;
+    padding-right: 2rem;
+    padding-left: 1rem;
+}
+
+.kind-title {
+    font-size: 1.5rem;
+}
+
+.auth-type-button:hover {
+    transform: scale(.93);
+    transition: all .2s ease-in-out;
+}
+
+.role:hover, .role:target {
+    border: 3px solid green;
+}
+
+.auth-type-image {
+    width: 30px;
+    margin: 0px 7px;
+}
+
+input[type="file"] {
+    padding-bottom: 2.3rem;
+}
+
+#past-part {
+    width: 4rem;
+    background-color: transparent;
+    border: none;
+    z-index: -1;
+    margin-top: 3rem;
+}
+
+#register-submit {
+    margin-top: 1rem;
+}
+
+#continue {
+    margin-top: 1rem;
+}
+
+#second-auth-option {
+    margin-top: 2.5rem;
+}
+
+.more-options {
+    margin-top: 1.5rem;
+}

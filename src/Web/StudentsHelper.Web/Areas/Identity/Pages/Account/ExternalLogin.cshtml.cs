@@ -49,8 +49,9 @@ namespace StudentsHelper.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Display(Name = "Имейл")]
+            [Required(ErrorMessage = "Полето {0} е задължително.")]
+            [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
             public string Email { get; set; }
         }
 

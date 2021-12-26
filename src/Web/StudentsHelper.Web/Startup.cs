@@ -2,17 +2,6 @@
 {
     using System.Reflection;
 
-    using StudentsHelper.Data;
-    using StudentsHelper.Data.Common;
-    using StudentsHelper.Data.Common.Repositories;
-    using StudentsHelper.Data.Models;
-    using StudentsHelper.Data.Repositories;
-    using StudentsHelper.Data.Seeding;
-    using StudentsHelper.Services.Data;
-    using StudentsHelper.Services.Mapping;
-    using StudentsHelper.Services.Messaging;
-    using StudentsHelper.Web.ViewModels;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -21,7 +10,20 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+
+    using StudentsHelper.Data;
+    using StudentsHelper.Data.Common;
+    using StudentsHelper.Data.Common.Repositories;
+    using StudentsHelper.Data.Models;
+    using StudentsHelper.Data.Repositories;
+    using StudentsHelper.Data.Seeding;
+    using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.Data;
+    using StudentsHelper.Services.Data.LocationLoaders;
+    using StudentsHelper.Services.Mapping;
+    using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.VideoChat;
+    using StudentsHelper.Web.ViewModels;
 
     public class Startup
     {
@@ -73,6 +75,11 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<RegionsLoader>();
+            services.AddTransient<TownshipsLoader>();
+            services.AddTransient<PopulatedAreasLoader>();
+            services.AddTransient<SchoolsLoader>();
+            services.AddTransient<ITeacherRegister, TeacherRegister>();
             services.AddTransient<IVideoChat>(_
                 => new VideoChat(
                         this.configuration["VideoSDK:APIKeySid"]));

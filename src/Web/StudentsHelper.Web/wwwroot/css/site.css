@@ -17,6 +17,7 @@
     bottom: 4rem;
     width: 50%;
     left: 25%;
+    background-color: white;
 }
 
 #imp_content {
@@ -54,26 +55,9 @@ h1, h2, h3, h4, h5, h6 {
     color: #1A275E;
 }
 
-.auth-form {
-    margin-top: 2rem;
-}
-
-.auth-type-button {
-    background-color: transparent;
-    border: none;
-}
-
 .btn-primary:hover {
-    transform: scale(.90);
-}
-
-.auth-type-button:hover {
-    transform: scale(.90);
-}
-
-.auth-type-image {
-    height: 54px;
-    width: 54px;
+    transform: scale(.94);
+    transition: all .1s ease-in-out;
 }
 
 footer {
