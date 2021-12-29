@@ -1,28 +1,38 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using StudentsHelper.Data.Models;
-
-namespace StudentsHelper.Web.Areas.Identity.Pages.Account.Manage
+﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account.Manage
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.Extensions.Logging;
+    using StudentsHelper.Common;
+    using StudentsHelper.Data.Common.Repositories;
+    using StudentsHelper.Data.Models;
+
     public class DeletePersonalDataModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly ILogger<DeletePersonalDataModel> logger;
+        private readonly IDeletableEntityRepository<Teacher> teachersRepository;
+        private readonly IDeletableEntityRepository<Student> studentsRepository;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            IDeletableEntityRepository<Teacher> teacher,
+            IDeletableEntityRepository<Student> student)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.logger = logger;
+            this.teachersRepository = teacher;
+            this.studentsRepository = student;
         }
 
         [BindProperty]
@@ -39,44 +49,65 @@ namespace StudentsHelper.Web.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGet()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
             }
 
-            RequirePassword = await _userManager.HasPasswordAsync(user);
+            RequirePassword = await userManager.HasPasswordAsync(user);
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
             }
 
-            RequirePassword = await _userManager.HasPasswordAsync(user);
+            RequirePassword = await userManager.HasPasswordAsync(user);
             if (RequirePassword)
             {
-                if (!await _userManager.CheckPasswordAsync(user, Input.Password))
+                if (!await userManager.CheckPasswordAsync(user, Input.Password))
                 {
                     ModelState.AddModelError(string.Empty, "Incorrect password.");
                     return Page();
                 }
             }
 
-            var result = await _userManager.DeleteAsync(user);
-            var userId = await _userManager.GetUserIdAsync(user);
-            if (!result.Succeeded)
+            try
             {
-                throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
+                if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+                {
+                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.TeacherRoleName);
+                    var teacher = this.teachersRepository.AllAsNoTracking().Where(x => x.ApplicationUser == user).SingleOrDefault();
+                    this.teachersRepository.HardDelete(teacher);
+                }
+                else if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+                {
+                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.StudentRoleName);
+                    var student = this.studentsRepository.AllAsNoTracking().Where(x => x.ApplicationUser == user).SingleOrDefault();
+                    this.studentsRepository.HardDelete(student);
+                }
+
+                var result = await userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    throw new Exception();
+                }
+
+                await this.teachersRepository.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{user.Id}'.");
             }
 
-            await _signInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
 
-            _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
 
             return Redirect("~/");
         }

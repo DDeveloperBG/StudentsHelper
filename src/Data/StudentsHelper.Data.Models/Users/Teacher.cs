@@ -1,5 +1,6 @@
 ﻿namespace StudentsHelper.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,10 +19,7 @@
 
         public bool IsValidated { get; set; }
 
-        [ForeignKey(nameof(Subject))]
-        public int SubjectId { get; set; }
-
-        public SchoolSubject Subject { get; set; }
+        public ICollection<SchoolSubject> Subjects { get; set; }
 
         [ForeignKey(nameof(School))]
         public int SchoolId { get; set; }

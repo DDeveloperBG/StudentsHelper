@@ -2,11 +2,12 @@
 var hiddenClassName = 'hidden';
 var clickEventName = 'click';
 var chooseOptionEventName = 'change';
+var role = null;
 var defaultLocationNames = {
     regions: 'Област',
     townships: 'Община',
     populatedAreas: 'Населено място',
-    'Input.TeacherModel.SchoolId': 'Училище',
+    "Input.TeacherModel.SchoolId": 'Училище',
 };
 
 function engine() {
@@ -15,6 +16,15 @@ function engine() {
         const getCurrentPart = () => document.getElementById(`part-${currentPartId}`);
 
         const changeActivePart = (event, currentPartChanger) => {
+            if (!isValidCurrentPart(getCurrentPart())) return;
+
+            if (currentPartId == 3) {
+                const schoolId = document.getElementById('SchoolId');
+                if (schoolId.value == 0 || Array.from(schoolId.parentNode.classList).some(x => x == hiddenClassName)) {
+                    return;
+                }
+            }
+
             getCurrentPart().classList.add(hiddenClassName);
             currentPartId = currentPartChanger(currentPartId);
             methodsActivatingParts[currentPartId](event);
@@ -22,6 +32,7 @@ function engine() {
         };
 
         return {
+            getCurrentPart,
             showLastPart(e) {
                 e.preventDefault();
                 changeActivePart(e, (currentPartId) => --currentPartId);
@@ -43,9 +54,27 @@ function engine() {
     document.getElementById('past-part').addEventListener(clickEventName, partsController.showLastPart);
 
     document.getElementById('continue').addEventListener(clickEventName, partsController.showNextPart);
+
+    document.getElementById('register-submit').addEventListener(clickEventName, registerUser.bind(null, partsController));
 }
 
-function activateFirstPart(e) {
+function isValidCurrentPart(currentPart) {
+    const inputFields = Array.from(currentPart.querySelectorAll('[name]'));
+
+    return inputFields.every(x => $(x).valid());
+}
+
+function registerUser(partsController, e) {
+    if (!isValidCurrentPart(partsController.getCurrentPart())) { e.preventDefault(); return; }
+
+    if (role == 'student') {
+        document.getElementById('part-3').remove();
+        document.getElementById('part-4').remove();
+    }
+}
+
+function activateFirstPart() {
+    document.getElementById('allErrorsList').classList.remove(hiddenClassName);
     document.getElementById('register-submit').classList.add(hiddenClassName);
     document.getElementById('continue').classList.add(hiddenClassName);
     document.getElementById('past-part').classList.add(hiddenClassName);
@@ -54,8 +83,11 @@ function activateFirstPart(e) {
 }
 
 function activateSecondPart(e) {
-    const roleInput = document.getElementById('role');
-    roleInput.value = e.target.getAttribute('role');
+    document.getElementById('allErrorsList').classList.add(hiddenClassName);
+    const roleInput = document.getElementById('Input_Role');
+    role = e.target.getAttribute('role');
+    roleInput.value = role;
+    document.getElementById('second-auth-option-userRole').value = role;
 
     document.getElementById('past-part').classList.remove(hiddenClassName);
     const registerBtn = document.getElementById('register-submit');
@@ -72,18 +104,28 @@ function activateSecondPart(e) {
     }
 }
 
-function activateThirdPart(e) {
+function activateThirdPart() {
+    if (Array.from(document.getElementById('SchoolId').parentNode.classList).some(x => x == hiddenClassName)) {
+        document.getElementById('continue').classList.add(hiddenClassName);
+    } else {
+        document.getElementById('continue').classList.remove(hiddenClassName);
+    }
+
+    document.getElementById('register-submit').classList.add(hiddenClassName);
     document.getElementById('second-auth-option').classList.add(hiddenClassName);
     const getSelect = (name) => document.querySelector(`select[name="${name}"]`);
-    const selects = [getSelect('regions'), getSelect('townships'), getSelect('populatedAreas'), getSelect('Input.TeacherModel.SchoolId')];
+    const selects = [getSelect('regions'), getSelect('townships'), getSelect('populatedAreas'), document.getElementById('SchoolId')];
 
-    selects.slice(0, selects.length - 1).forEach((select, index) => select.addEventListener(chooseOptionEventName, loadOptionsForNext.bind(null, index)));
+    selects.slice(0, selects.length).forEach((select, index) => select.addEventListener(chooseOptionEventName, loadOptionsForNext.bind(null, index)));
     loadOptions(selects[0], null);
 
     async function loadOptionsForNext(index) {
         if (index + 1 === selects.length) {
+            document.getElementById('continue').classList.remove(hiddenClassName);
             return;
         }
+
+        document.getElementById('continue').classList.add(hiddenClassName);
 
         for (let i = index + 1; i < selects.length; i++) {
             selects[i].parentNode.classList.add(hiddenClassName);
@@ -126,7 +168,7 @@ function activateThirdPart(e) {
     }
 }
 
-function activateFourthPart(e) {
+function activateFourthPart() {
     document.getElementById('register-submit').classList.remove(hiddenClassName);
     document.getElementById('continue').classList.add(hiddenClassName);
 }

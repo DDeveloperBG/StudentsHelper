@@ -1,44 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using StudentsHelper.Data.Models;
-
-namespace StudentsHelper.Web.Areas.Identity.Pages.Account
+﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Text.Encodings.Web;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.UI.Services;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.WebUtilities;
+    using Microsoft.Extensions.Logging;
+    using StudentsHelper.Common;
+    using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.Auth;
+
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger<ExternalLoginModel> _logger;
+        private const string UserRoleKey = "userRole";
+
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IEmailSender emailSender;
+        private readonly ITeacherRegisterer teacherRegister;
+        private readonly IStudentRegisterer studentRegisterer;
+        private readonly ILogger<ExternalLoginModel> logger;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ITeacherRegisterer teacherRegister,
+            IStudentRegisterer studentRegisterer)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _logger = logger;
-            _emailSender = emailSender;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+            this.logger = logger;
+            this.emailSender = emailSender;
+            this.teacherRegister = teacherRegister;
+            this.studentRegisterer = studentRegisterer;
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public TeacherInputModel TeacherModel { get; set; }
 
         public string ProviderDisplayName { get; set; }
 
@@ -47,124 +58,181 @@ namespace StudentsHelper.Web.Areas.Identity.Pages.Account
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public class InputModel
-        {
-            [Display(Name = "Имейл")]
-            [Required(ErrorMessage = "Полето {0} е задължително.")]
-            [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
-            public string Email { get; set; }
-        }
-
         public IActionResult OnGetAsync()
         {
-            return RedirectToPage("./Login");
+            return this.RedirectToPage("./Login");
         }
 
-        public IActionResult OnPost(string provider, string returnUrl = null)
+        public IActionResult OnPost(string userRole, string provider, string returnUrl = null)
         {
+            if (userRole != null)
+            {
+                this.HttpContext.Session.Set(UserRoleKey, Encoding.UTF8.GetBytes(userRole));
+            }
+
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var redirectUrl = this.Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            var properties = this.signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? this.Url.Content("~/");
             if (remoteError != null)
             {
-                ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new {ReturnUrl = returnUrl });
+                this.ErrorMessage = $"Error from external provider: {remoteError}";
+                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
             }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+
+            var info = await this.signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                this.ErrorMessage = "Error loading external login information.";
+                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+            var result = await this.signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect(returnUrl);
+                this.logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                return this.LocalRedirect(returnUrl);
             }
+
             if (result.IsLockedOut)
             {
-                return RedirectToPage("./Lockout");
+                return this.RedirectToPage("./Lockout");
             }
             else
             {
                 // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                this.ReturnUrl = returnUrl;
+                this.ProviderDisplayName = info.ProviderDisplayName;
+
+                this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
+                var role = Encoding.UTF8.GetString(roleBytes);
+
+                if (role == GlobalConstants.StudentRoleName)
                 {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                    return await this.OnPostConfirmationAsync();
                 }
-                return Page();
+
+                return this.Page();
             }
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? this.Url.Content("~/");
+
             // Get the information about the user from the external login provider
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await this.signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information during confirmation.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                this.ErrorMessage = "Error loading external login information during confirmation.";
+                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
             }
 
-            if (ModelState.IsValid)
+            if (this.TeacherModel == null || this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
+                var role = Encoding.UTF8.GetString(roleBytes);
 
-                var result = await _userManager.CreateAsync(user);
+                if (!(role != null &&
+                        info.Principal.HasClaim(c => c.Type == ClaimTypes.Name) &&
+                        info.Principal.HasClaim(c => c.Type == ClaimTypes.Email)))
+                {
+                    this.ErrorMessage = "Error loading login information.";
+                    return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+                }
+
+                string name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                string email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                var user = new ApplicationUser
+                {
+                    Name = name,
+                    Email = email,
+                    UserName = email,
+                };
+
+                var result = await this.userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
+                    result = await this.userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        if (role == GlobalConstants.TeacherRoleName)
+                        {
+                            if (this.TeacherModel.QualificationDocument == null)
+                            {
+                                this.ModelState.AddModelError(string.Empty, "Qualification document is required!");
 
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+                            }
+
+                            try
+                            {
+                                await this.teacherRegister.RegisterAsync(this.TeacherModel, user);
+                            }
+                            catch (ArgumentException e)
+                            {
+                                this.ModelState.AddModelError(string.Empty, e.Message);
+
+                                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+                            }
+                        }
+                        else if (role == GlobalConstants.StudentRoleName)
+                        {
+                            await this.studentRegisterer.RegisterAsync(user);
+                        }
+                        else
+                        {
+                            this.ModelState.AddModelError(string.Empty, "Wrong role name!");
+
+                            return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+                        }
+
+                        this.logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        var userId = await this.userManager.GetUserIdAsync(user);
+                        var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
+                        var callbackUrl = this.Url.Page(
                             "/Account/ConfirmEmail",
                             pageHandler: null,
                             values: new { area = "Identity", userId = userId, code = code },
-                            protocol: Request.Scheme);
+                            protocol: this.Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        await this.emailSender.SendEmailAsync(
+                            email,
+                            "Confirm your email",
                             $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        if (this.userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                            return this.RedirectToPage("./RegisterConfirmation", new { Email = email });
                         }
 
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        await this.signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
 
-                        return LocalRedirect(returnUrl);
+                        return this.LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    this.ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            ProviderDisplayName = info.ProviderDisplayName;
-            ReturnUrl = returnUrl;
-            return Page();
+            this.ProviderDisplayName = info.ProviderDisplayName;
+            this.ReturnUrl = returnUrl;
+
+            return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
         }
     }
 }

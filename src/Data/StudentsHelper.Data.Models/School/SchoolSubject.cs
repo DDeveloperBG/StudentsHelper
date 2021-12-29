@@ -15,6 +15,9 @@
         [Required]
         public string Name { get; set; }
 
+        [Required]
+        public string IconPath { get; set; }
+
         public ICollection<Teacher> Teachers { get; set; }
     }
 }

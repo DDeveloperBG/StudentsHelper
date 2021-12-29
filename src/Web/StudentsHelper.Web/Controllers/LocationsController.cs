@@ -1,9 +1,11 @@
 ﻿namespace StudentsHelper.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+
     using StudentsHelper.Services.Data.LocationLoaders;
 
     public class LocationsController : Controller
@@ -22,14 +24,17 @@
                 { "townships", townshipsLoader },
                 { "populatedAreas", populatedAreasLoader },
                 { "Input.TeacherModel.SchoolId", schoolsLoader },
+                { "TeacherModel.SchoolId", schoolsLoader },
             };
         }
 
         public IActionResult Get(string selectName, int? lastSelectedId)
         {
-            if (this.locationLoaders.ContainsKey(selectName) && lastSelectedId != 0)
+            var locationLoader = this.locationLoaders.FirstOrDefault(x => x.Key.Contains(selectName)).Value;
+
+            if (locationLoader != null && lastSelectedId != 0)
             {
-                var result = this.locationLoaders[selectName].GetLocations(lastSelectedId);
+                var result = locationLoader.GetLocations(lastSelectedId);
                 return this.Json(result);
             }
 

@@ -1,10 +1,12 @@
 ﻿namespace StudentsHelper.Web
 {
+    using System;
     using System.Reflection;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -65,6 +67,14 @@
             services.AddRazorPages();
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddDistributedMemoryCache();
+            services.AddSession(opts =>
+            {
+                opts.Cookie.Name = ".Session";
+                opts.IdleTimeout = TimeSpan.FromHours(24);
+                opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
             services.AddSingleton(this.configuration);
 
             // Data repositories
@@ -79,7 +89,8 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
-            services.AddTransient<ITeacherRegister, TeacherRegister>();
+            services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
+            services.AddTransient<IStudentRegisterer, StudentRegisterer>();
             services.AddTransient<IVideoChat>(_
                 => new VideoChat(
                         this.configuration["VideoSDK:APIKeySid"]));
@@ -119,6 +130,8 @@
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(
                 endpoints =>

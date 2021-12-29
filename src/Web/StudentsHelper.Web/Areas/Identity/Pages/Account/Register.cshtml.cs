@@ -16,6 +16,7 @@
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
+    using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
 
@@ -26,20 +27,23 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<RegisterModel> logger;
         private readonly IEmailSender emailSender;
-        private readonly ITeacherRegister teacherRegister;
+        private readonly ITeacherRegisterer teacherRegister;
+        private readonly IStudentRegisterer studentRegisterer;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ITeacherRegister teacherRegister)
+            ITeacherRegisterer teacherRegister,
+            IStudentRegisterer studentRegisterer)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.emailSender = emailSender;
             this.teacherRegister = teacherRegister;
+            this.studentRegisterer = studentRegisterer;
         }
 
         [BindProperty]
@@ -61,20 +65,39 @@
             this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { Name = this.Input.Name, UserName = this.Input.Email, Email = this.Input.Email };
+                var user = new ApplicationUser { Name = this.Input.Name, Email = this.Input.Email, UserName = this.Input.Email };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
-                    if (this.Input.Role == "teacher")
+                    if (this.Input.Role == GlobalConstants.TeacherRoleName)
                     {
-                        var error = this.teacherRegister.RegisterTeacher(this.Input.TeacherModel, user.Id);
-
-                        if (error != null)
+                        if (this.Input.TeacherModel.QualificationDocument == null)
                         {
-                            this.ModelState.AddModelError(string.Empty, error);
+                            this.ModelState.AddModelError(string.Empty, "Qualification document is required!");
 
                             return this.Page();
                         }
+
+                        try
+                        {
+                            await this.teacherRegister.RegisterAsync(this.Input.TeacherModel, user);
+                        }
+                        catch (ArgumentException e)
+                        {
+                            this.ModelState.AddModelError(string.Empty, e.Message);
+
+                            return this.Page();
+                        }
+                    }
+                    else if (this.Input.Role == GlobalConstants.StudentRoleName)
+                    {
+                        await this.studentRegisterer.RegisterAsync(user);
+                    }
+                    else
+                    {
+                        this.ModelState.AddModelError(string.Empty, "Wrong role name!");
+
+                        return this.Page();
                     }
 
                     this.logger.LogInformation("User created a new account with password.");
@@ -116,7 +139,8 @@
 
     public class InputModel
     {
-        [Required]
+        [Required(ErrorMessage = "Полето {0} е задължително.")]
+        [Display(Name = "Роля")]
         public string Role { get; set; }
 
         [Required(ErrorMessage = "Полето {0} е задължително.")]

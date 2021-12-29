@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 }
 
-<div class="auth-form" style="text-align:center;">
+<div class="auth-form register-page">
     <button id="past-part" class="btn btn-primary float-left hidden">
         <img class="img-fluid" src="~/img/back.png" />
     </button>
@@ -18,25 +18,26 @@
                 <h1 class="form-header">@ViewData["Title"]</h1>
                 <h4>Регистрирайте се в системата на @StudentsHelper.Common.GlobalConstants.SystemName</h4>
                 <hr />
-                <div id="part-1">
-                    <input id="role" type="hidden" name="role" />
+                <div id="allErrorsList" asp-validation-summary="All" class="text-danger"></div>
+                <div id="part-1" class="part">
+                    <input asp-for="Input.Role" type="hidden" />
                     <h4>Аз съм:</h4>
                     <div class="row text-center justify-content-center mb-0 ">
                         <div class="col-12 col-md-10 col-xl-8 d-flex justify-content-center">
                             <div class="row d-flex flex-column flex-sm-row kind-row pt-1 pt-md-2">
                                 <div class="col user-kind-col">
-                                    <img class="role img-thumbnail" role="student" src="~/img/roles/student_male.png" />
+                                    <img class="role img-thumbnail" role=@GlobalConstants.StudentRoleName src="~/img/roles/student_male.png" />
                                     <p class="kind-title">Ученик</p>
                                 </div>
                                 <div class="col user-kind-col">
-                                    <img class="role img-thumbnail" role="teacher" src="~/img/roles/teacher_male.png" />
+                                    <img class="role img-thumbnail" role=@GlobalConstants.TeacherRoleName src="~/img/roles/teacher_male.png" />
                                     <p class="kind-title">Учител</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="part-2" class="hidden">
+                <div id="part-2" class="part hidden">
                     <div class="form-group">
                         <label asp-for="Input.Name"></label>
                         <input asp-for="Input.Name" class="form-control" />
@@ -53,7 +54,7 @@
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
                 </div>
-                <div id="part-3" class="hidden">
+                <div id="part-3" class="part hidden">
                     <h4>Къде преподавате?</h4>
                     <div class="form-group">
                         <label>Област:</label>
@@ -69,15 +70,15 @@
                     </div>
                     <div class="form-group hidden">
                         <label>Училище:</label>
-                        <select asp-for="Input.TeacherModel.SchoolId" class="form-control"></select>
+                        <select asp-for="Input.TeacherModel.SchoolId" id="SchoolId" class="form-control"></select>
                         <span asp-validation-for="Input.TeacherModel.SchoolId" class="text-danger"></span>
                     </div>
                 </div>
-                <div id="part-4" class="hidden">
+                <div id="part-4" class="part hidden">
                     <div class="form-group">
                         <label asp-for="Input.TeacherModel.QualificationDocument"></label>
                         <br />
-                        <label class="text-muted">Диплома или друг документ подвърждаващ способност за преподаване</label>
+                        <label class="text-muted">Диплома или друг документ, потвърждаващ педагогическа правоспособност</label>
                         <input asp-for="Input.TeacherModel.QualificationDocument" class="form-control" />
                         <span asp-validation-for="Input.TeacherModel.QualificationDocument" class="text-danger"></span>
                     </div>
@@ -96,6 +97,8 @@
                             {
                                 if (@provider.Name == "Facebook")
                                 {
+                                    <input id="second-auth-option-userRole" name="userRole" type="hidden" />
+
                                     <button type="submit" class="auth-type-button" name="provider" value="@provider.Name" title="Влез чрез @provider.DisplayName account">
                                         <img class="auth-type-image" src="~/img/facebook.png" alt="@provider.DisplayName" />
                                         @provider.Name
