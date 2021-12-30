@@ -11,7 +11,7 @@
 
     internal class SchoolsAndLocationSeeder : ISeeder
     {
-        private readonly string schoolsDataPath = @"D:\Downloads\Project\StudentsHelper\src\Data\StudentsHelper.Data\Seeding\Data\SchoolsData.json";
+        private readonly string schoolsDataPath = @".\SeedingData\SchoolsData.json";
 
         private readonly List<Region> regions;
         private readonly List<Township> townships;

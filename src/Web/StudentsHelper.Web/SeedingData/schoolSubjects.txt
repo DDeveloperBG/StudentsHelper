@@ -1,0 +1,17 @@
+Математика, /img/subjects/mathematics.png
+Български език и литература, /img/subjects/bulgarian.png
+Химия, /img/subjects/chemistry.png
+Физика, /img/subjects/physics.png
+Биология, /img/subjects/biology.png
+История, /img/subjects/history.png
+География, /img/subjects/geography.png
+Философия, /img/subjects/philosophy.png
+Информационни технологии, /img/subjects/information_technology.png
+Информатика, /img/subjects/informatics.png
+Човекът и природата, /img/subjects/human_and_nature.png
+Английски език, /img/subjects/english.png
+Немски език, /img/subjects/german.png
+Испански език, /img/subjects/spanish.png
+Френски език, /img/subjects/french.png
+Руски език, /img/subjects/russian.png
+Музика, /img/subjects/music.png

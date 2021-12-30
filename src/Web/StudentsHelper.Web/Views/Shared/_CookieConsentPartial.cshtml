@@ -1,4 +1,5 @@
-@using Microsoft.AspNetCore.Http.Features
+﻿@using Microsoft.AspNetCore.Http.Features
+@using StudentsHelper.Common
 
 @{
     var consentFeature = this.Context.Features.Get<ITrackingConsentFeature>();
@@ -9,9 +10,10 @@
 @if (showBanner)
 {
     <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
-        We use cookies to understand how you use our site and to improve your experience. <a asp-area="" asp-controller="Home" asp-action="Privacy">Learn More</a>.
+        @Html.Raw("🍪") @GlobalConstants.SystemName използва „бисквитки“ и други данни, за да предоставя, поддържа и подобрява услугите си.
+        <a asp-area="" asp-controller="Home" asp-action="Privacy">Научете повече</a>
         <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Accept</span>
+            <span aria-hidden="true">Приемам</span>
         </button>
     </div>
     <script>

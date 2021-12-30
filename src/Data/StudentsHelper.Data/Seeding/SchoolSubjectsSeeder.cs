@@ -11,7 +11,7 @@
 
     public class SchoolSubjectsSeeder : ISeeder
     {
-        private const string SchoolDataPath = @"C:\Users\Dani\Documents\GitHub\StudentsHelper\src\Data\StudentsHelper.Data\Seeding\Data\schoolSubjects.txt";
+        private const string SchoolDataPath = @".\SeedingData\schoolSubjects.txt";
 
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {

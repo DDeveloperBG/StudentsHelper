@@ -22,6 +22,7 @@
     using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.Data;
     using StudentsHelper.Services.Data.LocationLoaders;
+    using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.VideoChat;
@@ -85,6 +86,7 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<ISchoolSubjectsService, SchoolSubjectsService>();
             services.AddTransient<RegionsLoader>();
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();

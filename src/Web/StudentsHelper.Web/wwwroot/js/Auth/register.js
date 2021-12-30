@@ -85,7 +85,7 @@ function activateFirstPart() {
 function activateSecondPart(e) {
     document.getElementById('allErrorsList').classList.add(hiddenClassName);
     const roleInput = document.getElementById('Input_Role');
-    role = e.target.getAttribute('role');
+    role = e.target.getAttribute('userRole');
     roleInput.value = role;
     document.getElementById('second-auth-option-userRole').value = role;
 

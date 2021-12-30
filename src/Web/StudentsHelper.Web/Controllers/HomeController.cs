@@ -2,15 +2,26 @@
 {
     using System.Diagnostics;
 
-    using StudentsHelper.Web.ViewModels;
-
     using Microsoft.AspNetCore.Mvc;
+
+    using StudentsHelper.Services.Data.SchoolSubjects;
+    using StudentsHelper.Web.ViewModels;
+    using StudentsHelper.Web.ViewModels.SchoolSubjects;
 
     public class HomeController : BaseController
     {
+        private ISchoolSubjectsService schoolSubjectsService;
+
+        public HomeController(ISchoolSubjectsService schoolSubjectsService)
+        {
+            this.schoolSubjectsService = schoolSubjectsService;
+        }
+
         public IActionResult Index()
         {
-            return this.View();
+            var schoolSubjects = this.schoolSubjectsService.GetAll<SchoolSubjectViewModel>();
+            var model = new SchoolSubjectsListViewModel { SchoolSubjects = schoolSubjects };
+            return this.View(model);
         }
 
         public IActionResult Privacy()

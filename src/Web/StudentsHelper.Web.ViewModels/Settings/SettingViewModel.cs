@@ -1,9 +1,8 @@
 ﻿namespace StudentsHelper.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

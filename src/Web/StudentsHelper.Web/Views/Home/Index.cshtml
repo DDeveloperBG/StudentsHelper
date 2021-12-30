@@ -1,24 +1,43 @@
-﻿@using StudentsHelper.Common
+﻿@model StudentsHelper.Web.ViewModels.SchoolSubjects.SchoolSubjectsListViewModel
+@using StudentsHelper.Common
 @{
     this.ViewData["Title"] = "Home Page";
 }
 
 @section Css {
-    <link rel="stylesheet" href="~/css/homePage.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/homePage.min.css" asp-append-version="true" />
 }
 
 @if (!User.Identity.IsAuthenticated)
 {
     @section GuestMainPageHeader {
-        <div id="imp_content">
-            <h1>
-                МИГНОВЕНИ<br>
-                ОНЛАЙН КОНСУЛТАЦИИ<br>
+<div id="imp_content">
+    <h1>
+        МИГНОВЕНИ<br>
+        ОНЛАЙН КОНСУЛТАЦИИ<br>
 
-                <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">
-                    Регистрирай се
-                </a>
-            </h1>
-        </div>
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">
+            Регистрирай се
+        </a>
+    </h1>
+</div>
     }
 }
+
+@{
+    int counter = 0;
+}
+
+<div class="row schoolSubjects justify-content-center">
+
+    @foreach (var schoolSubject in Model.SchoolSubjects)
+    {
+        <div id=@schoolSubject.Id class="col-4 schoolSubjectItem ">
+            <img src=@schoolSubject.IconPath class="img-fluid" style="width: 8rem;">
+            <h4 class="schoolSubjectName w-75 text-center">@schoolSubject.Name</h4>
+        </div>
+
+        counter++;
+    }
+
+</div>

@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="author" content="Daniel Yordanov">
-    <meta name="description" content="Students Helper има за цел да помогне на учениците с техните домашни, уроци и т.н. Чрез мигновени консултации по конкретна тема от учител, специалист в областта.">
+    <meta name="description" content=@GlobalConstants.SiteDescription>
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
     <partial name="_Favicons" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
@@ -33,12 +33,6 @@
                         <li class="nav-item mr-3">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
-                        <li class="nav-item mr-3">
-                            <a class="nav-link" asp-area="" asp-controller="Settings" asp-action="Index">Настройки</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Общи условия</a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -54,9 +48,54 @@
         <partial name="_CookieConsentPartial" />
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @DateTime.Now.Year - @GlobalConstants.SystemName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer">
+        <div class="container footerContent">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-12">
+                    <p><img src="/img/logo.png" class="img-fluid" width="55" alt=""></p>
+                    <p id="footerSiteDescription" class="w-75">@GlobalConstants.SiteDescription</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5>Полезни връзки</h5>
+                    <ul class="links">
+                        <li><a href="/Blog">Блог</a></li>
+                        <li><a asp-area="Identity" asp-page="/Account/Login">Вход</a></li>
+                        <li><a asp-area="Identity" asp-page="/Account/Register">Регистрация</a></li>
+                        <li><a href="/Contacts">Контакти</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5>Свържете се с нас</h5>
+                    <ul class="contacts">
+                        <li>
+                            <a href="mailto:x@email.x">
+                                <svg id="mailIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M5.001 8.538v7.098S4.911 16.963 6.324 17h11.482S19 16.837 19 15.6V8.537l-6.763 4.339h-.42L5 8.538z"/>
+                                    <path d="M5.06 7.453S5.14 6.026 6.43 6h11.041s1.397.174 1.424 1.453l-6.8 4.402h-.197L5.06 7.453z"/>
+                                </svg>
+                                x@email.x
+                            </a>
+                        </li>
+                    </ul>
+                    <div>
+                        <ul id="social-media">
+                            <li><div>Последвайте ни в</div></li>
+                            <li><a href=""><img src="/img/facebook.png" alt="Facebook"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <ul id="additional_links">
+                        <li><a href="/Pages/Terms">Общи условия</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Политика за поверителност</a></li>
+                    </ul>
+                </div>
+                <div id="copy" class="container col-md-4">
+                    &copy; @DateTime.Now.Year - @GlobalConstants.SystemName
+                </div>
+            </div>
         </div>
     </footer>
 

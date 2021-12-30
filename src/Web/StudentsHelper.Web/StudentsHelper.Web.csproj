@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="SeedingData\SchoolsData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\homePage.min.css" />
   </ItemGroup>
   <ItemGroup>
@@ -57,5 +61,13 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="SeedingData\SchoolsData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="QualificationDocuments\" />
   </ItemGroup>
 </Project>
