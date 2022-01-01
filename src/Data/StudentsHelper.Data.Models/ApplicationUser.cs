@@ -19,6 +19,8 @@ namespace StudentsHelper.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
+        public string PicturePath { get; set; }
+
         [Required]
         public string Name { get; set; }
 

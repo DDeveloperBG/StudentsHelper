@@ -42,6 +42,7 @@
     @RenderSection("GuestMainPageHeader", required: false)
 
     <div id="pageBody" class="container">
+        <partial name="_AlertMessages" />
         <main role="main" class="pb-3">
             @this.RenderBody()
         </main>
@@ -68,12 +69,11 @@
                     <h5>Свържете се с нас</h5>
                     <ul class="contacts">
                         <li>
-                            <a href="mailto:x@email.x">
+                            <a asp-area="" asp-controller="Contact" asp-action="Index">
                                 <svg id="mailIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M5.001 8.538v7.098S4.911 16.963 6.324 17h11.482S19 16.837 19 15.6V8.537l-6.763 4.339h-.42L5 8.538z"/>
                                     <path d="M5.06 7.453S5.14 6.026 6.43 6h11.041s1.397.174 1.424 1.453l-6.8 4.402h-.197L5.06 7.453z"/>
-                                </svg>
-                                x@email.x
+                                </svg>@GlobalConstants.ContactEmail
                             </a>
                         </li>
                     </ul>
@@ -89,7 +89,7 @@
                 <div class="col-md-8">
                     <ul id="additional_links">
                         <li><a href="/Pages/Terms">Общи условия</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Политика за поверителност</a></li>
+                        <li><a class="w-50" asp-area="" asp-controller="Home" asp-action="Privacy">Политика за поверителност</a></li>
                     </ul>
                 </div>
                 <div id="copy" class="container col-md-4">

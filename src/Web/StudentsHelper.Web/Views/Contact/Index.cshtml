@@ -1,0 +1,54 @@
+﻿@using System.Text
+@using Microsoft.Extensions.Options
+
+@model StudentsHelper.Web.ViewModels.Contact.ContactInputModel
+
+<link rel="stylesheet" href="~/css/sitecustom.css">
+
+@{
+    this.ViewData["Title"] = "Контакти";
+}
+
+<br>
+
+<div class="row text-center">
+    <div class="container justify-content-center">
+        <div class="col-md-6" style="margin: auto;">
+            <div class="form-area">
+                <form role="form" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <br style="clear:both">
+                    <h6 class="text-purple text-sm-center">ИМАТЕ ВЪПРОС?</h6>
+                    <h2>ПИШЕТЕ НИ</h2>
+                    <div class="form-group">
+                        <input asp-for="Title"
+                               type="text"
+                               class="form-control"
+                               placeholder="Заглавие">
+                        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Email"
+                               class="form-control"
+                               placeholder="Имейл" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <textarea asp-for="Message"
+                                  class="form-control"
+                                  type="textarea"
+                                  placeholder="Съобщение"
+                                  rows="7">
+                            </textarea>
+                        <span asp-validation-for="@Model.Message" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Изпрати
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

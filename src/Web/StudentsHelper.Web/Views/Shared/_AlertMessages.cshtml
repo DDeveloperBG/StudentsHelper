@@ -1,0 +1,19 @@
+﻿@{
+    var type = (string)TempData["_alert.type"];
+    var body = (string)TempData["_alert.body"];
+}
+@if (!string.IsNullOrEmpty(type))
+{
+    <div class="row justify-content-center col-auto">
+        <div class="d-flex alert alert-@type alert-dismissible"
+             role="alert"
+             style="position:fixed; top:100px; border-radius: 1rem; z-index: 1;">
+            <img class="img-fluid align-content-start" style="width:2.5rem;" src="~/img/alert/@(type).png" >
+            <h4 class="pl-3" style="margin: auto 0; margin-right: 5.6rem;">@body</h4>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                style="border-left: 1px solid #91ca9f; height: 100%;">
+                <h4 aria-hidden="true">затвори</h4>
+            </button>
+        </div>
+    </div>
+}

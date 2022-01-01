@@ -4,6 +4,8 @@
     {
         public const string SystemName = "StudentsHelper";
 
+        public const string ContactEmail = "dakataebg@students.softuni.bg";
+
         public const string AdministratorRoleName = "Administrator";
 
         public const string TeacherRoleName = "teacher";

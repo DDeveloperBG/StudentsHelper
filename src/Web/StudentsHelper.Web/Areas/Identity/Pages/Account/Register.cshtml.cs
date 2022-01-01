@@ -139,23 +139,23 @@
 
     public class InputModel
     {
-        [Required(ErrorMessage = "Полето {0} е задължително.")]
         [Display(Name = "Роля")]
+        [Required(ErrorMessage = ValidationConstants.RequiredError)]
         public string Role { get; set; }
 
-        [Required(ErrorMessage = "Полето {0} е задължително.")]
         [Display(Name = "Име")]
+        [Required(ErrorMessage = ValidationConstants.RequiredError)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Полето {0} е задължително.")]
-        [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
         [Display(Name = "Имейл")]
+        [Required(ErrorMessage = ValidationConstants.RequiredError)]
+        [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Полето {0} е задължително.")]
+        [Display(Name = "Парола")]
+        [Required(ErrorMessage = ValidationConstants.RequiredError)]
         [StringLength(100, ErrorMessage = "Паролата трябва да бъде поне {2} и максимум {1} символа дълга.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Парола")]
         public string Password { get; set; }
 
         public TeacherInputModel TeacherModel { get; set; }

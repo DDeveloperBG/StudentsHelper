@@ -1,0 +1,24 @@
+﻿@model IEnumerable<StudentsHelper.Web.ViewModels.Teachers.TeacherViewModel>
+
+@{
+    ViewData["Title"] = "Учители за одобряване";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><img src=@item.PicturePath /></td>
+                <td>
+                    @item.ApplicationUserName
+                </td>
+                <td>
+                    <a asp-area="Administration" asp-controller="" asp-action="Details" asp-route-teacherId="@item.Id">Детайли</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

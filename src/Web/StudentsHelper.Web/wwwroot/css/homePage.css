@@ -28,6 +28,7 @@ main {
 }
 
 .schoolSubjectItem {
+    transition: all 250ms ease;
     padding-top: 2rem;
     border: none;
     border-radius: 0.5rem;

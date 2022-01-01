@@ -29,15 +29,17 @@
 }
 
 <div class="row schoolSubjects justify-content-center">
-
     @foreach (var schoolSubject in Model.SchoolSubjects)
     {
-        <div id=@schoolSubject.Id class="col-4 schoolSubjectItem ">
+        <div id=@schoolSubject.Id class="col-lg-4 col-sm-6 schoolSubjectItem">
             <img src=@schoolSubject.IconPath class="img-fluid" style="width: 8rem;">
             <h4 class="schoolSubjectName w-75 text-center">@schoolSubject.Name</h4>
         </div>
 
         counter++;
     }
-
 </div>
+
+@section Scripts {
+   <script src="~/js/Home/home.js"></script>
+}

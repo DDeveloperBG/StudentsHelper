@@ -14,6 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+    using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
 
     [AllowAnonymous]
@@ -46,13 +47,13 @@
         public class InputModel
         {
             [Display(Name = "Имейл")]
-            [Required(ErrorMessage = "Полето {0} е задължително.")]
+            [Required(ErrorMessage = ValidationConstants.RequiredError)]
             [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
             public string Email { get; set; }
 
             [Display(Name = "Парола")]
             [DataType(DataType.Password)]
-            [Required(ErrorMessage = "Полето {0} е задължително.")]
+            [Required(ErrorMessage = ValidationConstants.RequiredError)]
             public string Password { get; set; }
 
             [Display(Name = "Запомни ме")]

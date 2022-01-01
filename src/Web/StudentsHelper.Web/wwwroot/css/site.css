@@ -6,6 +6,7 @@
 /*lighter = #202F72*/
 
 #pageBody {
+    min-height: 79vh;
     margin-bottom: 3rem;
 }
 
