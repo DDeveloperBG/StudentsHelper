@@ -49,31 +49,31 @@
 
         public async Task<IActionResult> OnGet()
         {
-            var user = await userManager.GetUserAsync(User);
+            var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
             }
 
-            RequirePassword = await userManager.HasPasswordAsync(user);
-            return Page();
+            this.RequirePassword = await this.userManager.HasPasswordAsync(user);
+            return this.Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await userManager.GetUserAsync(User);
+            var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
             }
 
-            RequirePassword = await userManager.HasPasswordAsync(user);
-            if (RequirePassword)
+            this.RequirePassword = await this.userManager.HasPasswordAsync(user);
+            if (this.RequirePassword)
             {
-                if (!await userManager.CheckPasswordAsync(user, Input.Password))
+                if (!await this.userManager.CheckPasswordAsync(user, this.Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Incorrect password.");
-                    return Page();
+                    this.ModelState.AddModelError(string.Empty, "Incorrect password.");
+                    return this.Page();
                 }
             }
 
@@ -92,7 +92,7 @@
                     this.studentsRepository.HardDelete(student);
                 }
 
-                var result = await userManager.DeleteAsync(user);
+                var result = await this.userManager.DeleteAsync(user);
                 if (!result.Succeeded)
                 {
                     throw new Exception();
@@ -105,11 +105,11 @@
                 throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{user.Id}'.");
             }
 
-            await signInManager.SignOutAsync();
+            await this.signInManager.SignOutAsync();
 
-            logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
+            this.logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
 
-            return Redirect("~/");
+            return this.Redirect("~/");
         }
     }
 }

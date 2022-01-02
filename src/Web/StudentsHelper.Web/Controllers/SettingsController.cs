@@ -3,12 +3,11 @@
     using System;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Mvc;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data;
     using StudentsHelper.Web.ViewModels.Settings;
-
-    using Microsoft.AspNetCore.Mvc;
 
     public class SettingsController : BaseController
     {

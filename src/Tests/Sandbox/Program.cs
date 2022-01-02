@@ -5,6 +5,11 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using CommandLine;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using StudentsHelper.Data;
     using StudentsHelper.Data.Common;
     using StudentsHelper.Data.Common.Repositories;
@@ -13,13 +18,6 @@
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Data;
     using StudentsHelper.Services.Messaging;
-
-    using CommandLine;
-
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
 
     public static class Program
     {

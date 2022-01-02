@@ -10,7 +10,7 @@
 
     public class HomeController : BaseController
     {
-        private ISchoolSubjectsService schoolSubjectsService;
+        private readonly ISchoolSubjectsService schoolSubjectsService;
 
         public HomeController(ISchoolSubjectsService schoolSubjectsService)
         {

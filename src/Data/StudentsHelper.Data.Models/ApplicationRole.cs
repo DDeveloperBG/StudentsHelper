@@ -3,9 +3,8 @@ namespace StudentsHelper.Data.Models
 {
     using System;
 
-    using StudentsHelper.Data.Common.Models;
-
     using Microsoft.AspNetCore.Identity;
+    using StudentsHelper.Data.Common.Models;
 
     public class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity
     {

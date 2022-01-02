@@ -1,7 +1,5 @@
 ﻿namespace StudentsHelper.Services.VideoChat
 {
-    using System;
-
     using StudentsHelper.Services.Data.VideoChat;
 
     public class VideoChat : IVideoChat
@@ -21,9 +19,8 @@
                 ApiKey = this.apiKey,
                 MeetingId = meetingId,
 
-                //brandingEnabled: true,
-                //brandLogoURL: logo url,
-
+                // brandingEnabled: true,
+                // brandLogoURL: logo url,
                 RedirectOnLeave = $"https://{host}/",
 
                 MicEnabled = true,

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace StudentsHelper.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class MadeSchoolSubjectsToCollection : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace StudentsHelper.Data.Migrations
                 columns: table => new
                 {
                     SubjectsId = table.Column<int>(type: "int", nullable: false),
-                    TeachersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    TeachersId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                 },
                 constraints: table =>
                 {
