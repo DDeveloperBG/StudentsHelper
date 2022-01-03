@@ -19,7 +19,10 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
+    using StudentsHelper.Web.Controllers;
+    using StudentsHelper.Web.Infrastructure.Filters;
 
+    [GuestFilter]
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {

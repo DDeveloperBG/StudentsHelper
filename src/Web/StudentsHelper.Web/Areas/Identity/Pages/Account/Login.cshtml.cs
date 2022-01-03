@@ -13,7 +13,9 @@
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Web.Infrastructure.Filters;
 
+    [GuestFilter]
     [AllowAnonymous]
     public class LoginModel : PageModel
     {

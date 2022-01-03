@@ -29,15 +29,20 @@
         [HttpPost]
         public async Task<IActionResult> Index(ContactInputModel model)
         {
+            var result = this.RedirectToAction(nameof(HomeController.Index), "Home", new { area = string.Empty });
+
             if (this.ModelState.IsValid)
             {
-                await this.emailSender.SendEmailAsync(model.Email, null, GlobalConstants.ContactEmail, model.Title, model.Message, null);
+                try
+                {
+                    await this.emailSender.SendEmailAsync(model.Email, null, GlobalConstants.ContactEmail, model.Title, model.Message, null);
+                }
+                catch (System.Exception)
+                {
+                    return result.WithDanger("Не успяхме да изпратим съобщението ви");
+                }
 
-                return this.RedirectToAction(
-                    nameof(HomeController.Index),
-                    "Home",
-                    new { area = string.Empty })
-                    .WithSuccess("Съобщението ви бе изпратено успешно!");
+                return result.WithSuccess("Съобщението ви бе изпратено успешно!");
             }
 
             return this.View(model);
