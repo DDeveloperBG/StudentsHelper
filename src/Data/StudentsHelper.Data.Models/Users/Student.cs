@@ -1,5 +1,6 @@
 ﻿namespace StudentsHelper.Data.Models
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,6 +8,11 @@
 
     public class Student : BaseDeletableModel<string>
     {
+        public Student()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
         [Required]
         [ForeignKey(nameof(ApplicationUser))]
         public string ApplicationUserId { get; set; }

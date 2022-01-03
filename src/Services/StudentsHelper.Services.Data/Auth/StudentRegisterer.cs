@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Services.Auth
 {
-    using System;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
@@ -28,7 +27,6 @@
         {
             Student student = new Student
             {
-                Id = Guid.NewGuid().ToString(),
                 ApplicationUserId = user.Id,
             };
 

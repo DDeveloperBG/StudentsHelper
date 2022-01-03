@@ -24,8 +24,6 @@
         {
         }
 
-        public DbSet<Setting> Settings { get; set; }
-
         public DbSet<Region> Regions { get; set; }
 
         public DbSet<Township> Townships { get; set; }

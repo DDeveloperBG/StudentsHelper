@@ -19,7 +19,7 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
-    using StudentsHelper.Web.Controllers;
+    using StudentsHelper.Services.Data.User;
     using StudentsHelper.Web.Infrastructure.Filters;
 
     [GuestFilter]
@@ -32,6 +32,7 @@
         private readonly IEmailSender emailSender;
         private readonly ITeacherRegisterer teacherRegister;
         private readonly IStudentRegisterer studentRegisterer;
+        private readonly IUsersService usersService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -39,7 +40,8 @@
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             ITeacherRegisterer teacherRegister,
-            IStudentRegisterer studentRegisterer)
+            IStudentRegisterer studentRegisterer,
+            IUsersService usersService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -47,6 +49,7 @@
             this.emailSender = emailSender;
             this.teacherRegister = teacherRegister;
             this.studentRegisterer = studentRegisterer;
+            this.usersService = usersService;
         }
 
         [BindProperty]
@@ -68,7 +71,15 @@
             this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { Name = this.Input.Name, Email = this.Input.Email, UserName = this.Input.Email };
+                var user = this.usersService.GetUserWithUsername(this.Input.Email);
+                if (user != null)
+                {
+                    await this.usersService.RestoreUserAsync(user);
+                    await this.signInManager.SignInAsync(user, isPersistent: false);
+                    return this.LocalRedirect(returnUrl);
+                }
+
+                user = new ApplicationUser { Name = this.Input.Name, Email = this.Input.Email, UserName = this.Input.Email };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {

@@ -13,5 +13,7 @@
         public const string StudentRoleName = "student";
 
         public const string SiteDescription = $"{SystemName} има за цел да помогне на учениците с техните домашни, уроци и т.н. Чрез мигновени консултации по конкретна тема с учител, специалист в областта.";
+
+        public const string DeletedUserUsername = "deleted_user";
     }
 }

@@ -35,7 +35,7 @@
             {
                 try
                 {
-                    await this.emailSender.SendEmailAsync(model.Email, null, GlobalConstants.ContactEmail, model.Title, model.Message, null);
+                    await this.emailSender.SendEmailAsync(GlobalConstants.ContactEmail, model.Email, GlobalConstants.ContactEmail, model.Title, model.Message, null);
                 }
                 catch (System.Exception)
                 {

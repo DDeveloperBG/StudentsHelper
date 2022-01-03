@@ -1,6 +1,7 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account
 {
     using System;
+    using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using System.Text.Encodings.Web;
@@ -14,8 +15,11 @@
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
+    using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.Data.User;
+    using StudentsHelper.Web.Infrastructure.Alerts;
 
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
@@ -27,6 +31,7 @@
         private readonly IEmailSender emailSender;
         private readonly ITeacherRegisterer teacherRegister;
         private readonly IStudentRegisterer studentRegisterer;
+        private readonly IUsersService usersService;
         private readonly ILogger<ExternalLoginModel> logger;
 
         public ExternalLoginModel(
@@ -35,7 +40,8 @@
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender,
             ITeacherRegisterer teacherRegister,
-            IStudentRegisterer studentRegisterer)
+            IStudentRegisterer studentRegisterer,
+            IUsersService usersService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -43,6 +49,7 @@
             this.emailSender = emailSender;
             this.teacherRegister = teacherRegister;
             this.studentRegisterer = studentRegisterer;
+            this.usersService = usersService;
         }
 
         [BindProperty]
@@ -109,6 +116,13 @@
                 this.ProviderDisplayName = info.ProviderDisplayName;
 
                 this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
+
+                // if rolebytes == null so it came from login page
+                if (roleBytes == null)
+                {
+                    return await this.OnPostConfirmationAsync();
+                }
+
                 var role = Encoding.UTF8.GetString(roleBytes);
 
                 if (role == GlobalConstants.StudentRoleName)
@@ -128,27 +142,50 @@
             var info = await this.signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                this.ErrorMessage = "Error loading external login information during confirmation.";
-                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl }).WithDanger("Настъпи грешка");
             }
 
+            if (!(info.Principal.HasClaim(c => c.Type == ClaimTypes.Name) &&
+                        info.Principal.HasClaim(c => c.Type == ClaimTypes.Email)))
+            {
+                return this.RedirectToPage("./Register").WithDanger("Настъпи грешка");
+            }
+
+            // If user already has account
+            string name = info.Principal.FindFirstValue(ClaimTypes.Name);
+            string email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+            var user = this.usersService.GetUserWithUsername(email);
+
+            if (user != null)
+            {
+                await this.usersService.RestoreUserAsync(user);
+
+                var emailSenderResult = await this.SendEmailConfirmationAsync(user);
+
+                if (emailSenderResult != null)
+                {
+                    return emailSenderResult;
+                }
+
+                await this.signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+
+                return this.LocalRedirect(returnUrl).WithSuccess("Влязохте успешно");
+            }
+
+            // If he is trying to register
             if (this.TeacherModel == null || this.ModelState.IsValid)
             {
                 this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
-                var role = Encoding.UTF8.GetString(roleBytes);
 
-                if (!(role != null &&
-                        info.Principal.HasClaim(c => c.Type == ClaimTypes.Name) &&
-                        info.Principal.HasClaim(c => c.Type == ClaimTypes.Email)))
+                if (roleBytes == null)
                 {
-                    this.ErrorMessage = "Error loading login information.";
-                    return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+                    return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl }).WithDanger("Нямате съществуващ профил.");
                 }
 
-                string name = info.Principal.FindFirstValue(ClaimTypes.Name);
-                string email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var role = Encoding.UTF8.GetString(roleBytes);
 
-                var user = new ApplicationUser
+                user = new ApplicationUser
                 {
                     Name = name,
                     Email = email,
@@ -165,7 +202,7 @@
                         {
                             if (this.TeacherModel.QualificationDocument == null)
                             {
-                                this.ModelState.AddModelError(string.Empty, "Qualification document is required!");
+                                this.ModelState.AddModelError(string.Empty, "Документа за квалификация е необходим!");
 
                                 return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
                             }
@@ -194,24 +231,11 @@
 
                         this.logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
-                        var userId = await this.userManager.GetUserIdAsync(user);
-                        var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = this.Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code },
-                            protocol: this.Request.Scheme);
+                        var emailSenderResult = await this.SendEmailConfirmationAsync(user);
 
-                        await this.emailSender.SendEmailAsync(
-                            email,
-                            "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (this.userManager.Options.SignIn.RequireConfirmedAccount)
+                        if (emailSenderResult != null)
                         {
-                            return this.RedirectToPage("./RegisterConfirmation", new { Email = email });
+                            return emailSenderResult;
                         }
 
                         await this.signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
@@ -230,6 +254,29 @@
             this.ReturnUrl = returnUrl;
 
             return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
+        }
+
+        private async Task<IActionResult> SendEmailConfirmationAsync(ApplicationUser user)
+        {
+            if (this.userManager.Options.SignIn.RequireConfirmedAccount)
+            {
+                var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = this.Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code = code },
+                    protocol: this.Request.Scheme);
+
+                await this.emailSender.SendEmailAsync(
+                    user.Email,
+                    "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                return this.RedirectToPage("./RegisterConfirmation", new { Email = user.Email });
+            }
+
+            return null;
         }
     }
 }

@@ -2,37 +2,33 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
-    using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Web.Infrastructure.Alerts;
 
     public class DeletePersonalDataModel : PageModel
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<DeletePersonalDataModel> logger;
-        private readonly IDeletableEntityRepository<Teacher> teachersRepository;
-        private readonly IDeletableEntityRepository<Student> studentsRepository;
+        private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<DeletePersonalDataModel> logger,
-            IDeletableEntityRepository<Teacher> teacher,
-            IDeletableEntityRepository<Student> student)
+            IDeletableEntityRepository<ApplicationUser> usersRepository)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
-            this.teachersRepository = teacher;
-            this.studentsRepository = student;
+            this.usersRepository = usersRepository;
         }
 
         [BindProperty]
@@ -79,26 +75,9 @@
 
             try
             {
-                if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
-                {
-                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.TeacherRoleName);
-                    var teacher = this.teachersRepository.AllAsNoTracking().Where(x => x.ApplicationUser == user).SingleOrDefault();
-                    this.teachersRepository.HardDelete(teacher);
-                }
-                else if (this.User.IsInRole(GlobalConstants.StudentRoleName))
-                {
-                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.StudentRoleName);
-                    var student = this.studentsRepository.AllAsNoTracking().Where(x => x.ApplicationUser == user).SingleOrDefault();
-                    this.studentsRepository.HardDelete(student);
-                }
+                this.usersRepository.Delete(user);
 
-                var result = await this.userManager.DeleteAsync(user);
-                if (!result.Succeeded)
-                {
-                    throw new Exception();
-                }
-
-                await this.teachersRepository.SaveChangesAsync();
+                await this.usersRepository.SaveChangesAsync();
             }
             catch (Exception)
             {
@@ -109,7 +88,7 @@
 
             this.logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
 
-            return this.Redirect("~/");
+            return this.Redirect("~/").WithSuccess("Успешно изтрихте акаунта си.");
         }
     }
 }

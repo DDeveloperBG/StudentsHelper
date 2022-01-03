@@ -55,7 +55,6 @@
 
             Teacher teacher = new Teacher
             {
-                Id = Guid.NewGuid().ToString(),
                 ApplicationUserId = user.Id,
                 SchoolId = inputModel.SchoolId,
                 QualificationDocumentPath = qualificationDocumentPath,

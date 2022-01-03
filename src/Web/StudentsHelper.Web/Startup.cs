@@ -19,10 +19,10 @@
     using StudentsHelper.Data.Repositories;
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Auth;
-    using StudentsHelper.Services.Data;
     using StudentsHelper.Services.Data.LocationLoaders;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.Data.User;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.VideoChat;
@@ -84,9 +84,9 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISchoolSubjectsService, SchoolSubjectsService>();
             services.AddTransient<ITeachersService, TeachersService>();
+            services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<RegionsLoader>();
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();

@@ -17,7 +17,13 @@
             this.client = new SendGridClient(apiKey);
         }
 
-        public async Task SendEmailAsync(string from, string fromName, string to, string subject, string htmlContent, IEnumerable<EmailAttachment> attachments = null)
+        public async Task SendEmailAsync(
+            string from,
+            string fromName,
+            string to,
+            string subject,
+            string htmlContent,
+            IEnumerable<EmailAttachment> attachments = null)
         {
             if (string.IsNullOrWhiteSpace(subject) && string.IsNullOrWhiteSpace(htmlContent))
             {
@@ -38,6 +44,12 @@
             try
             {
                 var response = await this.client.SendEmailAsync(message);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception();
+                }
+
                 Console.WriteLine(response.StatusCode);
                 Console.WriteLine(await response.Body.ReadAsStringAsync());
             }
