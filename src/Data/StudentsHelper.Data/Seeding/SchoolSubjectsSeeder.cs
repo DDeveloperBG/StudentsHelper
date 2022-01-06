@@ -32,7 +32,6 @@
                 .ToList();
 
             await dbContext.Subjects.AddRangeAsync(subjects);
-            await dbContext.SaveChangesAsync();
         }
     }
 }

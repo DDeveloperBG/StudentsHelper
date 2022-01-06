@@ -13,6 +13,8 @@
         {
             this.Id = Guid.NewGuid().ToString();
             this.Subjects = new HashSet<SchoolSubject>();
+            this.IsValidated = false;
+            this.IsRejected = false;
         }
 
         [Required]
@@ -24,7 +26,11 @@
         [Required]
         public string QualificationDocumentPath { get; set; }
 
+        [Required]
         public bool IsValidated { get; set; }
+
+        [Required]
+        public bool IsRejected { get; set; }
 
         public ICollection<SchoolSubject> Subjects { get; set; }
 

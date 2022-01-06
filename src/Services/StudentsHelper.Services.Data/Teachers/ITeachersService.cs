@@ -6,6 +6,8 @@
     {
         IEnumerable<T> GetAllOfType<T>(int subjectId);
 
-        IEnumerable<T> GetAllNotApproved<T>();
+        IEnumerable<T> GetAllNotRejected<T>(bool validated);
+
+        IEnumerable<T> GetAllRejected<T>();
     }
 }

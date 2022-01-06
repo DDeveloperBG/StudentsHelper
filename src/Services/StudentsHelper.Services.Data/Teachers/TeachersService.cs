@@ -16,11 +16,20 @@
             this.teachersRepository = teachersRepository;
         }
 
-        public IEnumerable<T> GetAllNotApproved<T>()
+        public IEnumerable<T> GetAllNotRejected<T>(bool validated)
         {
             return this.teachersRepository
                 .All()
-                .Where(x => !x.IsValidated)
+                .Where(x => x.IsValidated == validated && !x.IsRejected)
+                .To<T>()
+                .ToList();
+        }
+
+        public IEnumerable<T> GetAllRejected<T>()
+        {
+            return this.teachersRepository
+                .All()
+                .Where(x => x.IsRejected)
                 .To<T>()
                 .ToList();
         }
@@ -30,7 +39,7 @@
             return this.teachersRepository
                 .All()
                 .Where(x => x.Subjects
-                    .Any(x => x.Id == subjectId))
+                    .Any(x => x.Id == subjectId) && x.IsValidated)
                 .To<T>()
                 .ToList();
         }

@@ -32,7 +32,6 @@
         private readonly IEmailSender emailSender;
         private readonly ITeacherRegisterer teacherRegister;
         private readonly IStudentRegisterer studentRegisterer;
-        private readonly IUsersService usersService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -40,8 +39,7 @@
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             ITeacherRegisterer teacherRegister,
-            IStudentRegisterer studentRegisterer,
-            IUsersService usersService)
+            IStudentRegisterer studentRegisterer)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -49,7 +47,6 @@
             this.emailSender = emailSender;
             this.teacherRegister = teacherRegister;
             this.studentRegisterer = studentRegisterer;
-            this.usersService = usersService;
         }
 
         [BindProperty]
@@ -71,15 +68,7 @@
             this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = this.usersService.GetUserWithUsername(this.Input.Email);
-                if (user != null)
-                {
-                    await this.usersService.RestoreUserAsync(user);
-                    await this.signInManager.SignInAsync(user, isPersistent: false);
-                    return this.LocalRedirect(returnUrl);
-                }
-
-                user = new ApplicationUser { Name = this.Input.Name, Email = this.Input.Email, UserName = this.Input.Email };
+                var user = new ApplicationUser { Name = this.Input.Name, Email = this.Input.Email, UserName = this.Input.Email };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
@@ -116,21 +105,21 @@
 
                     this.logger.LogInformation("User created a new account with password.");
 
-                    var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = this.Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: this.Request.Scheme);
-
-                    await this.emailSender.SendEmailAsync(
-                        this.Input.Email,
-                        "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
                     if (this.userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+                        var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var callbackUrl = this.Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+                            protocol: this.Request.Scheme);
+
+                        await this.emailSender.SendEmailAsync(
+                                  user.Email,
+                                  "Потвърдете акаунта си",
+                                  $"Моля потвърдете акаунта си като <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>кликнете тук</a>.");
+
                         return this.RedirectToPage("RegisterConfirmation", new { email = this.Input.Email, returnUrl = returnUrl });
                     }
                     else

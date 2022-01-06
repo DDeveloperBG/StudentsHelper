@@ -2,7 +2,12 @@
 {
     using System;
     using System.Reflection;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
 
+    using IdentityModel;
+
+    using Microsoft.AspNetCore.Authentication.OAuth;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -46,11 +51,25 @@
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddAuthentication().AddFacebook(facebookOptions =>
+            services.AddAuthentication((x) =>
+            {
+                x.RequireAuthenticatedSignIn = true;
+            }).AddFacebook(facebookOptions =>
             {
                 facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
                 facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
                 facebookOptions.AccessDeniedPath = "/Home/Error";
+                facebookOptions.Fields.Add("picture");
+                facebookOptions.Events = new OAuthEvents
+                {
+                    OnCreatingTicket = context =>
+                    {
+                        var identity = (ClaimsIdentity)context.Principal.Identity;
+                        var profileImg = context.User.GetProperty("picture").GetProperty("data").GetProperty("url").GetString();
+                        identity.AddClaim(new Claim(JwtClaimTypes.Picture, profileImg));
+                        return Task.CompletedTask;
+                    },
+                };
             });
 
             services.Configure<CookiePolicyOptions>(
@@ -110,6 +129,7 @@
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                dbContext.Database.EnsureDeleted(); //!!!!
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }

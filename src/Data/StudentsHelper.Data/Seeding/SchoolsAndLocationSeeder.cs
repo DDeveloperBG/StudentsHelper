@@ -72,8 +72,6 @@
             dbContext.PopulatedAreas.AddRange(this.populatedAreas);
 
             dbContext.Schools.AddRange(this.schools);
-
-            await dbContext.SaveChangesAsync();
         }
 
         private Region AddIfNewerRegion(string name)

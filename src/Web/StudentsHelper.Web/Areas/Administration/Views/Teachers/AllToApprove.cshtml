@@ -1,24 +1,26 @@
-﻿@model IEnumerable<StudentsHelper.Web.ViewModels.Teachers.TeacherViewModel>
+﻿@using StudentsHelper.Common
+@model IEnumerable<StudentsHelper.Web.ViewModels.Teachers.TeacherViewModel>
 
 @{
     ViewData["Title"] = "Учители за одобряване";
 }
 
-<h1>@ViewData["Title"]</h1>
+@section Css
+{
+<link rel="stylesheet" href="~/css/teachersList.css" asp-append-version="true" />
+}
 
-<table class="table">
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td><img src=@item.PicturePath /></td>
-                <td>
-                    @item.ApplicationUserName
-                </td>
-                <td>
-                    <a asp-area="Administration" asp-controller="" asp-action="Details" asp-route-teacherId="@item.Id">Детайли</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h1 class="text-center">@ViewData["Title"]</h1>
+
+<div class="container">
+    @foreach (var item in Model)
+    {
+        <div class="row col-md-10 offset-md-1 p-2 one-teacher-row">
+            <img src=@(item.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid teacher-picture col-md-1" />
+            <p class="col-md-7 m-auto">
+                @item.ApplicationUserName
+            </p>
+            <a asp-area="Administration" asp-controller="" asp-action="Details" asp-route-teacherId="@item.Id" class="col-md-2 m-auto btn btn-info">Детайли</a>
+        </div>
+    }
+</div>

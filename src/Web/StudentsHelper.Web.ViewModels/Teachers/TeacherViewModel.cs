@@ -9,6 +9,6 @@
 
         public string ApplicationUserName { get; set; }
 
-        public string PicturePath { get; set; }
+        public string ApplicationUserPicturePath { get; set; }
     }
 }

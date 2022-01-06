@@ -3,7 +3,11 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
@@ -19,14 +23,18 @@
                 return;
             }
 
-            await usersRepository.AddAsync(new ApplicationUser
+            var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
+
+            var user = new ApplicationUser
             {
                 Name = GlobalConstants.DeletedUserUsername,
                 UserName = GlobalConstants.DeletedUserUsername,
-                IsDeleted = true,
-            });
+                Email = GlobalConstants.DeletedUserUsername,
+            };
 
-            await dbContext.SaveChangesAsync();
+            var configuration = serviceProvider.GetService<IConfiguration>();
+
+            await userManager.CreateAsync(user, configuration["DeletedUser:Password"]);
         }
     }
 }

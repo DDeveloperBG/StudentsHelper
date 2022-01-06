@@ -15,7 +15,7 @@
 
         public IActionResult AllToApprove()
         {
-            var teachers = this.teachersService.GetAllNotApproved<TeacherViewModel>();
+            var teachers = this.teachersService.GetAllNotRejected<TeacherViewModel>(false);
             return this.View(teachers);
         }
     }

@@ -1,11 +1,12 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account
 {
     using System;
-    using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
+
+    using IdentityModel;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,6 @@
     using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
-    using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.Data.User;
@@ -31,7 +31,6 @@
         private readonly IEmailSender emailSender;
         private readonly ITeacherRegisterer teacherRegister;
         private readonly IStudentRegisterer studentRegisterer;
-        private readonly IUsersService usersService;
         private readonly ILogger<ExternalLoginModel> logger;
 
         public ExternalLoginModel(
@@ -40,8 +39,7 @@
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender,
             ITeacherRegisterer teacherRegister,
-            IStudentRegisterer studentRegisterer,
-            IUsersService usersService)
+            IStudentRegisterer studentRegisterer)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -49,7 +47,6 @@
             this.emailSender = emailSender;
             this.teacherRegister = teacherRegister;
             this.studentRegisterer = studentRegisterer;
-            this.usersService = usersService;
         }
 
         [BindProperty]
@@ -155,24 +152,6 @@
             string name = info.Principal.FindFirstValue(ClaimTypes.Name);
             string email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
-            var user = this.usersService.GetUserWithUsername(email);
-
-            if (user != null)
-            {
-                await this.usersService.RestoreUserAsync(user);
-
-                var emailSenderResult = await this.SendEmailConfirmationAsync(user);
-
-                if (emailSenderResult != null)
-                {
-                    return emailSenderResult;
-                }
-
-                await this.signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-
-                return this.LocalRedirect(returnUrl).WithSuccess("Влязохте успешно");
-            }
-
             // If he is trying to register
             if (this.TeacherModel == null || this.ModelState.IsValid)
             {
@@ -184,12 +163,14 @@
                 }
 
                 var role = Encoding.UTF8.GetString(roleBytes);
+                string profilePicUrl = info.Principal.FindFirstValue(JwtClaimTypes.Picture);
 
-                user = new ApplicationUser
+                var user = new ApplicationUser
                 {
                     Name = name,
                     Email = email,
                     UserName = email,
+                    PicturePath = profilePicUrl,
                 };
 
                 var result = await this.userManager.CreateAsync(user);
@@ -231,11 +212,22 @@
 
                         this.logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
-                        var emailSenderResult = await this.SendEmailConfirmationAsync(user);
-
-                        if (emailSenderResult != null)
+                        if (this.userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            return emailSenderResult;
+                            var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                            var callbackUrl = this.Url.Page(
+                                "/Account/ConfirmEmail",
+                                pageHandler: null,
+                                values: new { area = "Identity", userId = user.Id, code = code },
+                                protocol: this.Request.Scheme);
+
+                            await this.emailSender.SendEmailAsync(
+                                user.Email,
+                                "Потвърдете акаунта си",
+                                $"Моля потвърдете акаунта си като <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>кликнете тук</a>.");
+
+                            return this.RedirectToPage("./RegisterConfirmation", new { Email = user.Email });
                         }
 
                         await this.signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
@@ -254,29 +246,6 @@
             this.ReturnUrl = returnUrl;
 
             return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl });
-        }
-
-        private async Task<IActionResult> SendEmailConfirmationAsync(ApplicationUser user)
-        {
-            if (this.userManager.Options.SignIn.RequireConfirmedAccount)
-            {
-                var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = this.Url.Page(
-                    "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = user.Id, code = code },
-                    protocol: this.Request.Scheme);
-
-                await this.emailSender.SendEmailAsync(
-                    user.Email,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                return this.RedirectToPage("./RegisterConfirmation", new { Email = user.Email });
-            }
-
-            return null;
         }
     }
 }

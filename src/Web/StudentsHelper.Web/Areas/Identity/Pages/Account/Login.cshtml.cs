@@ -20,16 +20,13 @@
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly IUsersService usersService;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<LoginModel> logger;
 
         public LoginModel(
             SignInManager<ApplicationUser> signInManager,
-            ILogger<LoginModel> logger,
-            IUsersService usersService)
+            ILogger<LoginModel> logger)
         {
-            this.usersService = usersService;
             this.signInManager = signInManager;
             this.logger = logger;
         }
@@ -87,14 +84,6 @@
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var user = this.usersService.GetUserWithUsername(this.Input.Email);
-                if (user != null)
-                {
-                    await this.usersService.RestoreUserAsync(user);
-                    await this.signInManager.SignInAsync(user, isPersistent: false);
-                    return this.LocalRedirect(returnUrl);
-                }
-
                 var result = await this.signInManager.PasswordSignInAsync(this.Input.Email, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
