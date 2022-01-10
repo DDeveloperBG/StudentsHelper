@@ -13,7 +13,6 @@
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Services.Data.User;
     using StudentsHelper.Web.Infrastructure.Filters;
 
     [GuestFilter]

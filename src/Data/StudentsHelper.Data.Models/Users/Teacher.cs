@@ -24,7 +24,7 @@
         public ApplicationUser ApplicationUser { get; set; }
 
         [Required]
-        public string QualificationDocumentPath { get; set; }
+        public string QualificationDocumentName { get; set; }
 
         [Required]
         public bool IsValidated { get; set; }

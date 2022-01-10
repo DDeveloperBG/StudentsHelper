@@ -2,23 +2,21 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    using StudentsHelper.Common;
-
     public class ContactInputModel
     {
-        [Display(Name = "Заглавие")]
-        [Required(ErrorMessage = ValidationConstants.RequiredError)]
-        [StringLength(200, MinimumLength = 5, ErrorMessage = "Заглавието трябва да бъде поне {2} и максимум {1} символа дълго.")]
-        public string Title { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Моля въведете вашите имена")]
+        public string Name { get; set; }
 
-        [Display(Name = "Имейл")]
-        [Required(ErrorMessage = ValidationConstants.RequiredError)]
-        [EmailAddress(ErrorMessage = "Невалиден имейл адрес.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Моля въведете вашият email адрес")]
+        [EmailAddress(ErrorMessage = "Моля въведете валиден email адрес")]
         public string Email { get; set; }
 
-        [Display(Name = "Съдържание")]
-        [Required(ErrorMessage = ValidationConstants.RequiredError)]
-        [StringLength(20000, MinimumLength = 12, ErrorMessage = "Съдържанието трябва да бъде поне {2} и максимум {1} символа дълго.")]
-        public string Message { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Моля въведете заглавие на съобщението")]
+        [StringLength(100, ErrorMessage = "Заглавието трябва да е поне {2} и не повече от {1} символа.", MinimumLength = 5)]
+        public string Title { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Моля въведете съдържание на съобщението")]
+        [StringLength(10000, ErrorMessage = "Съобщението трябва да е поне {2} символа.", MinimumLength = 20)]
+        public string Content { get; set; }
     }
 }

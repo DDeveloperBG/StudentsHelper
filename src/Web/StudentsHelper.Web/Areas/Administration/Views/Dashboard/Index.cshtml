@@ -3,8 +3,10 @@
     this.ViewData["Title"] = "Admin dashboard";
 }
 
-<h1>@this.ViewData["Title"]</h1>
+<div class="text-center">
+    <h1 class="p-md-4">@this.ViewData["Title"]</h1>
 
-<ul>
-    <li><a asp-area="Administration" asp-controller="Teachers" asp-action="AllToApprove">Учители за одобряване</a></li>
-</ul>
+    <ul>
+        <li class="btn btn-primary"><a class="text-decoration-none" style="color:#96f0b6;" asp-area="Administration" asp-controller="Teachers" asp-action="AllToApprove">Учители за одобряване</a></li>
+    </ul>
+</div>

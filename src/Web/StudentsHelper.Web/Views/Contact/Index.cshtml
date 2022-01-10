@@ -20,27 +20,34 @@
                     <br style="clear:both">
                     <h6 class="text-purple text-sm-center">ИМАТЕ ВЪПРОС?</h6>
                     <h2>ПИШЕТЕ НИ</h2>
-                    <div class="form-group">
-                        <input asp-for="Title"
-                               type="text"
-                               class="form-control"
-                               placeholder="Заглавие">
+
+                    <div class="form-group mt-4 mb-4">
+                        <input asp-for="@Model.Name" 
+                            class="form-control" 
+                            placeholder="Име" />
+                        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                    </div>
+                     <div class="form-group mt-4 mb-4">
+                        <input asp-for="@Model.Email"
+                            value="@User.Identity.Name"
+                            class="form-control"
+                            placeholder="Имейл" />
+                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-4 mb-4">
+                        <input asp-for="@Model.Title"
+                               placeholder="Заглавие"
+                               class="form-control" />
                         <span asp-validation-for="@Model.Title" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="Email"
-                               class="form-control"
-                               placeholder="Имейл" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <textarea asp-for="Message"
+                    </div>                   
+                    <div class="form-group mt-4 mb-4">
+                        <textarea asp-for="@Model.Content"
                                   class="form-control"
                                   type="textarea"
                                   placeholder="Съобщение"
                                   rows="7">
                             </textarea>
-                        <span asp-validation-for="@Model.Message" class="text-danger"></span>
+                        <span asp-validation-for="@Model.Content" class="text-danger"></span>
                     </div>
 
                     <button type="submit"

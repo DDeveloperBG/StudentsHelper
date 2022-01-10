@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
@@ -51,13 +52,13 @@
                 throw new ArgumentException("Невалидно училище!");
             }
 
-            string qualificationDocumentPath = await this.SaveQualificationDocument(inputModel.QualificationDocument);
+            string qualificationDocumentName = await this.SaveQualificationDocument(inputModel.QualificationDocument);
 
             Teacher teacher = new Teacher
             {
                 ApplicationUserId = user.Id,
                 SchoolId = inputModel.SchoolId,
-                QualificationDocumentPath = qualificationDocumentPath,
+                QualificationDocumentName = qualificationDocumentName,
             };
 
             var role = await this.roleManager.FindByNameAsync(GlobalConstants.TeacherRoleName);
@@ -82,7 +83,7 @@
                     await qualificationDoc.CopyToAsync(fileStream);
                 }
 
-                return filePath;
+                return fileName;
             }
 
             throw new Exception("File size was 0!");

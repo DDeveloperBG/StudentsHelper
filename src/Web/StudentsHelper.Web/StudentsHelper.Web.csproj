@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="QualificationDocuments\**" />
+    <Content Remove="QualificationDocuments\**" />
+    <EmbeddedResource Remove="QualificationDocuments\**" />
+    <None Remove="QualificationDocuments\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="SeedingData\SchoolsData.json" />
   </ItemGroup>
 
@@ -66,9 +73,5 @@
 
   <ItemGroup>
     <None Include="SeedingData\SchoolsData.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="QualificationDocuments\" />
   </ItemGroup>
 </Project>

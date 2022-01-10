@@ -1,0 +1,15 @@
+﻿#downloadIcon:hover {
+    color: initial;
+    background-color: initial;
+    border-color: initial;
+    transform: scale(0.95);
+    color: black;
+}
+
+    #downloadIcon img {
+        height: 2rem;
+    }
+
+.background-container {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);
+}

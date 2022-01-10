@@ -1,6 +1,7 @@
 ﻿namespace StudentsHelper.Web
 {
     using System;
+    using System.Configuration;
     using System.Reflection;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -27,7 +28,6 @@
     using StudentsHelper.Services.Data.LocationLoaders;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Teachers;
-    using StudentsHelper.Services.Data.User;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.VideoChat;
@@ -51,32 +51,31 @@
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddAuthentication((x) =>
-            {
-                x.RequireAuthenticatedSignIn = true;
-            }).AddFacebook(facebookOptions =>
-            {
-                facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
-                facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
-                facebookOptions.AccessDeniedPath = "/Home/Error";
-                facebookOptions.Fields.Add("picture");
-                facebookOptions.Events = new OAuthEvents
+            services.AddAuthentication()
+                .AddFacebook(facebookOptions =>
                 {
-                    OnCreatingTicket = context =>
+                    facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
+                    facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
+                    facebookOptions.AccessDeniedPath = "/Home/Error";
+                    facebookOptions.Fields.Add("picture");
+                    facebookOptions.Events = new OAuthEvents
                     {
-                        var identity = (ClaimsIdentity)context.Principal.Identity;
-                        var profileImg = context.User.GetProperty("picture").GetProperty("data").GetProperty("url").GetString();
-                        identity.AddClaim(new Claim(JwtClaimTypes.Picture, profileImg));
-                        return Task.CompletedTask;
-                    },
-                };
-            });
+                        OnCreatingTicket = context =>
+                        {
+                            var identity = (ClaimsIdentity)context.Principal.Identity;
+                            var profileImg = context.User.GetProperty("picture").GetProperty("data").GetProperty("url").GetString();
+                            identity.AddClaim(new Claim(JwtClaimTypes.Picture, profileImg));
+                            return Task.CompletedTask;
+                        },
+                    };
+                });
 
             services.Configure<CookiePolicyOptions>(
                 options =>
                     {
                         options.CheckConsentNeeded = context => true;
                         options.MinimumSameSitePolicy = SameSiteMode.None;
+                        options.Secure = CookieSecurePolicy.Always;
                     });
 
             services.AddControllersWithViews(
@@ -105,7 +104,6 @@
             // Application services
             services.AddTransient<ISchoolSubjectsService, SchoolSubjectsService>();
             services.AddTransient<ITeachersService, TeachersService>();
-            services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<RegionsLoader>();
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
@@ -129,7 +127,6 @@
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                dbContext.Database.EnsureDeleted(); //!!!!
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }

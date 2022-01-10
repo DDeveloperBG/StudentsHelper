@@ -4,6 +4,8 @@
 
     using Microsoft.AspNetCore.Mvc;
     using StudentsHelper.Common;
+    using StudentsHelper.Data.Common.Repositories;
+    using StudentsHelper.Data.Models.Contact;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Web.Controllers;
     using StudentsHelper.Web.Infrastructure.Alerts;
@@ -12,11 +14,14 @@
     public class ContactController : BaseController
     {
         private readonly IEmailSender emailSender;
+        private readonly IRepository<ContactFormEntry> contactsRepository;
 
         public ContactController(
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IRepository<ContactFormEntry> contactsRepository)
         {
             this.emailSender = emailSender;
+            this.contactsRepository = contactsRepository;
         }
 
         public IActionResult Index()
@@ -29,13 +34,30 @@
         [HttpPost]
         public async Task<IActionResult> Index(ContactInputModel model)
         {
-            var result = this.RedirectToAction(nameof(HomeController.Index), "Home", new { area = string.Empty });
-
             if (this.ModelState.IsValid)
             {
+                var result = this.RedirectToAction(nameof(HomeController.Index), "Home", new { area = string.Empty });
+
                 try
                 {
-                    await this.emailSender.SendEmailAsync(GlobalConstants.ContactEmail, model.Email, GlobalConstants.ContactEmail, model.Title, model.Message, null);
+                    var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
+                    var contactFormEntry = new ContactFormEntry
+                    {
+                        Name = model.Name,
+                        Email = model.Email,
+                        Title = model.Title,
+                        Content = model.Content,
+                        Ip = ip,
+                    };
+                    await this.contactsRepository.AddAsync(contactFormEntry);
+                    await this.contactsRepository.SaveChangesAsync();
+
+                    await this.emailSender.SendEmailAsync(
+                        GlobalConstants.ContactEmail,
+                        $"{model.Name} - {model.Email}",
+                        GlobalConstants.ContactEmail,
+                        model.Title,
+                        model.Content);
                 }
                 catch (System.Exception)
                 {

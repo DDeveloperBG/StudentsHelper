@@ -15,7 +15,7 @@
 
         public IActionResult All(int subjectId)
         {
-            var teachers = this.teachersService.GetAllOfType<TeacherViewModel>(subjectId);
+            var teachers = this.teachersService.GetAllOfType<TeacherOfListView>(subjectId);
 
             return this.View(teachers);
         }

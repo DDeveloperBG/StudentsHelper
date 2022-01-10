@@ -19,7 +19,6 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
-    using StudentsHelper.Services.Data.User;
     using StudentsHelper.Web.Infrastructure.Filters;
 
     [GuestFilter]
@@ -68,19 +67,22 @@
             this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
+                if (this.Input.Role == GlobalConstants.TeacherRoleName)
+                {
+                    if (this.Input.TeacherModel.QualificationDocument == null)
+                    {
+                        this.ModelState.AddModelError(string.Empty, "Qualification document is required!");
+
+                        return this.Page();
+                    }
+                }
+
                 var user = new ApplicationUser { Name = this.Input.Name, Email = this.Input.Email, UserName = this.Input.Email };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
                     if (this.Input.Role == GlobalConstants.TeacherRoleName)
                     {
-                        if (this.Input.TeacherModel.QualificationDocument == null)
-                        {
-                            this.ModelState.AddModelError(string.Empty, "Qualification document is required!");
-
-                            return this.Page();
-                        }
-
                         try
                         {
                             await this.teacherRegister.RegisterAsync(this.Input.TeacherModel, user);

@@ -26,9 +26,10 @@
             var seeders = new List<ISeeder>
                           {
                               new RolesSeeder(),
+                              new AdminSeeder(),
+                              new DeletedUserSeeder(),
                               new SchoolsAndLocationSeeder(),
                               new SchoolSubjectsSeeder(),
-                              new DeletedUserSeeder(),
                           };
 
             foreach (var seeder in seeders)

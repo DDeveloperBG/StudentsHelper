@@ -1,11 +1,13 @@
-﻿namespace StudentsHelper.Web.ViewModels.Teachers
+﻿namespace StudentsHelper.Web.ViewModels.Administration.Teachers
 {
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Mapping;
 
-    public class TeacherViewModel : IMapFrom<Teacher>
+    public class TeacherDetails : IMapFrom<Teacher>
     {
         public string Id { get; set; }
+
+        public string QualificationDocumentName { get; set; }
 
         public string ApplicationUserName { get; set; }
 

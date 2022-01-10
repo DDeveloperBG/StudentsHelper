@@ -15,7 +15,7 @@
             this.populatedAreaRepository = populatedAreaRepository;
         }
 
-        public ICollection<Location> GetLocations(int? lastLocationId)
+        public IEnumerable<Location> GetLocations(int? lastLocationId)
         {
             return this.populatedAreaRepository
                 .All()

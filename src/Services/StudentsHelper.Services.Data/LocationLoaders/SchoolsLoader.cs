@@ -15,7 +15,7 @@
             this.schoolRepository = schoolRepository;
         }
 
-        public ICollection<Location> GetLocations(int? lastLocationId)
+        public IEnumerable<Location> GetLocations(int? lastLocationId)
         {
             return this.schoolRepository
                 .All()

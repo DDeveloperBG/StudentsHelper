@@ -11,6 +11,7 @@
 
     using StudentsHelper.Data.Common.Models;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Data.Models.Contact;
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -37,6 +38,8 @@
         public DbSet<SchoolSubject> Subjects { get; set; }
 
         public DbSet<Student> Students { get; set; }
+
+        public DbSet<ContactFormEntry> ContactFormEntries { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

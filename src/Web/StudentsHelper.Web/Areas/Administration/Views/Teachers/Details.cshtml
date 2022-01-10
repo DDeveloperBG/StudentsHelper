@@ -1,0 +1,44 @@
+﻿@using StudentsHelper.Common
+@model StudentsHelper.Web.ViewModels.Administration.Teachers.TeacherDetails
+
+@{
+    ViewData["Title"] = Model.ApplicationUserName;
+}
+
+@section Css
+{
+<link rel="stylesheet" href="~/css/teacherDetailsAdmin.css" asp-append-version="true" />
+}
+
+<div class="container background-container m-lg-5 col-auto text-center">
+    <div>
+        <img src=@(Model.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
+             class="col-md-2 img-fluid m-lg-4 teacher-picture img-thumbnail p-lg-4" />
+    </div>
+    <div class="mb-lg-4"><h2>@Model.ApplicationUserName</h2></div>
+    <div class="p-lg-4">
+        <label class="mr-lg-3">Документ за квалификация:</label>
+        <a id="downloadIcon" class="btn btn-outline-dark"
+           asp-area="Administration"
+           asp-controller="Teachers"
+           asp-action="Download"
+           asp-route-fileName="@Model.QualificationDocumentName">
+            <img src="~/img/downloadIcon.png"
+                 class="img-fluid" />
+            Изтегли
+        </a>
+    </div>
+    <div class="p-lg-4">
+        <a asp-area="Administration"
+           asp-controller="Teachers"
+           asp-action="SetTeacherData"
+           asp-route-teacherId="@Model.Id" 
+           asp-route-teacherName="@Model.ApplicationUserName"
+           class="btn btn-success">Продължи</a>
+
+        <a asp-area="Administration"
+           asp-controller="Teachers"
+           asp-action="Reject" 
+           asp-route-teacherId="@Model.Id" class="btn btn-danger">Отхвърли</a>
+    </div>
+</div>
