@@ -10,6 +10,8 @@
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
+    using StudentsHelper.Data;
+    using StudentsHelper.Data.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
 
@@ -20,19 +22,25 @@
         private readonly ILogger<DeletePersonalDataModel> logger;
         private readonly IRepository<Teacher> teachersRepository;
         private readonly IRepository<Student> studentsRepository;
+        private readonly ApplicationDbContext dbContext;
+        private readonly IDbQueryRunner dbQueryRunner;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<DeletePersonalDataModel> logger,
             IRepository<Teacher> teachersRepository,
-            IRepository<Student> studentsRepository)
+            IRepository<Student> studentsRepository,
+            ApplicationDbContext dbContext,
+            IDbQueryRunner dbQueryRunner)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.teachersRepository = teachersRepository;
             this.studentsRepository = studentsRepository;
+            this.dbContext = dbContext;
+            this.dbQueryRunner = dbQueryRunner;
         }
 
         [BindProperty]
@@ -77,38 +85,50 @@
                 }
             }
 
-            var deletedUser = await this.userManager.FindByNameAsync(GlobalConstants.DeletedUserUsername);
-
-            if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+            using (var transaction = this.dbContext.Database.BeginTransaction())
             {
-                await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.StudentRoleName);
-                this.studentsRepository.All().Where(x => x.ApplicationUserId == user.Id).SingleOrDefault().ApplicationUser = deletedUser;
-                await this.studentsRepository.SaveChangesAsync();
+                var deletedUser = await this.userManager.FindByNameAsync(GlobalConstants.DeletedUserUsername);
+
+                if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+                {
+                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.StudentRoleName);
+                    this.studentsRepository.All().Where(x => x.ApplicationUserId == user.Id).SingleOrDefault().ApplicationUser = deletedUser;
+                    await this.studentsRepository.SaveChangesAsync();
+                }
+                else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+                {
+                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.TeacherRoleName);
+                    this.teachersRepository.All().Where(x => x.ApplicationUserId == user.Id).SingleOrDefault().ApplicationUser = deletedUser;
+                    await this.teachersRepository.SaveChangesAsync();
+                }
+
+                var externalLogins = await this.userManager.GetLoginsAsync(user);
+
+                foreach (var item in externalLogins)
+                {
+                    await this.userManager.RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
+                }
+
+                await this.dbQueryRunner.RunQueryAsync(
+                    @"DELETE FROM [StudentsHelper].[dbo].[AspNetUserTokens] WHERE UserId = {0}",
+                    user.Id);
+
+                await this.dbContext.SaveChangesAsync();
+
+                var result = await this.userManager.DeleteAsync(user);
+                var userId = await this.userManager.GetUserIdAsync(user);
+                if (!result.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
+                }
+
+                await this.signInManager.SignOutAsync();
+
+                transaction.Commit();
             }
-            else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
-            {
-                await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.TeacherRoleName);
-                this.teachersRepository.All().Where(x => x.ApplicationUserId == user.Id).SingleOrDefault().ApplicationUser = deletedUser;
-                await this.teachersRepository.SaveChangesAsync();
-            }
 
-            var externalLogins = await this.userManager.GetLoginsAsync(user);
-
-            foreach (var item in externalLogins)
-            {
-                await this.userManager.RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
-            }
-
-            var result = await this.userManager.DeleteAsync(user);
-            var userId = await this.userManager.GetUserIdAsync(user);
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
-            }
-
-            await this.signInManager.SignOutAsync();
-
-            this.logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            this.logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
 
             return this.Redirect("~/");
         }
