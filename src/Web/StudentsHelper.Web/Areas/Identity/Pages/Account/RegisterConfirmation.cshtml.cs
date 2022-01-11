@@ -9,25 +9,20 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.AspNetCore.WebUtilities;
+    using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
 
     [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IEmailSender sender;
+        private readonly IEmailSender emailSender;
 
-        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
         {
             this.userManager = userManager;
-            this.sender = sender;
+            this.emailSender = emailSender;
         }
-
-        public string Email { get; set; }
-
-        public bool DisplayConfirmAccountLink { get; set; }
-
-        public string EmailConfirmationUrl { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null)
         {
@@ -42,21 +37,21 @@
                 return this.NotFound($"Unable to load user with email '{email}'.");
             }
 
-            this.Email = email;
+            var userId = await this.userManager.GetUserIdAsync(user);
+            var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            string emailConfirmationUrl = this.Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                protocol: this.Request.Scheme);
 
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-            this.DisplayConfirmAccountLink = true;
-            if (this.DisplayConfirmAccountLink)
-            {
-                var userId = await this.userManager.GetUserIdAsync(user);
-                var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                this.EmailConfirmationUrl = this.Url.Page(
-                    "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    protocol: this.Request.Scheme);
-            }
+            string message = GlobalConstants.GetEmailConfirmationMessage(emailConfirmationUrl);
+
+            await this.emailSender.SendEmailAsync(
+                email,
+                GlobalConstants.ConfirmEmailTitle,
+                message);
 
             return this.Page();
         }

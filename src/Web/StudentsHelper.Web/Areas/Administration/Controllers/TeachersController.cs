@@ -1,7 +1,6 @@
 ﻿namespace StudentsHelper.Web.Areas.Administration.Controllers
 {
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Hosting;

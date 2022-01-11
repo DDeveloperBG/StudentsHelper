@@ -14,7 +14,7 @@
     public class AdminSeeder : ISeeder
     {
         private const string AdminName = "Admin";
-        private const string AdminUsername = "admin@admin.bg";
+        private const string AdminUsername = "daniel123@dir.bg";
         private const string AdminPasswordKey = "Admin:Password";
 
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
@@ -27,7 +27,11 @@
 
                 await userManager.CreateAsync(user, configuration[AdminPasswordKey]);
                 await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
-                await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var userId = await userManager.GetUserIdAsync(user);
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                await userManager.ConfirmEmailAsync(user, code);
             }
         }
     }

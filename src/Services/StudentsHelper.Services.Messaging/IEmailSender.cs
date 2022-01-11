@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IEmailSender
+    public interface IEmailSender : Microsoft.AspNetCore.Identity.UI.Services.IEmailSender
     {
         Task SendEmailAsync(
             string from,

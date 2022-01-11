@@ -12,6 +12,7 @@
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 6;
 
+            options.SignIn.RequireConfirmedAccount = true;
             options.SignIn.RequireConfirmedEmail = true;
 
             options.Lockout.MaxFailedAccessAttempts = 15;

@@ -21,13 +21,16 @@
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<LoginModel> logger;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public LoginModel(
             SignInManager<ApplicationUser> signInManager,
-            ILogger<LoginModel> logger)
+            ILogger<LoginModel> logger,
+            UserManager<ApplicationUser> userManager)
         {
             this.signInManager = signInManager;
             this.logger = logger;
+            this.userManager = userManager;
         }
 
         [BindProperty]
@@ -81,8 +84,6 @@
 
             if (this.ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await this.signInManager.PasswordSignInAsync(this.Input.Email, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
@@ -102,8 +103,17 @@
                 }
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "Неуспешен опит за вход.");
-                    return this.Page();
+                    var user = await this.userManager.FindByEmailAsync(this.Input.Email);
+                    if (user != null && !await this.userManager.IsEmailConfirmedAsync(user))
+                    {
+                        this.ModelState.AddModelError(string.Empty, "Потвърдете своя имейл.");
+                    }
+                    else
+                    {
+                        this.ModelState.AddModelError(string.Empty, "Невалиден имейл или парола.");
+
+                        return this.Page();
+                    }
                 }
             }
 

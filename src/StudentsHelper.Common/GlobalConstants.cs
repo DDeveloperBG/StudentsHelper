@@ -1,5 +1,7 @@
 ﻿namespace StudentsHelper.Common
 {
+    using System.Text.Encodings.Web;
+
     public static class GlobalConstants
     {
         public const string SystemName = "StudentsHelper";
@@ -17,5 +19,9 @@
         public const string DeletedUserUsername = "deleted_user";
 
         public const string NoProfilePicturePath = "/img/noProgilePicture.png";
+
+        public const string ConfirmEmailTitle = "Потвърдете акаунта си";
+
+        public static string GetEmailConfirmationMessage(string confirmUrl) => $"<h1>Моля потвърдете акаунта си, като <a href='{HtmlEncoder.Default.Encode(confirmUrl)}'>кликнете тук</a>.";
     }
 }

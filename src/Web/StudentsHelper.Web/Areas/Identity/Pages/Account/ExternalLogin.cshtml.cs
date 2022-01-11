@@ -3,7 +3,6 @@
     using System;
     using System.Security.Claims;
     using System.Text;
-    using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
     using IdentityModel;
@@ -13,7 +12,6 @@
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
-    using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
@@ -147,23 +145,12 @@
                 return this.RedirectToPage("./Register").WithDanger("Настъпи грешка");
             }
 
-            // If user already has account
-            string name = info.Principal.FindFirstValue(ClaimTypes.Name);
-            string email = info.Principal.FindFirstValue(ClaimTypes.Email);
-
-            // If he is trying to register
             if (this.TeacherModel == null || this.ModelState.IsValid)
             {
-                this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
-
-                if (roleBytes == null)
-                {
-                    return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl }).WithDanger("Нямате съществуващ профил.");
-                }
-
-                var role = Encoding.UTF8.GetString(roleBytes);
                 string profilePicUrl = info.Principal.FindFirstValue(JwtClaimTypes.Picture);
 
+                string name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                string email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 var user = new ApplicationUser
                 {
                     Name = name,
@@ -178,6 +165,15 @@
                     result = await this.userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
+                        this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
+
+                        if (roleBytes == null)
+                        {
+                            return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl }).WithDanger("Нямате съществуващ профил.");
+                        }
+
+                        var role = Encoding.UTF8.GetString(roleBytes);
+
                         if (role == GlobalConstants.TeacherRoleName)
                         {
                             if (this.TeacherModel.QualificationDocument == null)
@@ -213,19 +209,6 @@
 
                         if (this.userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                            var callbackUrl = this.Url.Page(
-                                "/Account/ConfirmEmail",
-                                pageHandler: null,
-                                values: new { area = "Identity", userId = user.Id, code = code },
-                                protocol: this.Request.Scheme);
-
-                            await this.emailSender.SendEmailAsync(
-                                user.Email,
-                                "Потвърдете акаунта си",
-                                $"Моля потвърдете акаунта си като <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>кликнете тук</a>.");
-
                             return this.RedirectToPage("./RegisterConfirmation", new { Email = user.Email });
                         }
 

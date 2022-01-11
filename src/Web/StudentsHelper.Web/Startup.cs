@@ -1,7 +1,6 @@
 ﻿namespace StudentsHelper.Web
 {
     using System;
-    using System.Configuration;
     using System.Reflection;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -111,6 +110,9 @@
             services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
             services.AddTransient<IStudentRegisterer, StudentRegisterer>();
             services.AddTransient<IEmailSender>(_
+                => new SendGridEmailSender(
+                    this.configuration["SendGrid:ApiKey"]));
+            services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender>(_
                 => new SendGridEmailSender(
                     this.configuration["SendGrid:ApiKey"]));
             services.AddTransient<IVideoChat>(_
