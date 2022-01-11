@@ -38,5 +38,11 @@
     "inputFiles": [
       "wwwroot/js/VideoChat/videoChat.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/QR/qr.min.js",
+    "inputFiles": [
+      "wwwroot/js/QR/qr.js"
+    ]
   }
 ]

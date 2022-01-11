@@ -19,10 +19,12 @@
 
   <ItemGroup>
     <Content Remove="SeedingData\SchoolsData.json" />
+    <Content Remove="wwwroot\js\QR\qr.min.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\homePage.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\QR\qr.min.js" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
@@ -73,5 +75,6 @@
 
   <ItemGroup>
     <None Include="SeedingData\SchoolsData.json" />
+    <None Include="wwwroot\js\QR\qr.min.js" />
   </ItemGroup>
 </Project>
