@@ -65,5 +65,11 @@
 
             return redirect.WithSuccess("Успешно дадохте оценка.");
         }
+
+        [Authorize]
+        public IActionResult GetNextReviews(string teacherId, int currentNumber)
+        {
+            return this.ViewComponent("StudentReview", new { teacherId, currentNumber });
+        }
     }
 }

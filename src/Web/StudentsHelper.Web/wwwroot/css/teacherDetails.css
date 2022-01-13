@@ -19,3 +19,16 @@
     width: 30px;
     cursor: pointer;
 }
+
+.paging-nav-img {
+    width: 15px;
+    height: 15px;
+    background-size: 100% 100%!important;
+}
+
+.paging-nav-img-holder {
+    border-radius: 20px;
+    border: 1px solid #4747479e;
+    padding: 8px;
+    margin-right: 3px;
+}

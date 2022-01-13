@@ -1,0 +1,63 @@
+﻿@using StudentsHelper.Common
+@using StudentsHelper.Services.Data.Paging
+@using StudentsHelper.Web.ViewModels.Reviews
+@model PagedResult<StudentReview>
+
+@if (Model.AllCount > 0)
+{
+    <span id="currentNumber" class="hidden">@Model.CurrentNumber</span>
+    <span id="allRatingsCount" class="hidden">@Model.AllCount</span>
+
+    <div id="paging-navigation" class="row">
+        <p class="col-2 pr-0 mt-auto mb-auto">
+            @Model.CurrentNumber - @(Math.Min(Model.CurrentNumber + Model.PageSize - 1, Model.AllCount)) от @Model.AllCount
+        </p>
+        <div id="to-start" class="paging-nav-img-holder">
+            <div class="paging-nav-img img-fluid" style="background:url(/img/pagingNav/back_to_start.png);"></div>
+        </div>
+
+        <div id="previous" class="paging-nav-img-holder">
+            <div class="paging-nav-img img-fluid" style="background:url(/img/pagingNav/previous.png);"></div>
+        </div>
+
+        <div id="next" class="paging-nav-img-holder">
+            <div class="paging-nav-img img-fluid" style="background:url(/img/pagingNav/next.png);"></div>
+        </div>
+
+        <div id="to-end" class="paging-nav-img-holder">
+            <div class="paging-nav-img img-fluid" style="background:url(/img/pagingNav/next_to_end.png);"></div>
+        </div>
+    </div>
+    <div class="reviews container pb-4">
+        @foreach (var review in Model.Results)
+        {
+            <div class="review m-3 jumbotron p-0 col-7">
+                <div class="row p-3">
+                    <img src=@(review.StudentApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
+                 class="img-fluid ml-5 rounded mt-auto mb-auto" style="width: 50px; height: 50px;" />
+                    <div class="container col-9 text-left m-0 ml-4">
+                        <h6 class="ml-1">@review.StudentApplicationUserName</h6>
+                        <div class="row pl-3">
+                            @{
+                                for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <img class="ultra-small-star mb-1 mr-1" src="~/img/star.png">
+                                }
+
+                                for (int i = review.Rating; i < 5; i++)
+                                {
+                                    <img class="ultra-small-star mb-1 mr-1" src="~/img/empty_star.png">
+                                }
+                                <p class="small-date ml-1 mb-2">@review.CreatedOn.ToString("dd.MM.yyyy")</p>
+                            }
+                        </div>
+                        @if (review.Comment != null)
+                        {
+                            <p class="comment m-0 p-0">@review.Comment</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

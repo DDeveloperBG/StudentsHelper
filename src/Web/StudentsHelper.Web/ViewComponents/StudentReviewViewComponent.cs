@@ -22,13 +22,18 @@
 
         public IViewComponentResult Invoke(string teacherId, int currentNumber)
         {
-            if (currentNumber < 1)
+            int nextNumber;
+            if (currentNumber <= 0)
             {
-                currentNumber = 1;
+                nextNumber = 1;
+            }
+            else
+            {
+                nextNumber = currentNumber + PagingSize;
             }
 
             var teachersQuery = this.reviewsService.GetAllReviewsForTeacher<StudentReview>(teacherId);
-            var result = this.pagingService.GetPaged(teachersQuery, currentNumber, PagingSize);
+            var result = this.pagingService.GetPaged(teachersQuery, nextNumber, PagingSize);
 
             return this.View(result);
         }

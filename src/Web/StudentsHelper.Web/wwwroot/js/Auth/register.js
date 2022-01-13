@@ -86,7 +86,11 @@ function activateSecondPart(e) {
     document.getElementById('allErrorsList').classList.add(hiddenClassName);
     const roleInput = document.getElementById('Input_Role');
     role = e.target.getAttribute('userRole');
-    roleInput.value = role;
+
+    if (role != null){
+        roleInput.value = role;
+    }
+
     document.getElementById('second-auth-option-userRole').value = role;
 
     document.getElementById('past-part').classList.remove(hiddenClassName);
