@@ -6,6 +6,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using StudentsHelper.Data.Common.Models;
+    using StudentsHelper.Data.Models.Rating;
 
     public class Teacher : BaseDeletableModel<string>
     {
@@ -13,6 +14,7 @@
         {
             this.Id = Guid.NewGuid().ToString();
             this.Subjects = new HashSet<SchoolSubject>();
+            this.Reviews = new HashSet<Review>();
             this.IsValidated = false;
             this.IsRejected = false;
         }
@@ -33,6 +35,8 @@
         public bool IsRejected { get; set; }
 
         public ICollection<SchoolSubject> Subjects { get; set; }
+
+        public ICollection<Review> Reviews { get; set; }
 
         [ForeignKey(nameof(School))]
         public int SchoolId { get; set; }

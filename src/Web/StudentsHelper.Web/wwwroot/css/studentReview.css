@@ -1,0 +1,18 @@
+﻿.ultra-small-star {
+    height: 15px;
+    width: 15px;
+}
+
+.small-date {
+    font-size: 13px;
+    margin-top: -3px;
+}
+
+.review {
+    background-color: transparent;
+    border: 1px solid #d0d0d0;
+}
+
+.comment {
+    word-wrap: break-word;
+}

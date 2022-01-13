@@ -40,7 +40,7 @@ main {
 .schoolSubjectItem:hover {
     background-color: rgba(30, 215, 96, 0.2);
     cursor: pointer;
-    transform: scale(.94);
+    transform: scale(.90);
 }
 
 .schoolSubjectName{

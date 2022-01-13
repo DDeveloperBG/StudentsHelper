@@ -1,14 +1,9 @@
 ﻿@using StudentsHelper.Common
-@using StudentsHelper.Web.ViewModels.Teachers
-@model IEnumerable<StudentsHelper.Web.ViewModels.Teachers.TeacherOfListView>
+
+@model IEnumerable<StudentsHelper.Services.Data.Ratings.Models.TeacherWithRating>
 
 @{
     ViewData["Title"] = "Учители";
-}
-
-@section Css
-{
-<link rel="stylesheet" href="~/css/teachersList.css" asp-append-version="true" />
 }
 
 <h1 class="text-center">@ViewData["Title"]</h1>
@@ -16,12 +11,17 @@
 <div class="container">
     @foreach (var item in Model)
     {
-        <div class="row col-md-10 offset-md-1 p-2 one-teacher-row">
-            <img src=@(item.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid teacher-picture col-md-1" />
-            <p class="col-md-7 m-auto">
+        <div class="row col-md-10 offset-md-1 p-2 mb-2" style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+            <img src=@(item.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded" style="width: 50px; height: 50px;" />
+            <p class="col-md-6 m-auto">
                 @item.ApplicationUserName
             </p>
-            <a asp-area="Administration" asp-controller="" asp-action="Details" asp-route-teacherId="@item.Id" class="col-md-2 m-auto btn btn-info">Детайли</a>
+            <p class="col-md-1 m-auto pr-0">
+                @item.AverageRating <img class="mb-1" src="~/img/star.png">
+            </p>
+            <a asp-area="" asp-controller="Teachers" asp-action="Details" asp-route-teacherId="@item.Id" class="col-md-2 m-auto btn btn-info">
+                Детайли
+            </a>
         </div>
     }
 </div>

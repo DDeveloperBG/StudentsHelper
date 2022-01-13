@@ -16,7 +16,6 @@
         <div class="col-md-6" style="margin: auto;">
             <div class="form-area">
                 <form role="form" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <br style="clear:both">
                     <h6 class="text-purple text-sm-center">ИМАТЕ ВЪПРОС?</h6>
                     <h2>ПИШЕТЕ НИ</h2>
@@ -50,10 +49,7 @@
                         <span asp-validation-for="@Model.Content" class="text-danger"></span>
                     </div>
 
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Изпрати
-                    </button>
+                    <button type="submit" class="btn btn-primary">Изпрати</button>
                 </form>
             </div>
         </div>

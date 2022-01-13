@@ -40,11 +40,16 @@
 
         public IEnumerable<T> GetAllOfType<T>(int subjectId)
         {
-            return this.GetAllAsNoTracking()
-                .Where(x => x.Subjects
-                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected)
+            return this.GetAllOfType(subjectId)
                 .To<T>()
                 .ToList();
+        }
+
+        public IQueryable<Teacher> GetAllOfType(int subjectId)
+        {
+            return this.GetAllAsNoTracking()
+                .Where(x => x.Subjects
+                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected);
         }
 
         public T GetOne<T>(string id, bool isRejected)
@@ -86,14 +91,14 @@
             return this.teachersRepository.SaveChangesAsync();
         }
 
-        private IQueryable<Teacher> GetAllAsNoTracking()
+        public IQueryable<Teacher> GetAllAsNoTracking()
         {
             return this.teachersRepository
                 .AllAsNoTracking()
                 .Where(x => x.ApplicationUser.UserName != GlobalConstants.DeletedUserUsername);
         }
 
-        private IQueryable<Teacher> GetAll()
+        public IQueryable<Teacher> GetAll()
         {
             return this.teachersRepository
                 .All()

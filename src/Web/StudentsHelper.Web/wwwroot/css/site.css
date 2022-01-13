@@ -2,6 +2,10 @@
     background-color: white;
 }
 
+.hidden {
+    display: none;
+}
+
 /*darker = #1A275E*/
 /*lighter = #202F72*/
 

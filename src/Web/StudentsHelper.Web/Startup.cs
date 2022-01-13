@@ -25,7 +25,10 @@
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.Data.LocationLoaders;
+	using StudentsHelper.Services.Data.Paging;
+	using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.SchoolSubjects;
+    using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
@@ -73,7 +76,7 @@
                 options =>
                     {
                         options.CheckConsentNeeded = context => true;
-                        options.MinimumSameSitePolicy = SameSiteMode.None;
+                        options.MinimumSameSitePolicy = SameSiteMode.Lax;
                         options.Secure = CookieSecurePolicy.Always;
                     });
 
@@ -103,6 +106,9 @@
             // Application services
             services.AddTransient<ISchoolSubjectsService, SchoolSubjectsService>();
             services.AddTransient<ITeachersService, TeachersService>();
+            services.AddTransient<IStudentsService, StudentsService>();
+            services.AddTransient<IReviewsService, ReviewsService>();
+            services.AddTransient<IPagingService, PagingService>();
             services.AddTransient<RegionsLoader>();
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();

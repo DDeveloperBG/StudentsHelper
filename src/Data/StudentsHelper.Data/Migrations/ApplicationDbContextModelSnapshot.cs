@@ -340,6 +340,49 @@ namespace StudentsHelper.Data.Migrations
                     b.ToTable("PopulatedAreas");
                 });
 
+            modelBuilder.Entity("StudentsHelper.Data.Models.Rating.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Rating")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TeacherId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("StudentsHelper.Data.Models.Region", b =>
                 {
                     b.Property<int>("Id")
@@ -630,6 +673,21 @@ namespace StudentsHelper.Data.Migrations
                     b.Navigation("Township");
                 });
 
+            modelBuilder.Entity("StudentsHelper.Data.Models.Rating.Review", b =>
+                {
+                    b.HasOne("StudentsHelper.Data.Models.Student", "Student")
+                        .WithMany("Reviews")
+                        .HasForeignKey("StudentId");
+
+                    b.HasOne("StudentsHelper.Data.Models.Teacher", "Teacher")
+                        .WithMany("Reviews")
+                        .HasForeignKey("TeacherId");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("StudentsHelper.Data.Models.School", b =>
                 {
                     b.HasOne("StudentsHelper.Data.Models.PopulatedArea", "PopulatedArea")
@@ -704,6 +762,16 @@ namespace StudentsHelper.Data.Migrations
             modelBuilder.Entity("StudentsHelper.Data.Models.School", b =>
                 {
                     b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("StudentsHelper.Data.Models.Student", b =>
+                {
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("StudentsHelper.Data.Models.Teacher", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("StudentsHelper.Data.Models.Township", b =>

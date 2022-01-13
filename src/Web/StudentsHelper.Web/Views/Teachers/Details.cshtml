@@ -1,0 +1,98 @@
+﻿@using StudentsHelper.Common
+@using StudentsHelper.Web.ViewModels.Reviews
+@model StudentsHelper.Services.Data.Ratings.Models.TeacherDetails
+
+@{
+	ViewData["Title"] = Model.ApplicationUserName;
+}
+
+@section Css
+{
+<link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/studentReview.min.css" asp-append-version="true" />
+}
+
+<div class="container m-lg-5 col-auto text-center" style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+	<div>
+		<img id="teacher-profile-picture" src=@(Model.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
+			 class="col-md-2 img-fluid m-lg-4 teacher-picture img-thumbnail p-lg-4" />
+	</div>
+	<div class="mb-lg-4"><h2>@Model.ApplicationUserName</h2></div>
+	<hr />
+	<div>
+		<h5 class="font-weight-normal text-left mr-3">ОЦЕНКИ</h5>
+		<div class="justify-content-center row">
+			<div class="col-md-3 mt-3 mb-auto mr-3">
+				<h1 class="display-4">@Model.AverageRating</h1>
+				<div class="row justify-content-center">
+					@{
+						int fullStarsCount = (int)Math.Floor(Model.AverageRating);
+						for (int i = 0; i < fullStarsCount; i++)
+						{
+							<img class="star mb-1 mr-1" src="~/img/star.png">
+						}
+
+						int numberAfterFloatingPoint = (int)(Model.AverageRating * 10) % 10;
+						if (numberAfterFloatingPoint != 0)
+						{
+							<div class="star" style="background: url('/img/empty_star.png') no-repeat left;">
+								<div class="star mb-1 mr-1"
+							 	style="background: url('/img/star.png') no-repeat left; width: @(numberAfterFloatingPoint * 10)%;"></div>
+							</div>
+						}
+
+						int emptyStarsCount = Model.RatingRangesCount.Count - fullStarsCount - 1;
+						for (int i = 0; i < emptyStarsCount; i++)
+						{
+							<img class="star mb-1 mr-1" src="~/img/empty_star.png">
+						}
+					}
+				</div>
+				<p><img class="mb-1" src="~/img/small_person_icon.png"> @Model.RatingsCount</p>
+			</div>
+			<div id="rating-statistic" class="col-md-6 jumbotron jumbotron-fluid p-4">
+
+				@for (int i = Model.RatingRangesCount.Count - 1; i >= 0; i--)
+				{
+					<div class="row mb-1">
+						<span class="mr-2" style="font-size: 13px;">@(i+1)</span>
+						@if (Model.RatingsCount > 0)
+						{
+							<div style="
+                                background-color: @ColorConstants.RatingRangesColors[i];
+                                width: @(Model.RatingRangesPercentage[i] > 90 ? 90 : Model.RatingRangesPercentage[i])%;"></div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+
+		@if (!(bool)TempData["HasAlreadyReviewed"])
+		{
+			<div class="row m-3">
+				<div>
+					<h5 class="font-weight-normal text-left">ОЦЕНЕТЕ УЧИТЕЛЯ</h5>
+					<p class="font-weight-normal text-left">Покажете на другите, мнението си:</p>
+				</div>
+
+				<form id="reviewForm" class="col-lg-6 col-sm-8" asp-area="" asp-controller="Reviews" asp-action="ShowAddReview" method="get">
+					<input type="hidden" name="teacherId" value=@Model.Id />
+					<div class="form-group mt-4 mb-4">
+						<div id="stars" class="d-flex flex-row">
+							<img id="star-not-selected" class="small-star mr-2 hidden" src="~/img/not-filled-review.png">
+							<img id="star-selected" class="small-star mr-2 hidden" src="~/img/filled-review.png">
+						</div>
+						<input id="rating" type="hidden" name="rating" class="form-control" />
+					</div>
+				</form>
+			</div>
+
+			@section Scripts {
+				<script src="~/js/Reviews/starsChoice.min.js" asp-append-version="true"></script>
+				<script src="~/js/Reviews/showAddReviePage.min.js" asp-append-version="true"></script>
+			}
+		}
+
+		<vc:student-review teacher-id="@Model.Id" current-number=1></vc:student-review>
+	</div>
+</div>

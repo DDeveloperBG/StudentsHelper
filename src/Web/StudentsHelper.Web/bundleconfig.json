@@ -44,5 +44,35 @@
     "inputFiles": [
       "wwwroot/js/QR/qr.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/teacherDetails.min.css",
+    "inputFiles": [
+      "wwwroot/css/teacherDetails.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Reviews/reviews.min.js",
+    "inputFiles": [
+      "wwwroot/js/Reviews/reviews.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Reviews/starsChoice.min.js",
+    "inputFiles": [
+      "wwwroot/js/Reviews/starsChoice.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Reviews/showAddReviePage.min.js",
+    "inputFiles": [
+      "wwwroot/js/Reviews/showAddReviePage.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/studentReview.min.css",
+    "inputFiles": [
+      "wwwroot/css/studentReview.css"
+    ]
   }
 ]

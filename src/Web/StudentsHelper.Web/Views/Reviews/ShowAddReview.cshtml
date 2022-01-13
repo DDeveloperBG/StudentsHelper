@@ -1,0 +1,38 @@
+﻿@model StudentsHelper.Web.ViewModels.Reviews.ReviewInputModel
+
+@section Css
+{
+<link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
+}
+
+<div class="m-5" style="box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px;">
+    <div class="p-4">
+        <h5 class="font-weight-normal text-left">ОЦЕНЕТЕ УЧИТЕЛЯ</h5>
+        <p class="font-weight-normal text-left">Покажете на другите, мнението си:</p>
+
+        <form asp-area="" asp-controller="Reviews" asp-action="AddReview" method="post">
+            <input type="hidden" asp-for="@Model.TeacherId" />
+            <div class="form-group mt-4 mb-4">
+                <div id="stars" class="d-flex flex-row">
+                    <img id="star-not-selected" class="small-star mr-2 hidden" src="~/img/not-filled-review.png">
+                    <img id="star-selected" class="small-star mr-2 hidden" src="~/img/filled-review.png">
+                </div>
+                <input id="rating" type="hidden" asp-for="@Model.Rating" class="form-control" />
+                <span asp-validation-for="@Model.Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4 mb-4">
+                <textarea asp-for="@Model.Comment"
+                          class="form-control"
+                          rows="6"
+                          placeholder="Коментар">
+                </textarea>
+                <span asp-validation-for="@Model.Comment" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Изпрати</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/Reviews/starsChoice.min.js" asp-append-version="true"></script>
+}

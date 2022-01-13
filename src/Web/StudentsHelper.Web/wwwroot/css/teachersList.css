@@ -1,9 +1,0 @@
-﻿/*Do not bundle - the box shadow creates errors. If you do it go to bundleconfig.json and delete the setting for this file!!!*/
-
-.one-teacher-row {
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);
-}
-
-.teacher-picture {
-    width: 2.5rem;
-}
