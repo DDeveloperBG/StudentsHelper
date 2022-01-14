@@ -1,38 +1,36 @@
 ﻿namespace StudentsHelper.Services.Auth
 {
     using System;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.CloudStorage;
 
     public class TeacherRegisterer : ITeacherRegisterer
     {
+        private const string QualificationDocumentFolder = "QualificationDocuments";
         private readonly IDeletableEntityRepository<Teacher> teachersRepository;
         private readonly IDeletableEntityRepository<School> schoolsRepository;
-        private readonly IHostingEnvironment hostingEnvironment;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly ICloudStorageService cloudStorageService;
 
         public TeacherRegisterer(
             IDeletableEntityRepository<Teacher> teachersRepository,
             IDeletableEntityRepository<School> schoolsRepository,
-            IHostingEnvironment hostingEnvironment,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            ICloudStorageService cloudStorageService)
         {
             this.teachersRepository = teachersRepository;
             this.schoolsRepository = schoolsRepository;
-            this.hostingEnvironment = hostingEnvironment;
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.cloudStorageService = cloudStorageService;
         }
 
         public async Task RegisterAsync(TeacherInputModel inputModel, ApplicationUser user)
@@ -52,13 +50,13 @@
                 throw new ArgumentException("Невалидно училище!");
             }
 
-            string qualificationDocumentName = await this.SaveQualificationDocument(inputModel.QualificationDocument);
+            string qualificationDocumentPath = await this.cloudStorageService.SaveFileAsync(inputModel.QualificationDocument, QualificationDocumentFolder);
 
             Teacher teacher = new Teacher
             {
                 ApplicationUserId = user.Id,
                 SchoolId = inputModel.SchoolId,
-                QualificationDocumentName = qualificationDocumentName,
+                QualificationDocumentPath = qualificationDocumentPath,
             };
 
             var role = await this.roleManager.FindByNameAsync(GlobalConstants.TeacherRoleName);
@@ -66,27 +64,6 @@
 
             await this.teachersRepository.AddAsync(teacher);
             await this.teachersRepository.SaveChangesAsync();
-        }
-
-        private async Task<string> SaveQualificationDocument(IFormFile qualificationDoc)
-        {
-            string folderPath = Path.Combine(this.hostingEnvironment.ContentRootPath, "QualificationDocuments");
-            Directory.CreateDirectory(folderPath);
-
-            if (qualificationDoc.Length > 0)
-            {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(qualificationDoc.FileName);
-                string filePath = Path.Combine(folderPath, fileName);
-
-                using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-                {
-                    await qualificationDoc.CopyToAsync(fileStream);
-                }
-
-                return fileName;
-            }
-
-            throw new Exception("File size was 0!");
         }
     }
 }

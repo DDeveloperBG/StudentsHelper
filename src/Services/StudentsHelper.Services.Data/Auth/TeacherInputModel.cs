@@ -16,7 +16,7 @@
         [QualificationDocumentAllowedExtensions]
         [Display(Name = "Документ за квалификация")]
         [Required(ErrorMessage = ValidationConstants.RequiredError)]
-        [MaxFileSize(ValidationConstants.QualificationDocumentValidSize)]
+        [MaxFileSize(ValidationConstants.PictureValidSize)]
         public IFormFile QualificationDocument { get; set; }
     }
 }

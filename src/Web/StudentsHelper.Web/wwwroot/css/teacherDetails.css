@@ -1,10 +1,4 @@
-﻿#teacher-profile-picture {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-}
-
-#rating-statistic {
+﻿#rating-statistic {
     background-color: transparent;
     border: 1px solid #d0d0d0;
 }

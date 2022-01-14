@@ -22,6 +22,8 @@
 
         public const string ConfirmEmailTitle = "Потвърдете акаунта си";
 
+        public const string ProfilePicturesFolder = "ProfilePictures";
+
         public static string GetEmailConfirmationMessage(string confirmUrl) => $"<h1>Моля потвърдете акаунта си, като <a href='{HtmlEncoder.Default.Encode(confirmUrl)}'>кликнете тук</a>.";
     }
 }

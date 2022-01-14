@@ -1,7 +1,8 @@
 ﻿@page
+@using StudentsHelper.Common;
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Профил";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -9,8 +10,14 @@
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        <form id="profile-form" class="mt-2 ml-4" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3 mt-3">
+                <img src=@(Model.ProfilePictureUrl ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded"  >
+                <label class="mt-1">Сменете профилната си снимка: </label>
+                <input asp-for="Input.ProfilePicture" class="form-control" style="padding-bottom: 2.3rem;" />
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Username"></label>
                 <input asp-for="Username" class="form-control" disabled />
@@ -20,7 +27,7 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-primary">Запази</button>
         </form>
     </div>
 </div>

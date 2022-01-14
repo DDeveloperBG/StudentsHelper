@@ -1,4 +1,7 @@
-﻿@model StudentsHelper.Web.ViewModels.Administration.Teachers.TeacherExternalData
+﻿@using StudentsHelper.Common
+@using StudentsHelper.Web.ViewModels.Administration.Teachers
+
+@model TeacherDetailsViewModel
 
 @{
     ViewData["Title"] = "SetTeacherData";
@@ -6,23 +9,44 @@
 
 @section Css
 {
-<link rel="stylesheet" href="~/css/teacherDetailsAdmin.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
 }
 
 <div class="container background-container m-lg-5 col-auto text-center">
-    <h2 class="pt-lg-5">@Model.ViewData.ApplicationUserName</h2>
-    <form class="p-lg-5" method="post">
-        <input type="hidden" name="Id" value=@Model.Id />
-        <div class="form-group mb-lg-5">
-            <label asp-for=@Model.SubjectsId></label>
-            <select asp-for=@Model.SubjectsId class="form-control" multiple size="8">
-                @foreach (var subject in Model.ViewData.Subjects)
+    <h2 class="pt-lg-5">@Model.ApplicationUserName</h2>
+        
+    <div>
+        <img src=@(Model.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
+             class="col-md-2 img-fluid m-lg-4 teacher-picture img-thumbnail p-lg-4" />
+    </div>
+
+    <div class="p-lg-4">
+        <label class="mr-lg-2">Документ за квалификация:</label>
+        <a href="@Model.QualificationDocumentPath">линк</a>
+    </div>
+
+    <form class="pr-lg-5 pl-lg-5" method="post">
+        @{
+            var input = new TeacherExternalDataInputModel();
+        }
+        <input type="hidden" asp-for=@input.Id value=@Model.Id />
+        <div class="form-group mb-lg-3">
+            <label asp-for=@input.SubjectsId></label>
+            <select asp-for=@input.SubjectsId class="form-control" multiple size="8">
+                @foreach (var subject in Model.Subjects)
                 {
                     <option value="@subject.Id">@subject.Name</option>
                 }
             </select>
-            <span asp-validation-for=@Model.SubjectsId class="text-danger"></span>
+            <span asp-validation-for=@input.SubjectsId class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary">Активирай</button>
+
+        <div class="p-lg-4">
+            <button type="submit" class="btn btn-success">Активирай</button>
+            <a asp-area="Administration"
+               asp-controller="Teachers"
+               asp-action="Reject"
+               asp-route-teacherId="@Model.Id" class="btn btn-danger">Отхвърли</a>
+        </div>
     </form>
 </div>

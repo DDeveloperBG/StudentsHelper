@@ -24,14 +24,16 @@
     using StudentsHelper.Data.Repositories;
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.LocationLoaders;
-	using StudentsHelper.Services.Data.Paging;
-	using StudentsHelper.Services.Data.Ratings;
+    using StudentsHelper.Services.Data.Paging;
+    using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
+    using StudentsHelper.Services.Payments;
     using StudentsHelper.Services.VideoChat;
     using StudentsHelper.Web.ViewModels;
 
@@ -124,6 +126,14 @@
             services.AddTransient<IVideoChat>(_
                 => new VideoChat(
                         this.configuration["VideoSDK:APIKeySid"]));
+            services.AddTransient<IPaymentsService>(_
+               => new StripePaymentsService(
+                       this.configuration["Stripe:ApiKey"]));
+            services.AddTransient<ICloudStorageService>(_
+               => new CloudinaryService(
+                       this.configuration["Cloudinary:CloudName"],
+                       this.configuration["Cloudinary:ApiKey"],
+                       this.configuration["Cloudinary:ApiSecret"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -135,6 +145,7 @@
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                //dbContext.Database.EnsureDeleted();
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }

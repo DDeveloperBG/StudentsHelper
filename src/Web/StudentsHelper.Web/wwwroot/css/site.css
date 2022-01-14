@@ -6,6 +6,15 @@
     display: none;
 }
 
+.active {
+    background-color: #1AD057!important;
+}
+
+.profile-nav-a:not(.active) {
+    color: #1A275E;
+    font-weight: 600;
+}
+
 /*darker = #1A275E*/
 /*lighter = #202F72*/
 

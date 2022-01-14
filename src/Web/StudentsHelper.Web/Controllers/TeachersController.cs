@@ -8,6 +8,7 @@
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
@@ -17,23 +18,31 @@
         private readonly ITeachersService teachersService;
         private readonly IStudentsService studentsService;
         private readonly IReviewsService reviewsService;
+        private readonly ICloudStorageService cloudStorageService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public TeachersController(
             ITeachersService teachersService,
             IStudentsService studentsService,
             IReviewsService reviewsService,
+            ICloudStorageService cloudStorageService,
             UserManager<ApplicationUser> userManager)
         {
             this.teachersService = teachersService;
             this.studentsService = studentsService;
             this.reviewsService = reviewsService;
+            this.cloudStorageService = cloudStorageService;
             this.userManager = userManager;
         }
 
         public IActionResult All(int subjectId)
         {
             var teachers = this.reviewsService.GetTeachersRating(this.teachersService.GetAllOfType(subjectId));
+            foreach (var teacher in teachers)
+            {
+                teacher.ApplicationUserPicturePath
+                    = this.cloudStorageService.GetImageUri(teacher.ApplicationUserPicturePath, 130, 130);
+            }
 
             return this.View(teachers);
         }
@@ -54,6 +63,8 @@
             }
 
             var teacher = this.reviewsService.GetTeacherRating(teacherId);
+            teacher.ApplicationUserPicturePath
+                = this.cloudStorageService.GetImageUri(teacher.ApplicationUserPicturePath, 130, 130);
 
             return this.View(teacher);
         }

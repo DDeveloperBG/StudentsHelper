@@ -7,12 +7,11 @@
     {
         public const string RequiredError = "Полето {0} е задължително.";
 
-        public const int QualificationDocumentValidSize = 50 * 1024 * 1024; // 50 Megabytes
+        public const int PictureValidSize = 25 * 1024 * 1024; // 50 Megabytes
 
-        public static readonly Dictionary<string, string> ValidExteinsionsForQualificationDocumentToMime
+        public static readonly Dictionary<string, string> ValidExteinsionsForPictureToMime
             = new Dictionary<string, string>
             {
-                { ".pdf", "application/pdf" },
                 { ".jpg", "image/jpeg" },
                 { ".jpeg", "image/jpeg" },
                 { ".jpe", "image/jpeg" },
@@ -22,11 +21,10 @@
                 { ".png", "image/png" },
                 { ".tiff", "image/tiff" },
                 { ".tif", "image/tiff" },
-                { ".doc", "application/vnd.ms-word" },
-                { ".docx", "application/vnd.ms-word" },
+                { ".bmp", "image/bmp" },
             };
 
-        public static readonly string[] ValidExteinsionsForQualificationDocument
-            = ValidExteinsionsForQualificationDocumentToMime.Keys.ToArray();
+        public static readonly string[] ValidExteinsionsForPicture
+            = ValidExteinsionsForPictureToMime.Keys.ToArray();
     }
 }

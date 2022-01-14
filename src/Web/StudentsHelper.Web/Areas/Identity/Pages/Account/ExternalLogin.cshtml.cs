@@ -1,6 +1,7 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account
 {
     using System;
+    using System.Net.Http;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -9,13 +10,13 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Web.Infrastructure.Alerts;
 
     [AllowAnonymous]
@@ -25,25 +26,25 @@
 
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IEmailSender emailSender;
         private readonly ITeacherRegisterer teacherRegister;
         private readonly IStudentRegisterer studentRegisterer;
+        private readonly ICloudStorageService cloudStorageService;
         private readonly ILogger<ExternalLoginModel> logger;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender,
             ITeacherRegisterer teacherRegister,
-            IStudentRegisterer studentRegisterer)
+            IStudentRegisterer studentRegisterer,
+            ICloudStorageService cloudStorageService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.logger = logger;
-            this.emailSender = emailSender;
             this.teacherRegister = teacherRegister;
             this.studentRegisterer = studentRegisterer;
+            this.cloudStorageService = cloudStorageService;
         }
 
         [BindProperty]
@@ -148,6 +149,18 @@
             if (this.TeacherModel == null || this.ModelState.IsValid)
             {
                 string profilePicUrl = info.Principal.FindFirstValue(JwtClaimTypes.Picture);
+                string picturePath = null;
+                if (profilePicUrl != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    HttpClient client = new HttpClient();
+                    var responce = await client.GetAsync(profilePicUrl);
+                    var fileStream = await responce.Content.ReadAsStreamAsync();
+
+                    await this.cloudStorageService.UploadImageAsync(GlobalConstants.ProfilePicturesFolder, fileName, fileStream);
+
+                    picturePath = $"{GlobalConstants.ProfilePicturesFolder}/{fileName}";
+                }
 
                 string name = info.Principal.FindFirstValue(ClaimTypes.Name);
                 string email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -156,7 +169,7 @@
                     Name = name,
                     Email = email,
                     UserName = email,
-                    PicturePath = profilePicUrl,
+                    PicturePath = picturePath,
                 };
 
                 var result = await this.userManager.CreateAsync(user);
