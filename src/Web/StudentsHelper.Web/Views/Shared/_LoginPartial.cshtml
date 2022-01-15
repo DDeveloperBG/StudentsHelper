@@ -3,12 +3,21 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject StudentsHelper.Services.CloudStorage.ICloudStorageService CloudStorage
 
 <ul class="navbar-nav">
     @if (this.SignInManager.IsSignedIn(this.User))
     {
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Профил</a>
+        <li id="navbar-profile-pic" class="nav-item row mr-1">
+            @{
+                var user = await this.UserManager.GetUserAsync(this.User);
+                var userName = user.Name;
+                var profilePicUrl = this.CloudStorage.GetImageUri(user.PicturePath, 45, 45);
+            }
+            <a class="nav-link pl-3" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                @userName
+            </a>
+            <img src=@(profilePicUrl ?? GlobalConstants.NoProfilePicturePath) class="img-fluid m-2 ml-3 rounded">
         </li>
         if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {
@@ -16,11 +25,6 @@
                 <a class="nav-link" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
             </li>
         }
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
-                <button type="submit" class="nav-link btn btn-link">Изход</button>
-            </form>
-        </li>
     }
     else
     {

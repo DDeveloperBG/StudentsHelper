@@ -13,7 +13,8 @@
         <form id="profile-form" class="mt-2 ml-4" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3 mt-3">
-                <img src=@(Model.ProfilePictureUrl ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded"  >
+                <img src=@(Model.ProfilePictureUrl ?? GlobalConstants.NoProfilePicturePath) class="img-fluid m-2 ml-3 rounded"  >
+                <br />
                 <label class="mt-1">Сменете профилната си снимка: </label>
                 <input asp-for="Input.ProfilePicture" class="form-control" style="padding-bottom: 2.3rem;" />
                 <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>

@@ -28,7 +28,7 @@
         {
             if (string.IsNullOrWhiteSpace(subject) && string.IsNullOrWhiteSpace(htmlContent))
             {
-                throw new ArgumentException("Subject and message should be provided.");
+                return;
             }
 
             var fromAddress = new EmailAddress(from, fromName);
@@ -57,7 +57,6 @@
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
         }
 

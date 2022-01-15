@@ -63,9 +63,9 @@
                         @if (!this.User.Identity.IsAuthenticated)
                         {
                             <li><a asp-area="Identity" asp-page="/Account/Login">Вход</a></li>
-                        <li><a asp-area="Identity" asp-page="/Account/Register">Регистрация</a></li>
+                            <li><a asp-area="Identity" asp-page="/Account/Register">Регистрация</a></li>
                         }
-                        
+
                         <li><a asp-area="" asp-controller="Contact" asp-action="Index">Контакти</a></li>
                     </ul>
                 </div>
@@ -75,8 +75,8 @@
                         <li>
                             <a asp-area="" asp-controller="Contact" asp-action="Index">
                                 <svg id="mailIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M5.001 8.538v7.098S4.911 16.963 6.324 17h11.482S19 16.837 19 15.6V8.537l-6.763 4.339h-.42L5 8.538z"/>
-                                    <path d="M5.06 7.453S5.14 6.026 6.43 6h11.041s1.397.174 1.424 1.453l-6.8 4.402h-.197L5.06 7.453z"/>
+                                    <path d="M5.001 8.538v7.098S4.911 16.963 6.324 17h11.482S19 16.837 19 15.6V8.537l-6.763 4.339h-.42L5 8.538z" />
+                                    <path d="M5.06 7.453S5.14 6.026 6.43 6h11.041s1.397.174 1.424 1.453l-6.8 4.402h-.197L5.06 7.453z" />
                                 </svg>@GlobalConstants.ContactEmail
                             </a>
                         </li>
