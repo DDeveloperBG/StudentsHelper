@@ -2,7 +2,7 @@
 {
     using System;
 
-    using StudentsHelper.Data.Models.Rating;
+    using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Mapping;
 
     public class StudentReview : IMapFrom<Review>

@@ -6,7 +6,6 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using StudentsHelper.Data.Common.Models;
-    using StudentsHelper.Data.Models.Rating;
 
     public class Student : BaseDeletableModel<string>
     {
@@ -14,6 +13,7 @@
         {
             this.Id = Guid.NewGuid().ToString();
             this.Reviews = new HashSet<Review>();
+            this.Transactions = new HashSet<StudentTransaction>();
         }
 
         [Required]
@@ -23,5 +23,7 @@
         public ApplicationUser ApplicationUser { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
+
+        public ICollection<StudentTransaction> Transactions { get; set; }
     }
 }

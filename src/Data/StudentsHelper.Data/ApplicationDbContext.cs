@@ -12,7 +12,6 @@
     using StudentsHelper.Data.Common.Models;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Data.Models.Contact;
-    using StudentsHelper.Data.Models.Rating;
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -43,6 +42,8 @@
         public DbSet<ContactFormEntry> ContactFormEntries { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
+
+        public DbSet<StudentTransaction> StudentsTransactions { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

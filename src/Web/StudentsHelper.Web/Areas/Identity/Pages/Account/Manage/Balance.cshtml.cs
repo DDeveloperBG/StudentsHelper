@@ -1,0 +1,95 @@
+﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account.Manage
+{
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using StudentsHelper.Common;
+    using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.Data.Students;
+    using StudentsHelper.Services.Payments;
+
+    public class Balance : PageModel
+    {
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IPaymentsService paymentsService;
+        private readonly IStudentsService studentsService;
+
+        public Balance(
+            UserManager<ApplicationUser> userManager,
+            IPaymentsService paymentsService,
+            IStudentsService studentsService)
+        {
+            this.userManager = userManager;
+            this.paymentsService = paymentsService;
+            this.studentsService = studentsService;
+        }
+
+        [TempData]
+        public string StatusMessage { get; set; }
+
+        [TempData]
+        public int BalanceAmount { get; set; }
+
+        [BindProperty]
+        public InputModel Input { get; set; }
+
+        public class InputModel
+        {
+            [Display(Name = "Пари за курсове - лв")]
+            [Required(ErrorMessage = ValidationConstants.RequiredError)]
+            [Range(
+                ValidationConstants.MinDepositAmount,
+                ValidationConstants.MaxDepositAmount,
+                ErrorMessage = "Стойноста трябва да е поне {1} и не повече от {2} лв.")]
+            public int DepositRequestMoneyAmount { get; set; }
+        }
+
+        public async Task<IActionResult> OnGetAsync(string result = null)
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            if (user == null)
+            {
+                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+            }
+
+            string studentId = this.studentsService.GetId(user.Id);
+            this.BalanceAmount = this.paymentsService.GetStudentBalance(studentId);
+
+            switch (result)
+            {
+                case "success": this.StatusMessage = "Плащането бе успешно!"; break;
+                case "canceled": this.StatusMessage = "Error: Плащането бе отказано."; break;
+            }
+
+            return this.Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!this.ModelState.IsValid)
+            {
+                this.StatusMessage = "Error: Невалидни данни!";
+                return await this.OnGetAsync();
+            }
+
+            var user = await this.userManager.GetUserAsync(this.User);
+            if (user == null)
+            {
+                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+            }
+
+            string studentId = this.studentsService.GetId(user.Id);
+            string paymentUrl = await this
+                .paymentsService
+                .CreateCheckoutSession(
+                    studentId,
+                    user.Email,
+                    this.Input.DepositRequestMoneyAmount);
+
+            return this.Redirect(paymentUrl);
+        }
+    }
+}

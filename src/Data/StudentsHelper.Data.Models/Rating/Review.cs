@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Data.Models.Rating
+﻿namespace StudentsHelper.Data.Models
 {
     using System.ComponentModel.DataAnnotations.Schema;
 

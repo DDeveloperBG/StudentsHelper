@@ -25,10 +25,6 @@
     border-radius: 20px
 }
 
-    #navbar-profile-pic:hover .nav-link {
-        color: #fff;
-    }
-
     #navbar-profile-pic:hover {
         background-color: #3A3B3C;
         cursor: pointer;

@@ -7,7 +7,6 @@
 
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Data.Models.Rating;
     using StudentsHelper.Services.Data.Ratings.Models;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Mapping;

@@ -4,6 +4,7 @@
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Профил</a></li>
+    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.BalanceNavClass(ViewContext)" id="balance" asp-page="./Balance">Баланс</a></li>
     <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Имейл</a></li>
     <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Парола</a></li>
     @if (hasExternalLogins)

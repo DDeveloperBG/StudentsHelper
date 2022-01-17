@@ -34,6 +34,7 @@
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.Payments;
+    using StudentsHelper.Services.Payments.Models;
     using StudentsHelper.Services.VideoChat;
     using StudentsHelper.Web.ViewModels;
 
@@ -73,6 +74,14 @@
                         },
                     };
                 });
+
+            services.Configure<StripeOptions>(options =>
+            {
+                options.PublishableKey = this.configuration["Stripe:ApiKey"];
+                options.SecretKey = this.configuration["Stripe:ApiSecret"];
+                options.WebhookSecret = this.configuration["Stripe:WebhookSecret"];
+                options.Domain = this.configuration["DOMAIN"];
+            });
 
             services.Configure<CookiePolicyOptions>(
                 options =>
@@ -117,6 +126,7 @@
             services.AddTransient<SchoolsLoader>();
             services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
             services.AddTransient<IStudentRegisterer, StudentRegisterer>();
+            services.AddTransient<IPaymentsService, StripePaymentsService>();
             services.AddTransient<IEmailSender>(_
                 => new SendGridEmailSender(
                     this.configuration["SendGrid:ApiKey"]));
@@ -126,9 +136,6 @@
             services.AddTransient<IVideoChat>(_
                 => new VideoChat(
                         this.configuration["VideoSDK:APIKeySid"]));
-            services.AddTransient<IPaymentsService>(_
-               => new StripePaymentsService(
-                       this.configuration["Stripe:ApiKey"]));
             services.AddTransient<ICloudStorageService>(_
                => new CloudinaryService(
                        this.configuration["Cloudinary:CloudName"],

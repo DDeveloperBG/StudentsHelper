@@ -3,6 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -96,7 +97,7 @@
                 var setPhoneResult = await this.userManager.SetPhoneNumberAsync(user, this.Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    this.StatusMessage = "Неочаквана грешка при опит за задаване на телефонен номер.";
+                    this.StatusMessage = "Error: Неочаквана грешка при опит за задаване на телефонен номер.";
                     return this.RedirectToPage();
                 }
             }

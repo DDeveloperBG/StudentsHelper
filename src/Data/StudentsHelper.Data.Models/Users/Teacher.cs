@@ -6,7 +6,6 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using StudentsHelper.Data.Common.Models;
-    using StudentsHelper.Data.Models.Rating;
 
     public class Teacher : BaseDeletableModel<string>
     {

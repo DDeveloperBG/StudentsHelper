@@ -17,7 +17,7 @@
             <a class="nav-link pl-3" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 @userName
             </a>
-            <img src=@(profilePicUrl ?? GlobalConstants.NoProfilePicturePath) class="img-fluid m-2 ml-3 rounded">
+            <img src=@(profilePicUrl ?? GlobalConstants.NoProfilePicturePath) class="img-fluid m-2 rounded">
         </li>
         if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {

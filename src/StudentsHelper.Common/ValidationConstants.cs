@@ -9,6 +9,10 @@
 
         public const int PictureValidSize = 25 * 1024 * 1024; // 50 Megabytes
 
+        public const int MinDepositAmount = 5;
+
+        public const int MaxDepositAmount = 1000;
+
         public static readonly Dictionary<string, string> ValidExteinsionsForPictureToMime
             = new Dictionary<string, string>
             {
