@@ -14,10 +14,10 @@
         public StudentTransaction()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.PaymentDate = DateTime.UtcNow;
-            this.IsCompleted = false; // I know it would be false by default but I want it to be made clear
+            this.IsCompleted = false; // I know it would be false by default but I want to make it clear
         }
 
+        // If it is deposit it would be possitive, if it is payment to teacher it would have negative value
         public int Amount { get; set; }
 
         public DateTime PaymentDate { get; set; }
@@ -31,5 +31,10 @@
         public string StudentId { get; set; }
 
         public Student Student { get; set; }
+
+        [ForeignKey(nameof(ToTeacher))]
+        public string ToTeacherId { get; set; }
+
+        public Teacher ToTeacher { get; set; }
     }
 }

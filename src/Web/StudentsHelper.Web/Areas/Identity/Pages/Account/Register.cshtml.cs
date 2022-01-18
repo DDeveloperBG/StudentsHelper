@@ -125,22 +125,34 @@
 
     public class InputModel
     {
+        [MaxLength(255)]
         [Display(Name = "Роля")]
         [Required(ErrorMessage = ValidationConstants.RequiredError)]
         public string Role { get; set; }
 
         [Display(Name = "Име")]
+        [StringLength(
+            ValidationConstants.NameMaxLength,
+            MinimumLength = ValidationConstants.NameMinLength,
+            ErrorMessage = "Името може да бъде най - малко {2} и максимум {1} символа дълго.")]
         [Required(ErrorMessage = ValidationConstants.RequiredError)]
         public string Name { get; set; }
 
         [Display(Name = "Имейл")]
         [Required(ErrorMessage = ValidationConstants.RequiredError)]
+        [StringLength(
+            ValidationConstants.EmailMaxLength,
+            MinimumLength = ValidationConstants.EmailMinLength,
+            ErrorMessage = "Имейла може да бъде най - малко {2} и максимум {1} символа дълъг.")]
         [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
         public string Email { get; set; }
 
         [Display(Name = "Парола")]
         [Required(ErrorMessage = ValidationConstants.RequiredError)]
-        [StringLength(100, ErrorMessage = "Паролата трябва да бъде поне {2} и максимум {1} символа дълга.", MinimumLength = 6)]
+        [StringLength(
+            ValidationConstants.PasswordMaxLength,
+            MinimumLength = ValidationConstants.PasswordMinLength,
+            ErrorMessage = "Паролата трябва да бъде поне {2} и максимум {1} символа дълга.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

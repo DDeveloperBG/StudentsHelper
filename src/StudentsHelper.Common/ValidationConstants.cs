@@ -5,6 +5,20 @@
 
     public static class ValidationConstants
     {
+        // User Auth Constraints
+        public const int NameMinLength = 5;
+
+        public const int NameMaxLength = 32;
+
+        public const int EmailMinLength = 6;
+
+        public const int EmailMaxLength = 50;
+
+        public const int PasswordMinLength = 6;
+
+        public const int PasswordMaxLength = 50;
+
+        // Other Constraints
         public const string RequiredError = "Полето {0} е задължително.";
 
         public const int PictureValidSize = 25 * 1024 * 1024; // 50 Megabytes

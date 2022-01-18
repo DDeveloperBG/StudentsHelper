@@ -16,6 +16,8 @@
 
         IEnumerable<T> GetAllNotConfirmed<T>();
 
+        string GetId(string userId);
+
         T GetOne<T>(string id, bool isRejected);
 
         Task RejectTeacherAsync(string id);

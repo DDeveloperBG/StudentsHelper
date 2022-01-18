@@ -7,22 +7,21 @@
     using Microsoft.Extensions.Options;
 
     using Stripe;
-
-    using StudentsHelper.Services.Payments;
+    using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Payments.Models;
 
     [IgnoreAntiforgeryToken]
     public class PaymentsWebhookController : BaseController
     {
         private readonly string webhookSecret;
-        private readonly IPaymentsService paymentsService;
+        private readonly IStudentsTransactionsService studentsTransactionsService;
 
         public PaymentsWebhookController(
             IOptions<StripeOptions> options,
-            IPaymentsService paymentsService)
+            IStudentsTransactionsService studentsTransactionsService)
         {
             this.webhookSecret = options.Value.WebhookSecret;
-            this.paymentsService = paymentsService;
+            this.studentsTransactionsService = studentsTransactionsService;
         }
 
         [HttpPost]
@@ -41,7 +40,7 @@
                 {
                     var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                    await this.paymentsService.MarkPaymentAsCompletedAsync(session.Id);
+                    await this.studentsTransactionsService.MarkPaymentAsCompletedAsync(session.Id);
                 }
 
                 return this.Ok();

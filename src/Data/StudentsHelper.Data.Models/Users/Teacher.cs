@@ -14,6 +14,7 @@
             this.Id = Guid.NewGuid().ToString();
             this.Subjects = new HashSet<SchoolSubject>();
             this.Reviews = new HashSet<Review>();
+            this.ReceivedPayments = new HashSet<StudentTransaction>();
             this.IsValidated = false;
             this.IsRejected = false;
         }
@@ -36,6 +37,8 @@
         public ICollection<SchoolSubject> Subjects { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
+
+        public ICollection<StudentTransaction> ReceivedPayments { get; set; }
 
         [ForeignKey(nameof(School))]
         public int SchoolId { get; set; }

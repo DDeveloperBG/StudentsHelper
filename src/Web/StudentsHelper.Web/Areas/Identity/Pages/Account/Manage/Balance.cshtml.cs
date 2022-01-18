@@ -2,13 +2,15 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Authorization;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Students;
+    using StudentsHelper.Services.Data.StudentTransactions;
+    using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Payments;
 
     public class Balance : PageModel
@@ -16,15 +18,21 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IPaymentsService paymentsService;
         private readonly IStudentsService studentsService;
+        private readonly ITeachersService teachersService;
+        private readonly IStudentsTransactionsService studentsTransactionsService;
 
         public Balance(
             UserManager<ApplicationUser> userManager,
             IPaymentsService paymentsService,
-            IStudentsService studentsService)
+            IStudentsService studentsService,
+            ITeachersService teachersService,
+            IStudentsTransactionsService studentsTransactionsService)
         {
             this.userManager = userManager;
             this.paymentsService = paymentsService;
             this.studentsService = studentsService;
+            this.teachersService = teachersService;
+            this.studentsTransactionsService = studentsTransactionsService;
         }
 
         [TempData]
@@ -55,8 +63,16 @@
                 return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
             }
 
-            string studentId = this.studentsService.GetId(user.Id);
-            this.BalanceAmount = this.paymentsService.GetStudentBalance(studentId);
+            if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+            {
+                string studentId = this.studentsService.GetId(user.Id);
+                this.BalanceAmount = this.studentsTransactionsService.GetStudentBalance(studentId);
+            }
+            else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+            {
+                string teacherId = this.teachersService.GetId(user.Id);
+                this.BalanceAmount = this.studentsTransactionsService.GetTeacherBalance(teacherId);
+            }
 
             switch (result)
             {

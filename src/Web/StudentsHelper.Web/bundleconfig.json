@@ -74,5 +74,11 @@
     "inputFiles": [
       "wwwroot/css/studentReview.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/balance.min.css",
+    "inputFiles": [
+      "wwwroot/css/balance.css"
+    ]
   }
 ]

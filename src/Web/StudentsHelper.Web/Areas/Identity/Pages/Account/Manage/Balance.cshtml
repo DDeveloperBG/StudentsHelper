@@ -7,21 +7,28 @@
     ViewData["ActivePage"] = ManageNavPages.Balance;
 }
 
-<h5>@ViewData["Title"]: @Model.BalanceAmount</h5>
+@section ManageCss {
+<link rel="stylesheet" href="~/css/balance.min.css" asp-append-version="true" />
+}
+
+<h5>@ViewData["Title"]: @Model.BalanceAmount лв.</h5>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <h5>Добави</h5>
-        <form method="POST">
-            <div class="form-group">
-                <label asp-for="Input.DepositRequestMoneyAmount"></label>
-                <input asp-for="Input.DepositRequestMoneyAmount" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-primary">Плати</button>
-            <br />
-            <span asp-validation-for="Input.DepositRequestMoneyAmount" class="text-danger"></span>
-        </form>
-    </div>
+<div class="mt-3 row">
+    @if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+    {
+        <div id="add-to-balance-container" class="col-md-6">
+            <h5>Добави (цяло число)</h5>
+            <form method="POST">
+                <div class="form-group">
+                    <label asp-for="Input.DepositRequestMoneyAmount"></label>
+                    <input asp-for="Input.DepositRequestMoneyAmount" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary">Плати</button>
+                <br />
+                <span asp-validation-for="Input.DepositRequestMoneyAmount" class="text-danger"></span>
+            </form>
+        </div>
+    }
 </div>
 
 @section Scripts {

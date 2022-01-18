@@ -30,6 +30,7 @@
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Students;
+    using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
@@ -127,6 +128,7 @@
             services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
             services.AddTransient<IStudentRegisterer, StudentRegisterer>();
             services.AddTransient<IPaymentsService, StripePaymentsService>();
+            services.AddTransient<IStudentsTransactionsService, StudentsTransactionsService>();
             services.AddTransient<IEmailSender>(_
                 => new SendGridEmailSender(
                     this.configuration["SendGrid:ApiKey"]));

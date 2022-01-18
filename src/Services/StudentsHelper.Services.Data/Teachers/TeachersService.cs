@@ -52,6 +52,14 @@
                     .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected);
         }
 
+        public string GetId(string userId)
+        {
+            return this.GetAllAsNoTracking()
+                .Where(x => x.ApplicationUserId == userId)
+                .Select(x => x.Id)
+                .SingleOrDefault();
+        }
+
         public T GetOne<T>(string id, bool isRejected)
         {
             return this.GetAllAsNoTracking()
