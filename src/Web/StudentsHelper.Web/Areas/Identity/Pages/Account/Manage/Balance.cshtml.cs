@@ -1,6 +1,8 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account.Manage
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
@@ -12,6 +14,7 @@
     using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Payments;
+    using StudentsHelper.Web.ViewModels.Balance;
 
     public class Balance : PageModel
     {
@@ -20,6 +23,7 @@
         private readonly IStudentsService studentsService;
         private readonly ITeachersService teachersService;
         private readonly IStudentsTransactionsService studentsTransactionsService;
+        private decimal balanceValue = 0;
 
         public Balance(
             UserManager<ApplicationUser> userManager,
@@ -35,11 +39,11 @@
             this.studentsTransactionsService = studentsTransactionsService;
         }
 
-        [TempData]
         public string StatusMessage { get; set; }
 
-        [TempData]
-        public int BalanceAmount { get; set; }
+        public string BalanceAmount { get; set; }
+
+        public IEnumerable<TransactionViewModel> TransactionsInfo { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -66,13 +70,22 @@
             if (this.User.IsInRole(GlobalConstants.StudentRoleName))
             {
                 string studentId = this.studentsService.GetId(user.Id);
-                this.BalanceAmount = this.studentsTransactionsService.GetStudentBalance(studentId);
+                this.balanceValue = this.studentsTransactionsService.GetStudentBalance(studentId);
+                this.TransactionsInfo = this.studentsTransactionsService.GetStudentTransactions<TransactionViewModel>(studentId);
             }
             else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
             {
                 string teacherId = this.teachersService.GetId(user.Id);
-                this.BalanceAmount = this.studentsTransactionsService.GetTeacherBalance(teacherId);
+                this.balanceValue = this.studentsTransactionsService.GetTeacherBalance(teacherId);
+                this.TransactionsInfo = this.studentsTransactionsService.GetTeacherTransactions<TransactionViewModel>(teacherId);
             }
+
+            if (this.TransactionsInfo != null)
+            {
+                this.TransactionsInfo = this.TransactionsInfo.OrderByDescending(x => x.PaymentDate);
+            }
+
+            this.BalanceAmount = $"{this.balanceValue:f2}";
 
             switch (result)
             {

@@ -18,7 +18,8 @@
         }
 
         // If it is deposit it would be possitive, if it is payment to teacher it would have negative value
-        public int Amount { get; set; }
+        [Column(TypeName = "DECIMAL(8, 2)")]
+        public decimal Amount { get; set; }
 
         public DateTime PaymentDate { get; set; }
 

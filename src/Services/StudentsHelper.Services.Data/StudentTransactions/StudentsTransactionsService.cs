@@ -44,14 +44,14 @@
             return this.studentsTransactionsRepository.SaveChangesAsync();
         }
 
-        public int GetStudentBalance(string studentId)
+        public decimal GetStudentBalance(string studentId)
         {
             return this.GetAllCompleted()
                 .Where(x => x.StudentId == studentId)
                 .Sum(x => x.Amount);
         }
 
-        public int GetTeacherBalance(string teacherId)
+        public decimal GetTeacherBalance(string teacherId)
         {
             var result = this.GetAllCompleted()
                 .Where(x => x.ToTeacherId == teacherId)
@@ -64,6 +64,14 @@
         {
             return this.GetAllCompleted()
                 .Where(x => x.StudentId == studentId)
+                .To<T>()
+                .ToList();
+        }
+
+        public IEnumerable<T> GetTeacherTransactions<T>(string teacherId)
+        {
+            return this.GetAllCompleted()
+                .Where(x => x.ToTeacherId == teacherId)
                 .To<T>()
                 .ToList();
         }

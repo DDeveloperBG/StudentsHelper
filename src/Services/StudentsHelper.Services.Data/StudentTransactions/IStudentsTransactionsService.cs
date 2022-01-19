@@ -9,10 +9,12 @@
 
         Task MarkPaymentAsCompletedAsync(string sessionId);
 
-        int GetStudentBalance(string studentId);
+        decimal GetStudentBalance(string studentId);
 
-        int GetTeacherBalance(string teacherId);
+        decimal GetTeacherBalance(string teacherId);
 
         IEnumerable<T> GetStudentTransactions<T>(string studentId);
+
+        IEnumerable<T> GetTeacherTransactions<T>(string teacherId);
     }
 }
