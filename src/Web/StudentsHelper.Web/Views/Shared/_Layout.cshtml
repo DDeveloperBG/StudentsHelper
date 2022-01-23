@@ -39,7 +39,7 @@
         </nav>
     </header>
 
-    @RenderSection("GuestMainPageHeader", required: false)
+    @await this.RenderSectionAsync("GuestMainPageHeader", required: false)
 
     <div id="pageBody" class="container">
         <partial name="_AlertMessages" />

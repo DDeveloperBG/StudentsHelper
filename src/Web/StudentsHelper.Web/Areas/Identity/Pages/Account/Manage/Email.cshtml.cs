@@ -44,7 +44,7 @@
         {
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Нов имейл")]
             public string NewEmail { get; set; }
         }
 

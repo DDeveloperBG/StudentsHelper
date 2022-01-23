@@ -1,26 +1,49 @@
 ﻿namespace StudentsHelper.Web.Controllers
 {
     using System.Diagnostics;
-
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-
+    using StudentsHelper.Common;
+    using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.SchoolSubjects;
+    using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Web.Infrastructure.Alerts;
     using StudentsHelper.Web.ViewModels;
     using StudentsHelper.Web.ViewModels.SchoolSubjects;
 
     public class HomeController : BaseController
     {
         private readonly ISchoolSubjectsService schoolSubjectsService;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly ITeachersService teachersService;
 
-        public HomeController(ISchoolSubjectsService schoolSubjectsService)
+        public HomeController(
+            ISchoolSubjectsService schoolSubjectsService,
+            UserManager<ApplicationUser> userManager,
+            ITeachersService teachersService)
         {
             this.schoolSubjectsService = schoolSubjectsService;
+            this.userManager = userManager;
+            this.teachersService = teachersService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             var schoolSubjects = this.schoolSubjectsService.GetAll<SchoolSubjectViewModel>();
             var model = new SchoolSubjectsListViewModel { SchoolSubjects = schoolSubjects };
+
+            if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+            {
+                var user = await this.userManager.GetUserAsync(this.User);
+                var hourWage = this.teachersService.GetHourWage(user.Id);
+
+                if (hourWage == null)
+                {
+                    return this.View(model).WithWarning("Не сте задали почасово заплащане на услугите си, за да го направите отидете в профила си и кликнете на баланс.");
+                }
+            }
+
             return this.View(model);
         }
 

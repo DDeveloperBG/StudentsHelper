@@ -27,5 +27,9 @@
         IQueryable<Teacher> GetAllAsNoTracking();
 
         IQueryable<Teacher> GetAll();
+
+        decimal? GetHourWage(string userId);
+
+        Task ChangeTeacherHourWageAsync(string teacherId, decimal teacherWage);
     }
 }

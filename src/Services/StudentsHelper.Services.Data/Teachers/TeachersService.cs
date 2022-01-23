@@ -112,5 +112,23 @@
                 .All()
                 .Where(x => x.ApplicationUser.UserName != GlobalConstants.DeletedUserUsername);
         }
+
+        public decimal? GetHourWage(string userId)
+        {
+            return this.GetAllAsNoTracking()
+                .Where(x => x.ApplicationUserId == userId)
+                .Select(x => x.HourWage)
+                .SingleOrDefault();
+        }
+
+        public Task ChangeTeacherHourWageAsync(string teacherId, decimal teacherWage)
+        {
+            var teacher = this.GetAll()
+                .Where(x => x.Id == teacherId)
+                .SingleOrDefault();
+
+            teacher.HourWage = teacherWage;
+            return this.teachersRepository.SaveChangesAsync();
+        }
     }
 }

@@ -3,16 +3,39 @@
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Профил</a></li>
-    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.BalanceNavClass(ViewContext)" id="balance" asp-page="./Balance">Баланс</a></li>
-    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Имейл</a></li>
-    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Парола</a></li>
+    <li class="nav-item">
+        <a class="nav-link profile-nav-a @ManageNavPages.IndexNavClass(ViewContext)" id="profile" 
+            asp-area="Identity" asp-page="/Account/Manage/Index">Профил</a>
+        </li>
+    <li class="nav-item">
+        <a class="nav-link profile-nav-a @ManageNavPages.BalanceNavClass(ViewContext)" id="balance" 
+            asp-area="Identity"
+            asp-controller="Balance" 
+            asp-action="Index">Баланс</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link profile-nav-a @ManageNavPages.EmailNavClass(ViewContext)" id="email" 
+            asp-area="Identity" asp-page="/Account/Manage/Email">Имейл</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link profile-nav-a @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" 
+            asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Парола</a>
+    </li>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link profile-nav-a @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
+        <li id="external-logins" class="nav-item">
+            <a id="external-login" class="nav-link profile-nav-a @ManageNavPages.ExternalLoginsNavClass(ViewContext)" 
+                asp-area="Identity" asp-page="/Account/Manage/ExternalLogins">External logins</a>
+        </li>
     }
-    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link profile-nav-a @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Лична информация</a></li>
+    <li class="nav-item">
+        <a class="nav-link profile-nav-a @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" 
+            asp-area="Identity" asp-page="/Account/Manage/TwoFactorAuthentication">Two-factor authentication</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link profile-nav-a @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" 
+            asp-area="Identity" asp-page="/Account/Manage/PersonalData">Лична информация</a>
+    </li>
     <li class="nav-item">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
             <button type="submit" class="nav-link btn btn-link profile-nav-a">Изход</button>

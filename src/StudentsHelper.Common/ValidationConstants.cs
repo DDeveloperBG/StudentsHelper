@@ -27,6 +27,10 @@
 
         public const int MaxDepositAmount = 1000;
 
+        public const int MinTeacherWage = 1;
+
+        public const int MaxTeacherWage = 300;
+
         public static readonly Dictionary<string, string> ValidExteinsionsForPictureToMime
             = new Dictionary<string, string>
             {

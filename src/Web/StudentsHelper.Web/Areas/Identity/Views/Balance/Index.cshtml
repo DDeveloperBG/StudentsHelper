@@ -1,0 +1,75 @@
+﻿@using StudentsHelper.Common;
+@using StudentsHelper.Web.ViewModels.Balance;
+@model BalanceViewModel
+@{
+    ViewData["Title"] = "Баланс";
+    ViewData["ParentLayout"] = "/Views/Shared/_Layout.cshtml";
+    ViewData["ActivePage"] = StudentsHelper.Web.Areas.Identity.Pages.Account.Manage.ManageNavPages.Balance;
+}
+
+@section ManageCss {
+<link rel="stylesheet" href="~/css/balance.min.css" asp-append-version="true" />
+}
+
+<h5 class="mt-2">@ViewData["Title"]: @Model.BalanceAmount лв.</h5>
+@if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+{
+    <div id="add-to-balance-container" class="mt-4 col-md-6">
+        <h5>Добави (цяло число)</h5>
+        <form method="POST" asp-area="Identity" asp-controller="Balance" asp-action="Deposit">
+            @{
+                var depositInput = new DepositInputModel();
+            }
+            <div class="form-group">
+                <label asp-for="@depositInput.DepositRequestMoneyAmount"></label>
+                <input asp-for="@depositInput.DepositRequestMoneyAmount" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">Плати</button>
+            <br />
+            <span asp-validation-for="@depositInput.DepositRequestMoneyAmount" class="text-danger"></span>
+        </form>
+    </div>
+}
+
+@if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+{
+    <h5 class="mt-2">Възнаграждение: @Model.TeacherHourWage лв/час</h5>
+    <div id="add-to-balance-container" class="mt-4 col-md-6">
+        <h5>Възнаграждение</h5>
+        <form method="POST" asp-area="Identity" asp-controller="Balance" asp-action="SetTeacherWage">
+            @{
+                var teacherWageInput = new TeacherWageInputModel();
+            }
+            <div class="form-group">
+                <label asp-for="@teacherWageInput.TeacherWage"></label>
+                <input asp-for="@teacherWageInput.TeacherWage" class="form-control" value=@Model.TeacherHourWage />
+            </div>
+            <button type="submit" class="btn btn-primary">Запази</button>
+            <br />
+            <span asp-validation-for="@teacherWageInput.TeacherWage" class="text-danger"></span>
+        </form>
+    </div>
+}
+
+<div id="transactions-container" class="mt-4">
+    <h5>Транзакции:</h5>
+    <table class="mt-3 table">
+        <tbody>
+            @foreach (var transaction in Model.TransactionsInfo)
+            {
+                if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+                {
+                    <tr class="row">
+                        <td class="col-2">@transaction.PaymentDate.ToString("dd.MM.yyyy")</td>
+                        <td class="col-4">@(transaction.TeacherName == null ? "Депозит" : $"Плащане на урок с {transaction.TeacherName}")</td>
+                        <td class="col-2 font-weight-bold text-right" style="color: @(@transaction.Amount > 0 ? "green" : "red")">@(@transaction.Amount > 0 ? '+' : '\0')@transaction.Amount</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

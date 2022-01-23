@@ -19,6 +19,8 @@
             this.IsRejected = false;
         }
 
+        public decimal? HourWage { get; set; }
+
         [Required]
         [ForeignKey(nameof(ApplicationUser))]
         public string ApplicationUserId { get; set; }
