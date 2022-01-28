@@ -49,7 +49,7 @@
         {
             return this.GetAllAsNoTracking()
                 .Where(x => x.Subjects
-                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected);
+                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
         }
 
         public string GetId(string userId)
@@ -113,10 +113,10 @@
                 .Where(x => x.ApplicationUser.UserName != GlobalConstants.DeletedUserUsername);
         }
 
-        public decimal? GetHourWage(string userId)
+        public decimal? GetHourWage(string teacherId)
         {
             return this.GetAllAsNoTracking()
-                .Where(x => x.ApplicationUserId == userId)
+                .Where(x => x.Id == teacherId)
                 .Select(x => x.HourWage)
                 .SingleOrDefault();
         }

@@ -1,0 +1,43 @@
+﻿@using StudentsHelper.Common
+
+@model StudentsHelper.Web.ViewModels.Consultations.BookConsultationInputModel
+
+@{
+    ViewData["Title"] = "Резервирай консултация";
+}
+
+<div class="m-5" style="box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px;">
+    <div class="p-4">
+        <h5 class="font-weight-normal text-left">Резервирайте консултация</h5>
+        <form method="post" class="col-6">
+            <input type="hidden" asp-for="@Model.TeacherId" />
+            <div class="form-group mt-4 mb-4">
+                <label asp-for="@Model.StartTime"></label>
+                <input id="startTimeInput" asp-for="@Model.StartTime" class="form-control" />
+                <span asp-validation-for="@Model.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4 mb-4">
+                <label>Продължителност: (часове:минути)</label>
+                <input asp-for="@Model.Duration" class="form-control" value="00:00" />
+                <span asp-validation-for="@Model.Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4 mb-4">
+                <label>Цел:</label>
+                <textarea asp-for="@Model.Reason"
+                          class="form-control"
+                          type="textarea"
+                          placeholder="Цел на консултацията (уроци за обсъждане и т.н.)"
+                          rows="7">
+                            </textarea>
+                <span asp-validation-for="@Model.Reason" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Изпрати</button>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+<script src="~/moment.js/moment.min.js" asp-append-version="true"></script>
+<script src="~/js/Consultation/bookConsultationDatetimeManagment.js" asp-append-version="true"></script>
+}

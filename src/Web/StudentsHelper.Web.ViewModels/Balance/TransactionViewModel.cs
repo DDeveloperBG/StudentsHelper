@@ -20,7 +20,7 @@
             configuration.CreateMap<StudentTransaction, TransactionViewModel>()
                 .ForMember(
                     x => x.TeacherName,
-                    opt => opt.MapFrom(src => src.ToTeacher.ApplicationUser.Name));
+                    opt => opt.MapFrom(src => src.Consultation.Teacher.ApplicationUser.Name));
         }
     }
 }

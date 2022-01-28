@@ -54,7 +54,7 @@
         public decimal GetTeacherBalance(string teacherId)
         {
             var result = this.GetAllCompleted()
-                .Where(x => x.ToTeacherId == teacherId)
+                .Where(x => x.Consultation.TeacherId == teacherId)
                 .Sum(x => x.Amount);
 
             return Math.Abs(result);
@@ -71,7 +71,7 @@
         public IEnumerable<T> GetTeacherTransactions<T>(string teacherId)
         {
             return this.GetAllCompleted()
-                .Where(x => x.ToTeacherId == teacherId)
+                .Where(x => x.Consultation.TeacherId == teacherId)
                 .To<T>()
                 .ToList();
         }

@@ -45,5 +45,7 @@
         }
 
         public double AverageRating { get; set; }
+
+        public decimal? HourWage { get; set; }
     }
 }

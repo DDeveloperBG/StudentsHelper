@@ -1,6 +1,7 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Controllers
 {
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -59,15 +60,26 @@
             }
             else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
             {
-                viewModel.TeacherHourWage = this.teachersService.GetHourWage(user.Id);
                 string teacherId = this.teachersService.GetId(user.Id);
+                viewModel.TeacherHourWage = this.teachersService.GetHourWage(teacherId);
                 viewModel.BalanceAmount = this.studentsTransactionsService.GetTeacherBalance(teacherId);
                 viewModel.TransactionsInfo = this.studentsTransactionsService.GetTeacherTransactions<TransactionViewModel>(teacherId);
             }
 
             viewModel.TransactionsInfo = viewModel.TransactionsInfo.OrderByDescending(x => x.PaymentDate);
 
-            var responce = this.View(viewModel);
+            IActionResult responce = this.View(viewModel);
+            if (result != null)
+            {
+                this.HttpContext.Session.TryGetValue("returnUrl", out byte[] outputBytes);
+                this.HttpContext.Session.Remove("returnUrl");
+                var returnUrl = Encoding.UTF8.GetString(outputBytes);
+
+                if (returnUrl != null)
+                {
+                    responce = this.Redirect(returnUrl);
+                }
+            }
 
             switch (result)
             {

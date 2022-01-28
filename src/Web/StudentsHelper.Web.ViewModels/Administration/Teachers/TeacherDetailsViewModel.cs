@@ -14,6 +14,8 @@
 
         public string ApplicationUserName { get; set; }
 
+        public string ApplicationUserEmail { get; set; }
+
         public string ApplicationUserPicturePath { get; set; }
 
         public IEnumerable<SchoolSubjectPickViewModel> Subjects { get; set; }

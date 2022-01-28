@@ -16,7 +16,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-
     using StudentsHelper.Data;
     using StudentsHelper.Data.Common;
     using StudentsHelper.Data.Common.Repositories;
@@ -25,6 +24,7 @@
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Services.Data.Consulations;
     using StudentsHelper.Services.Data.LocationLoaders;
     using StudentsHelper.Services.Data.Paging;
     using StudentsHelper.Services.Data.Ratings;
@@ -37,6 +37,7 @@
     using StudentsHelper.Services.Payments;
     using StudentsHelper.Services.Payments.Models;
     using StudentsHelper.Services.VideoChat;
+    using StudentsHelper.Web.Infrastructure;
     using StudentsHelper.Web.ViewModels;
 
     public class Startup
@@ -105,6 +106,8 @@
             {
                 opts.Cookie.Name = ".Session";
                 opts.IdleTimeout = TimeSpan.FromHours(24);
+                opts.Cookie.HttpOnly = true;
+                opts.Cookie.IsEssential = true;
                 opts.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
@@ -128,6 +131,7 @@
             services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
             services.AddTransient<IStudentRegisterer, StudentRegisterer>();
             services.AddTransient<IPaymentsService, StripePaymentsService>();
+            services.AddTransient<IConsulationsService, ConsulationsService>();
             services.AddTransient<IStudentsTransactionsService, StudentsTransactionsService>();
             services.AddTransient<IEmailSender>(_
                 => new SendGridEmailSender(
@@ -182,6 +186,8 @@
             app.UseAuthorization();
 
             app.UseSession();
+
+            app.Use(Middlewares.AddTeacherActivityAsync);
 
             app.UseEndpoints(
                 endpoints =>

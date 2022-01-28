@@ -1,7 +1,6 @@
 ﻿namespace StudentsHelper.Data.Models
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     using Microsoft.EntityFrameworkCore;
@@ -27,15 +26,16 @@
 
         public string SessionId { get; set; }
 
-        [Required]
+        // For payments
+        [ForeignKey(nameof(Consultation))]
+        public string ConsultationId { get; set; }
+
+        public Consultation Consultation { get; set; }
+
+        // For deposits
         [ForeignKey(nameof(Student))]
         public string StudentId { get; set; }
 
         public Student Student { get; set; }
-
-        [ForeignKey(nameof(ToTeacher))]
-        public string ToTeacherId { get; set; }
-
-        public Teacher ToTeacher { get; set; }
     }
 }

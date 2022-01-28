@@ -29,8 +29,8 @@
         {
             var options = new SessionCreateOptions
             {
-                SuccessUrl = $"{this.options.Value.Domain}Identity/Account/Manage/Balance?result=success",
-                CancelUrl = $"{this.options.Value.Domain}Identity/Account/Manage/Balance?result=canceled",
+                SuccessUrl = $"{this.options.Value.Domain}Identity/Balance?result=success",
+                CancelUrl = $"{this.options.Value.Domain}Identity/Balance?result=canceled",
                 Mode = "payment",
                 CustomerEmail = studentEmail,
                 LineItems = new List<SessionLineItemOptions>

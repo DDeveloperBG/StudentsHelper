@@ -28,7 +28,7 @@
 
         IQueryable<Teacher> GetAll();
 
-        decimal? GetHourWage(string userId);
+        decimal? GetHourWage(string teacherId);
 
         Task ChangeTeacherHourWageAsync(string teacherId, decimal teacherWage);
     }

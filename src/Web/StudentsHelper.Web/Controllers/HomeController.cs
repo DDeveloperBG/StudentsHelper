@@ -36,7 +36,8 @@
             if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
             {
                 var user = await this.userManager.GetUserAsync(this.User);
-                var hourWage = this.teachersService.GetHourWage(user.Id);
+                var teacherId = this.teachersService.GetId(user.Id);
+                var hourWage = this.teachersService.GetHourWage(teacherId);
 
                 if (hourWage == null)
                 {

@@ -14,10 +14,14 @@
 
 <div class="container background-container m-lg-5 col-auto text-center">
     <h2 class="pt-lg-5">@Model.ApplicationUserName</h2>
-        
+
     <div>
         <img src=@(Model.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
              class="col-md-2 img-fluid m-lg-4 teacher-picture img-thumbnail p-lg-4" />
+    </div>
+
+    <div>
+        <label class="mr-lg-2">Имейл: <strong>@Model.ApplicationUserEmail</strong></label>
     </div>
 
     <div class="p-lg-4">

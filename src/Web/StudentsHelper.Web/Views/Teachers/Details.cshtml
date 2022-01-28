@@ -13,6 +13,19 @@
 }
 
 <div class="container m-lg-5 col-auto text-center" style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+    @if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+    {
+        <div style="position: absolute;" class="m-3">
+            <h5>@Model.HourWage лв/час</h5>
+            <a 
+                asp-area=""
+                asp-controller="Consultations" 
+                asp-action="BookConsultation" 
+                asp-route-teacherId="@Model.Id" 
+                asp-route-returnUrl=@($"{Context.Request.Path}{Context.Request.QueryString}")
+                style="font-weight: 600;" class="btn btn-warning p-1">Резервирай час</a>
+        </div>
+    }
     <div>
         <img id="teacher-profile-picture" src=@(Model.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
              class="col-md-2 img-fluid m-lg-4 teacher-picture img-thumbnail p-lg-4" />
@@ -33,15 +46,18 @@
                         }
 
                         int numberAfterFloatingPoint = (int)(Model.AverageRating * 10) % 10;
+                        byte notFullStar = 0;
                         if (numberAfterFloatingPoint != 0)
                         {
+                            notFullStar++;
+
                             <div class="star" style="background: url('/img/empty_star.png') no-repeat left;">
                                 <div class="star mb-1 mr-1"
                                  style="background: url('/img/star.png') no-repeat left; width: @(numberAfterFloatingPoint * 10)%;"></div>
                             </div>
                         }
 
-                        int emptyStarsCount = Model.RatingRangesCount.Count - fullStarsCount - 1;
+                        int emptyStarsCount = Model.RatingRangesCount.Count - fullStarsCount - notFullStar;
                         for (int i = 0; i < emptyStarsCount; i++)
                         {
                             <img class="star mb-1 mr-1" src="~/img/empty_star.png">

@@ -33,6 +33,24 @@
                         <li class="nav-item mr-3">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
+                        @{
+                            string action = string.Empty;
+                            if (this.User.IsInRole(GlobalConstants.StudentRoleName) || this.User.IsInRole(GlobalConstants.TeacherRoleName))
+                            {
+                                if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+                                {
+                                    action = "StudentConsultations";
+                                }
+                                else
+                                {
+                                    action = "TeacherConsultations";
+                                }
+
+                                <li class="nav-item mr-3">
+                                    <a class="nav-link" asp-area="" asp-controller="Consultations" asp-action="@action">Консултации</a>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
             </div>

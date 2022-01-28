@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentsHelper.Data;
 
@@ -11,9 +12,10 @@ using StudentsHelper.Data;
 namespace StudentsHelper.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220123150126_AddedTypeToHourWage")]
+    partial class AddedTypeToHourWage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,24 +287,13 @@ namespace StudentsHelper.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("HourWage")
-                        .HasColumnType("DECIMAL(5,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MeetingId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SchoolSubjectId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -317,10 +308,6 @@ namespace StudentsHelper.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
-
-                    b.HasIndex("MeetingId");
-
-                    b.HasIndex("SchoolSubjectId");
 
                     b.HasIndex("StudentId");
 
@@ -361,22 +348,6 @@ namespace StudentsHelper.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ContactFormEntries");
-                });
-
-            modelBuilder.Entity("StudentsHelper.Data.Models.Meeting", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Meeting");
                 });
 
             modelBuilder.Entity("StudentsHelper.Data.Models.PopulatedArea", b =>
@@ -787,18 +758,6 @@ namespace StudentsHelper.Data.Migrations
 
             modelBuilder.Entity("StudentsHelper.Data.Models.Consultation", b =>
                 {
-                    b.HasOne("StudentsHelper.Data.Models.Meeting", "Meeting")
-                        .WithMany()
-                        .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("StudentsHelper.Data.Models.SchoolSubject", "SchoolSubject")
-                        .WithMany()
-                        .HasForeignKey("SchoolSubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("StudentsHelper.Data.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
@@ -808,10 +767,6 @@ namespace StudentsHelper.Data.Migrations
                     b.HasOne("StudentsHelper.Data.Models.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
-
-                    b.Navigation("Meeting");
-
-                    b.Navigation("SchoolSubject");
 
                     b.Navigation("Student");
 

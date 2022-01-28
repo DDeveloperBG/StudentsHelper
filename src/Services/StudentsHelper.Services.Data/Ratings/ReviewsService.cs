@@ -30,6 +30,8 @@
                 .Select(x => new TeacherWithRating
                 {
                     Id = x.Id,
+                    HourWage = x.HourWage.Value,
+                    ApplicationUserEmail = x.ApplicationUser.Email,
                     ApplicationUserName = x.ApplicationUser.Name,
                     ApplicationUserPicturePath = x.ApplicationUser.PicturePath,
                     AverageRating = x.Reviews.Count != 0 ? Math.Round(x.Reviews.Average(x => x.Rating), 2) : 0,
@@ -47,6 +49,7 @@
                     Id = x.Id,
                     ApplicationUserName = x.ApplicationUser.Name,
                     ApplicationUserPicturePath = x.ApplicationUser.PicturePath,
+                    HourWage = x.HourWage,
                     RatingRangesCount = new int[]
                     {
                         GetReviewsTypeCount(x.Reviews, 1),

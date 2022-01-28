@@ -19,6 +19,7 @@
             this.IsRejected = false;
         }
 
+        [Column(TypeName = "DECIMAL(5, 2)")]
         public decimal? HourWage { get; set; }
 
         [Required]
