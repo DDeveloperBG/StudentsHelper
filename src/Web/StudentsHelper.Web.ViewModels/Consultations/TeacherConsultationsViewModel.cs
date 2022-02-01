@@ -11,6 +11,8 @@
 
         public string Reason { get; set; }
 
+        public string StudentEmail { get; set; }
+
         public string StudentName { get; set; }
 
         public string StudentPicturePath { get; set; }
@@ -21,6 +23,9 @@
                 .ForMember(
                     x => x.ConsultationDetails,
                     opt => opt.MapFrom(src => src))
+                .ForMember(
+                    x => x.StudentEmail,
+                    opt => opt.MapFrom(src => src.Student.ApplicationUser.Email))
                 .ForMember(
                     x => x.StudentName,
                     opt => opt.MapFrom(src => src.Student.ApplicationUser.Name))

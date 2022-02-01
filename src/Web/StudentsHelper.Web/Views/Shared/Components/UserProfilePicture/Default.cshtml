@@ -1,0 +1,12 @@
+﻿@using StudentsHelper.Web.ViewModels.Reviews
+@model StudentsHelper.Web.ViewModels.User.UserProfilePictureViewModel
+
+<div class="ml-auto position-relative" style="width: fit-content;">
+    <img src=@Model.PicturePath class="img-fluid ml-3 rounded" style="width: 50px; height: 50px;" />
+    <div style="position: absolute;top: 31px;left: 47px;background-color: white;border-radius: 13px;padding: 2px;">
+        <div style="width: 13px;
+                    height: 13px;
+                    background-color: @(Model.IsActive ? "#55CA36" : "#D6D7DC");
+                    border-radius: 13px;"></div>
+    </div>
+</div>

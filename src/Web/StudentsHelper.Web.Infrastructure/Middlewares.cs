@@ -8,12 +8,16 @@
 
     public static class Middlewares
     {
-        public static Task AddTeacherActivityAsync(HttpContext context, Func<Task> next)
+        public static Task AddUserActivityAsync(HttpContext context, Func<Task> next)
         {
-            if (context.User.IsInRole(GlobalConstants.TeacherRoleName))
+            if (context.User.Identity.IsAuthenticated)
             {
-                GlobalVariables.TeachersActivityDictionary
-                    .AddOrUpdate(context.User.Identity.Name, DateTime.UtcNow, (a, b) => { return b; });
+                GlobalVariables.UsersActivityDictionary[context.User.Identity.Name] = DateTime.UtcNow;
+            }
+
+            if (context.Request.Query.ContainsKey("userStatusUpdate"))
+            {
+                return context.Response.WriteAsync("Status updated.");
             }
 
             return next();

@@ -26,7 +26,8 @@
         {
             <tr>
                 <td>
-                    <img src=@(consultation.StudentPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded" style="width: 50px; height: 50px;" />
+                    <vc:user-profile-picture picture-path="@consultation.StudentPicturePath" email="@consultation.StudentEmail"></vc:user-profile-picture>
+                    @*<img src=@(consultation.StudentPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded" style="width: 50px; height: 50px;" />*@
                 </td>
                 <td class="align-bottom"><p>@consultation.StudentName</p></td>
                 <td class="align-bottom"><p>@consultation.Reason</p></td>

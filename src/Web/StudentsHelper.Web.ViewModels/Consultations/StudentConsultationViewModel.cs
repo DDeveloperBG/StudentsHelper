@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Web.ViewModels.Consultations
 {
-
     using AutoMapper;
 
     using StudentsHelper.Data.Models;
@@ -9,6 +8,8 @@
     public class StudentConsultationViewModel : IHaveCustomMappings
     {
         public ConsultationViewModel ConsultationDetails { get; set; }
+
+        public string TeacherEmail { get; set; }
 
         public string TeacherName { get; set; }
 
@@ -20,6 +21,9 @@
                 .ForMember(
                     x => x.ConsultationDetails,
                     opt => opt.MapFrom(src => src))
+                 .ForMember(
+                    x => x.TeacherEmail,
+                    opt => opt.MapFrom(src => src.Teacher.ApplicationUser.Email))
                 .ForMember(
                     x => x.TeacherName,
                     opt => opt.MapFrom(src => src.Teacher.ApplicationUser.Name))

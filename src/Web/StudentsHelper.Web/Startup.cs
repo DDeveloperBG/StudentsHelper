@@ -187,7 +187,7 @@
 
             app.UseSession();
 
-            app.Use(Middlewares.AddTeacherActivityAsync);
+            app.Use(Middlewares.AddUserActivityAsync);
 
             app.UseEndpoints(
                 endpoints =>

@@ -9,11 +9,11 @@
         /// Key -> Application User Email
         /// Value -> Last time active.
         /// </summary>
-        public static readonly ConcurrentDictionary<string, DateTime> TeachersActivityDictionary;
+        public static readonly ConcurrentDictionary<string, DateTime> UsersActivityDictionary;
 
         static GlobalVariables()
         {
-            TeachersActivityDictionary = new ConcurrentDictionary<string, DateTime>();
+            UsersActivityDictionary = new ConcurrentDictionary<string, DateTime>();
         }
     }
 }

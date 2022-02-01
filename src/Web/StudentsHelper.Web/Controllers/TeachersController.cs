@@ -30,8 +30,8 @@
             ITeachersService teachersService,
             IStudentsService studentsService,
             IReviewsService reviewsService,
-            IRepository<SchoolSubject> schoolSubjects,
             ICloudStorageService cloudStorageService,
+            IRepository<SchoolSubject> schoolSubjects,
             UserManager<ApplicationUser> userManager)
         {
             this.teachersService = teachersService;
@@ -57,16 +57,13 @@
             var teachers = this.reviewsService.GetTeachersRating(this.teachersService.GetAllOfType(subjectId));
             foreach (var teacher in teachers)
             {
-                teacher.ApplicationUserPicturePath
-                    = this.cloudStorageService.GetImageUri(teacher.ApplicationUserPicturePath, 50, 50);
-
-                GlobalVariables.TeachersActivityDictionary
+                GlobalVariables.UsersActivityDictionary
                     .TryGetValue(teacher.ApplicationUserEmail, out lastTimeActive);
 
                 teacher.IsActive = (now - lastTimeActive).Minutes < 2;
             }
 
-            teachers = teachers.OrderBy(x => x.IsActive).ThenByDescending(x => x.AverageRating).ThenBy(x => x.HourWage);
+            teachers = teachers.OrderByDescending(x => x.IsActive).ThenByDescending(x => x.AverageRating).ThenBy(x => x.HourWage);
 
             return this.View(teachers);
         }
@@ -87,8 +84,8 @@
             }
 
             var teacher = this.reviewsService.GetTeacherRating(teacherId);
-            teacher.ApplicationUserPicturePath
-                = this.cloudStorageService.GetImageUri(teacher.ApplicationUserPicturePath, 130, 130);
+            teacher.ApplicationUserPicturePath = this.cloudStorageService
+                .GetImageUri(teacher.ApplicationUserPicturePath, 100, 100);
 
             return this.View(teacher);
         }

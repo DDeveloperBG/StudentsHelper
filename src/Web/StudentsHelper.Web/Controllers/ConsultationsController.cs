@@ -24,7 +24,6 @@
         private readonly IStudentsService studentsService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ITeachersService teachersService;
-        private readonly ICloudStorageService cloudStorageService;
         private readonly IStudentsTransactionsService studentsTransactionsService;
 
         public ConsultationsController(
@@ -32,14 +31,12 @@
             UserManager<ApplicationUser> userManager,
             IStudentsService studentsService,
             ITeachersService teachersService,
-            ICloudStorageService cloudStorageService,
             IStudentsTransactionsService studentsTransactionsService)
         {
             this.consulationsService = consulationsService;
             this.userManager = userManager;
             this.studentsService = studentsService;
             this.teachersService = teachersService;
-            this.cloudStorageService = cloudStorageService;
             this.studentsTransactionsService = studentsTransactionsService;
         }
 
@@ -152,12 +149,6 @@
             var viewModel = this.consulationsService.GetStudentConsultations<StudentConsultationViewModel>(studentId)
                 .OrderBy(x => x.ConsultationDetails.StartTime);
 
-            foreach (var item in viewModel)
-            {
-                item.TeacherPicturePath
-                        = this.cloudStorageService.GetImageUri(item.TeacherPicturePath, 50, 50);
-            }
-
             return this.View(viewModel);
         }
 
@@ -173,12 +164,6 @@
             var teacherId = this.teachersService.GetId(teacherUser.Id);
             var viewModel = this.consulationsService.GetTeacherConsultations<TeacherConsultationsViewModel>(teacherId)
                 .OrderBy(x => x.ConsultationDetails.StartTime);
-
-            foreach (var item in viewModel)
-            {
-                item.StudentPicturePath
-                        = this.cloudStorageService.GetImageUri(item.StudentPicturePath, 50, 50);
-            }
 
             return this.View(viewModel);
         }
