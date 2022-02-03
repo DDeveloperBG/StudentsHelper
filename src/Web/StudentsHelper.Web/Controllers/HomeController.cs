@@ -28,7 +28,7 @@
             this.teachersService = teachersService;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> IndexAsync(string message)
         {
             var schoolSubjects = this.schoolSubjectsService.GetAll<SchoolSubjectViewModel>();
             var model = new SchoolSubjectsListViewModel { SchoolSubjects = schoolSubjects };
@@ -45,7 +45,13 @@
                 }
             }
 
-            return this.View(model);
+            IActionResult responce = this.View(model);
+            if (message != null)
+            {
+                responce = responce.WithInfo(message);
+            }
+
+            return responce;
         }
 
         public IActionResult Privacy()

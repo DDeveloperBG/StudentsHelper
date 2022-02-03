@@ -4,17 +4,17 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-
+    using Hangfire;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Consulations;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.Time;
     using StudentsHelper.Web.Infrastructure.Alerts;
     using StudentsHelper.Web.ViewModels.Consultations;
 
@@ -25,19 +25,22 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ITeachersService teachersService;
         private readonly IStudentsTransactionsService studentsTransactionsService;
+        private readonly IDateTimeProvider dateTimeProvider;
 
         public ConsultationsController(
             IConsulationsService consulationsService,
             UserManager<ApplicationUser> userManager,
             IStudentsService studentsService,
             ITeachersService teachersService,
-            IStudentsTransactionsService studentsTransactionsService)
+            IStudentsTransactionsService studentsTransactionsService, 
+            IDateTimeProvider dateTimeProvider)
         {
             this.consulationsService = consulationsService;
             this.userManager = userManager;
             this.studentsService = studentsService;
             this.teachersService = teachersService;
             this.studentsTransactionsService = studentsTransactionsService;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         [Authorize(Roles = GlobalConstants.StudentRoleName)]
@@ -130,7 +133,12 @@
 
             int subjectId = BitConverter.ToInt32(outputBytesForSubject);
 
-            await this.consulationsService.AddConsultationAsync(inputModel.StartTime, endTime, hourWage.Value, inputModel.Reason, subjectId, studentId, inputModel.TeacherId);
+            var consultation = await this.consulationsService.AddConsultationAsync(inputModel.StartTime, endTime, hourWage.Value, inputModel.Reason, subjectId, studentId, inputModel.TeacherId);
+
+            // Important !!!
+            var jobId = BackgroundJob.Schedule(
+                () => this.studentsTransactionsService.ChargeStudentAsync(consultation.MeetingId, this.dateTimeProvider.GetUtcNow()),
+                consultation.Duration);
 
             this.HttpContext.Session.Remove("returnUrl");
             return responce.WithSuccess("Успешно резервирахте консултация.");

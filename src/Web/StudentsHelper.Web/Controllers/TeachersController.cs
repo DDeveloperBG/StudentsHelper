@@ -53,14 +53,21 @@
             this.HttpContext.Session.Set("subjectId", BitConverter.GetBytes(subjectId));
 
             DateTime now = DateTime.UtcNow;
-            DateTime lastTimeActive;
+            DateTime emptyTime = default;
             var teachers = this.reviewsService.GetTeachersRating(this.teachersService.GetAllOfType(subjectId));
             foreach (var teacher in teachers)
             {
                 GlobalVariables.UsersActivityDictionary
-                    .TryGetValue(teacher.ApplicationUserEmail, out lastTimeActive);
+                    .TryGetValue(teacher.ApplicationUserEmail, out DateTime lastTimeActive);
 
-                teacher.IsActive = (now - lastTimeActive).Minutes < 2;
+                if (lastTimeActive == emptyTime)
+                {
+                    teacher.IsActive = false;
+                }
+                else
+                {
+                    teacher.IsActive = (now - lastTimeActive).Minutes < 2;
+                }
             }
 
             teachers = teachers.OrderByDescending(x => x.IsActive).ThenByDescending(x => x.AverageRating).ThenBy(x => x.HourWage);

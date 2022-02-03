@@ -11,9 +11,9 @@
 
     public class ConsulationsService : IConsulationsService
     {
-        private readonly IDeletableEntityRepository<Consultation> consultationsRepository;
+        private readonly IRepository<Consultation> consultationsRepository;
 
-        public ConsulationsService(IDeletableEntityRepository<Consultation> consultationsRepository)
+        public ConsulationsService(IRepository<Consultation> consultationsRepository)
         {
             this.consultationsRepository = consultationsRepository;
         }
@@ -36,7 +36,7 @@
                 .ToList();
         }
 
-        public async Task AddConsultationAsync(DateTime startTime, DateTime endTime, decimal hourWage, string reason, int subjectId, string studentId, string teacherId)
+        public async Task<Consultation> AddConsultationAsync(DateTime startTime, DateTime endTime, decimal hourWage, string reason, int subjectId, string studentId, string teacherId)
         {
             var consulation = new Consultation
             {
@@ -51,6 +51,7 @@
             };
             await this.consultationsRepository.AddAsync(consulation);
             await this.consultationsRepository.SaveChangesAsync();
+            return consulation;
         }
 
         public bool IsConsultationActive(string meetingId, string userId)

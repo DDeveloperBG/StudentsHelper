@@ -7,16 +7,21 @@
 
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.Data.Meetings;
     using StudentsHelper.Services.Mapping;
+    using StudentsHelper.Web.ViewModels.Consultations;
 
     public class StudentsTransactionsService : IStudentsTransactionsService
     {
-        private IRepository<StudentTransaction> studentsTransactionsRepository;
+        private readonly IRepository<StudentTransaction> studentsTransactionsRepository;
+        private readonly IMeetingsService meetingsService;
 
         public StudentsTransactionsService(
-            IRepository<StudentTransaction> studentsTransactionsRepository)
+            IRepository<StudentTransaction> studentsTransactionsRepository,
+            IMeetingsService meetingsService)
         {
             this.studentsTransactionsRepository = studentsTransactionsRepository;
+            this.meetingsService = meetingsService;
         }
 
         public async Task AddStudentTransaction(string studentId, int amount, string sessionId)
@@ -44,6 +49,13 @@
             return this.studentsTransactionsRepository.SaveChangesAsync();
         }
 
+        public decimal GetStudentBalanceWithUserId(string userId)
+        {
+            return this.GetAllCompleted()
+                .Where(x => x.Student.ApplicationUserId == userId)
+                .Sum(x => x.Amount);
+        }
+
         public decimal GetStudentBalance(string studentId)
         {
             return this.GetAllCompleted()
@@ -63,7 +75,7 @@
         public IEnumerable<T> GetStudentTransactions<T>(string studentId)
         {
             return this.GetAllCompleted()
-                .Where(x => x.StudentId == studentId)
+                .Where(x => x.StudentId == studentId || x.Consultation.StudentId == studentId)
                 .To<T>()
                 .ToList();
         }
@@ -74,6 +86,27 @@
                 .Where(x => x.Consultation.TeacherId == teacherId)
                 .To<T>()
                 .ToList();
+        }
+
+        public Task ChargeStudentAsync(string meetingId, DateTime paymentDate)
+        {
+            var meetingData = this.meetingsService.GetMeetingData<ChargeStudentNeededDataModel>(meetingId);
+
+            if (meetingData.Price < 1)
+            {
+                return Task.CompletedTask;
+            }
+
+            var transaction = new StudentTransaction
+            {
+                Amount = meetingData.Price * -1, // So that it would be known as payment.
+                PaymentDate = paymentDate,
+                IsCompleted = true,
+                ConsultationId = meetingData.ConsultationId,
+            };
+
+            this.studentsTransactionsRepository.AddAsync(transaction);
+            return this.studentsTransactionsRepository.SaveChangesAsync();
         }
 
         private IQueryable<StudentTransaction> GetAllCompleted()

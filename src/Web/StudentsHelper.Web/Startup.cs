@@ -5,6 +5,11 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
+    using Hangfire;
+    using Hangfire.Console;
+    using Hangfire.Dashboard;
+    using Hangfire.SqlServer;
+
     using IdentityModel;
 
     using Microsoft.AspNetCore.Authentication.OAuth;
@@ -16,6 +21,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using StudentsHelper.Common;
     using StudentsHelper.Data;
     using StudentsHelper.Data.Common;
     using StudentsHelper.Data.Common.Repositories;
@@ -26,6 +32,7 @@
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Consulations;
     using StudentsHelper.Services.Data.LocationLoaders;
+    using StudentsHelper.Services.Data.Meetings;
     using StudentsHelper.Services.Data.Paging;
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.SchoolSubjects;
@@ -36,6 +43,7 @@
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.Payments;
     using StudentsHelper.Services.Payments.Models;
+    using StudentsHelper.Services.Time;
     using StudentsHelper.Services.VideoChat;
     using StudentsHelper.Web.Infrastructure;
     using StudentsHelper.Web.ViewModels;
@@ -54,6 +62,21 @@
         {
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddHangfire(
+               config => config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                   .UseSimpleAssemblyNameTypeSerializer().UseRecommendedSerializerSettings().UseSqlServerStorage(
+                       this.configuration.GetConnectionString("DefaultConnection"),
+                       new SqlServerStorageOptions
+                       {
+                           CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                           SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                           QueuePollInterval = TimeSpan.Zero,
+                           UseRecommendedIsolationLevel = true,
+                           UsePageLocksOnDequeue = true,
+                           DisableGlobalLocks = true,
+                       }).UseConsole());
+            services.AddHangfireServer();
 
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
@@ -119,6 +142,8 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
+            services.AddTransient<IMeetingsService, MeetingsService>();
+            services.AddTransient<IDateTimeProvider, CustomDateTimeProvider>();
             services.AddTransient<ISchoolSubjectsService, SchoolSubjectsService>();
             services.AddTransient<ITeachersService, TeachersService>();
             services.AddTransient<IStudentsService, StudentsService>();
@@ -189,6 +214,10 @@
 
             app.Use(Middlewares.AddUserActivityAsync);
 
+            app.UseHangfireDashboard(
+                    "/hangfire",
+                    new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
+
             app.UseEndpoints(
                 endpoints =>
                     {
@@ -196,6 +225,15 @@
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });
+        }
+
+        private class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                var httpContext = context.GetHttpContext();
+                return httpContext.User.IsInRole(GlobalConstants.AdministratorRoleName);
+            }
         }
     }
 }

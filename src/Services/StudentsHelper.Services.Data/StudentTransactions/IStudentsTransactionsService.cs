@@ -1,5 +1,6 @@
 ﻿namespace StudentsHelper.Services.Data.StudentTransactions
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -16,5 +17,7 @@
         IEnumerable<T> GetStudentTransactions<T>(string studentId);
 
         IEnumerable<T> GetTeacherTransactions<T>(string teacherId);
+
+        Task ChargeStudentAsync(string meetingId, DateTime paymentDate);
     }
 }

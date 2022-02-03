@@ -6,7 +6,7 @@
 
     using StudentsHelper.Data.Common.Models;
 
-    public class Consultation : BaseDeletableModel<string>
+    public class Consultation : BaseModel<string>
     {
         public Consultation()
         {
