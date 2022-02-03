@@ -31,14 +31,14 @@
                 ChatEnabled = true,
                 ScreenShareEnabled = true,
                 PollEnabled = false,
-                WhiteBoardEnabled = true,
+                WhiteboardEnabled = true,
                 RaiseHandEnabled = true,
 
                 RecordingEnabled = false,
                 ParticipantCanToggleRecording = false,
 
                 BrandingEnabled = false,
-                PoweredBy = true,
+                PoweredBy = false,
 
                 ParticipantCanLeave = true,
 
@@ -53,14 +53,14 @@
 
                 JoinScreen = new JoinScreenConf
                 {
-                    Visible = true, // Show the join screen
+                    Visible = false, // Show the join screen
                     MeetingUrl = $"/VideoChat/VideoChat?{nameof(meetingId)}={meetingId}", // Meeting joining url
                 },
 
                 Pin = new PinConf
                 {
                     Allowed = true, // participant can pin any participant in meeting
-                    Layout = "SPOTLIGHT", // meeting layout - GRID | SPOTLIGHT | SIDEBAR
+                    Layout = "SIDEBAR", // meeting layout - GRID | SPOTLIGHT | SIDEBAR
                 },
             };
 

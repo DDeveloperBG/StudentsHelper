@@ -318,7 +318,8 @@ namespace StudentsHelper.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("MeetingId");
+                    b.HasIndex("MeetingId")
+                        .IsUnique();
 
                     b.HasIndex("SchoolSubjectId");
 
@@ -788,8 +789,8 @@ namespace StudentsHelper.Data.Migrations
             modelBuilder.Entity("StudentsHelper.Data.Models.Consultation", b =>
                 {
                     b.HasOne("StudentsHelper.Data.Models.Meeting", "Meeting")
-                        .WithMany()
-                        .HasForeignKey("MeetingId")
+                        .WithOne("Consultation")
+                        .HasForeignKey("StudentsHelper.Data.Models.Consultation", "MeetingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -922,6 +923,11 @@ namespace StudentsHelper.Data.Migrations
                     b.Navigation("Logins");
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("StudentsHelper.Data.Models.Meeting", b =>
+                {
+                    b.Navigation("Consultation");
                 });
 
             modelBuilder.Entity("StudentsHelper.Data.Models.PopulatedArea", b =>

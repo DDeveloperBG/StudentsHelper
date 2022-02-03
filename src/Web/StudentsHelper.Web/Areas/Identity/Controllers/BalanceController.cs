@@ -73,11 +73,15 @@
             {
                 this.HttpContext.Session.TryGetValue("returnUrl", out byte[] outputBytes);
                 this.HttpContext.Session.Remove("returnUrl");
-                var returnUrl = Encoding.UTF8.GetString(outputBytes);
 
-                if (returnUrl != null)
+                if (outputBytes != null)
                 {
-                    responce = this.Redirect(returnUrl);
+                    var returnUrl = Encoding.UTF8.GetString(outputBytes);
+
+                    if (returnUrl != null)
+                    {
+                        responce = this.Redirect(returnUrl);
+                    }
                 }
             }
 

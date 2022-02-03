@@ -52,5 +52,20 @@
             await this.consultationsRepository.AddAsync(consulation);
             await this.consultationsRepository.SaveChangesAsync();
         }
+
+        public bool IsConsultationActive(string meetingId, string userId)
+        {
+            var now = DateTime.UtcNow;
+
+            var count = this.consultationsRepository
+                .All()
+                .Where(x =>
+                    x.MeetingId == meetingId
+                    && (x.Teacher.ApplicationUserId == userId || x.Student.ApplicationUserId == userId)
+                    && (now >= x.StartTime && now <= x.EndTime))
+                .Count();
+
+            return count == 1;
+        }
     }
 }

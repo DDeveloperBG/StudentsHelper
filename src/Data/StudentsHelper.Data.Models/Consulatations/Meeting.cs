@@ -10,5 +10,7 @@
         {
             this.Id = Guid.NewGuid().ToString();
         }
+
+        public Consultation Consultation { get; set; }
     }
 }

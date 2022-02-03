@@ -24,7 +24,7 @@
 
         public bool PollEnabled { get; set; }
 
-        public bool WhiteBoardEnabled { get; set; }
+        public bool WhiteboardEnabled { get; set; }
 
         public bool RaiseHandEnabled { get; set; }
 
