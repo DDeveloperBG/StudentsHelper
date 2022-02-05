@@ -62,7 +62,7 @@
                     <tr class="row">
                         <td class="col-2">@transaction.PaymentDate.ToString("dd.MM.yyyy")</td>
                         <td class="col-4">@(transaction.TeacherName == null ? "Депозит" : $"Плащане на урок с {transaction.TeacherName}")</td>
-                        <td class="col-2 font-weight-bold text-right" style="color: @(@transaction.Amount > 0 ? "green" : "red")">@(@transaction.Amount > 0 ? '+' : '\0')@transaction.Amount</td>
+                        <td class="col-2 font-weight-bold text-right" style="color: @(@transaction.Amount > 0 ? "green" : "red")">@(@transaction.Amount > 0 ? "+" : string.Empty)@transaction.Amount</td>
                     </tr>
                 }
                 else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
@@ -70,6 +70,7 @@
                     <tr class="row">
                         <td class="col-2">@transaction.PaymentDate.ToString("dd.MM.yyyy")</td>
                         <td class="col-4">@($"Доходи от урок с {transaction.StudentName}")</td>
+                        <td class="col-auto">@(transaction.IsPaidToTeacher ? "Изплатена" : "Ще я получите в края на месеца")</td>
                         <td class="col-2 font-weight-bold text-right" style="color:green">+@(transaction.Amount * -1)</td>
                     </tr>
                 }

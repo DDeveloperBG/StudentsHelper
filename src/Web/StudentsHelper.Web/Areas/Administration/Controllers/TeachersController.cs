@@ -1,5 +1,6 @@
 ﻿namespace StudentsHelper.Web.Areas.Administration.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,13 @@
 
         public IActionResult AllToApprove()
         {
-            var teachers = this.teachersService.GetAllNotConfirmed<NotDetailedTeacherViewModel>();
+            var teachers = this.teachersService.GetAllNotConfirmed<NotDetailedTeacherViewModel>()
+                .Where(x =>
+                {
+                    GlobalVariables.TeachersConnectedAccountStatus.TryGetValue(x.ApplicationUserEmail, out bool status);
+                    return status;
+                });
+
             foreach (var teacher in teachers)
             {
                 teacher.ApplicationUserPicturePath

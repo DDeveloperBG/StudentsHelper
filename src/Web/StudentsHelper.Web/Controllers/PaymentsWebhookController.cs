@@ -40,7 +40,10 @@
                 {
                     var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                    await this.studentsTransactionsService.MarkPaymentAsCompletedAsync(session.Id);
+                    if (session?.PaymentStatus == "paid")
+                    {
+                        await this.studentsTransactionsService.MarkPaymentAsCompletedAsync(session.Id);
+                    }
                 }
 
                 return this.Ok();

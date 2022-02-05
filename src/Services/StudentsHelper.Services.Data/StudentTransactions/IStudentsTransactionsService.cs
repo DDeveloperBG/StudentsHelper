@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using StudentsHelper.Data.Models;
+
     public interface IStudentsTransactionsService
     {
-        Task AddStudentTransaction(string studentId, int amount, string sessionId);
+        Task AddStudentTransaction(string studentId, decimal amount, string sessionId);
 
         Task MarkPaymentAsCompletedAsync(string sessionId);
 
@@ -19,5 +21,7 @@
         IEnumerable<T> GetTeacherTransactions<T>(string teacherId);
 
         Task ChargeStudentAsync(string meetingId, DateTime paymentDate);
+
+        Task SetAsPaidTransactionsAsync(List<StudentTransaction> allPaidTransactions);
     }
 }

@@ -17,6 +17,8 @@
 
         public string StudentName { get; set; }
 
+        public bool IsPaidToTeacher { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<StudentTransaction, TransactionViewModel>()

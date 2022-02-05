@@ -45,7 +45,7 @@
     using StudentsHelper.Services.Payments.Models;
     using StudentsHelper.Services.Time;
     using StudentsHelper.Services.VideoChat;
-    using StudentsHelper.Web.Infrastructure;
+    using StudentsHelper.Web.Infrastructure.Middlewares;
     using StudentsHelper.Web.ViewModels;
 
     public class Startup
@@ -142,6 +142,7 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
+            services.AddTransient<IMontlyPaymentsService, MontlyPaymentsService>();
             services.AddTransient<IMeetingsService, MeetingsService>();
             services.AddTransient<IDateTimeProvider, CustomDateTimeProvider>();
             services.AddTransient<ISchoolSubjectsService, SchoolSubjectsService>();
@@ -175,7 +176,7 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
@@ -183,7 +184,6 @@
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                //dbContext.Database.EnsureDeleted();
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
@@ -212,11 +212,24 @@
 
             app.UseSession();
 
-            app.Use(Middlewares.AddUserActivityAsync);
+            app.UseUpdateUserActivityMiddleware();
+            app.UseSetTeacherConnectedAccountMiddleware();
 
             app.UseHangfireDashboard(
-                    "/hangfire",
-                    new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
+                "/hangfire",
+                new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var montlyPaymentsService = serviceScope.ServiceProvider.GetRequiredService<IMontlyPaymentsService>();
+                appLifetime.ApplicationStarted.Register(() =>
+                {
+                    RecurringJob.AddOrUpdate(
+                        "PayMontlySalaries",
+                        () => montlyPaymentsService.PayMontlySalariesAsync(),
+                        Cron.Monthly);
+                });
+            }
 
             app.UseEndpoints(
                 endpoints =>

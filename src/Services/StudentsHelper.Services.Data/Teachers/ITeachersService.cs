@@ -28,8 +28,12 @@
 
         IQueryable<Teacher> GetAll();
 
+        IEnumerable<T> GetAllAsTracked<T>();
+
         decimal? GetHourWage(string teacherId);
 
         Task ChangeTeacherHourWageAsync(string teacherId, decimal teacherWage);
+
+        string GetExpressConnectedAccountId(string teacherId);
     }
 }

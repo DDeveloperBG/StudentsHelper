@@ -24,7 +24,7 @@
             this.meetingsService = meetingsService;
         }
 
-        public async Task AddStudentTransaction(string studentId, int amount, string sessionId)
+        public async Task AddStudentTransaction(string studentId, decimal amount, string sessionId)
         {
             await this.studentsTransactionsRepository.AddAsync(new StudentTransaction
             {
@@ -59,14 +59,14 @@
         public decimal GetStudentBalance(string studentId)
         {
             return this.GetAllCompleted()
-                .Where(x => x.StudentId == studentId)
+                .Where(x => x.StudentId == studentId || x.Consultation.StudentId == studentId)
                 .Sum(x => x.Amount);
         }
 
         public decimal GetTeacherBalance(string teacherId)
         {
             var result = this.GetAllCompleted()
-                .Where(x => x.Consultation.TeacherId == teacherId)
+                .Where(x => x.Consultation.TeacherId == teacherId && !x.IsPaidToTeacher)
                 .Sum(x => x.Amount);
 
             return Math.Abs(result);
@@ -92,7 +92,7 @@
         {
             var meetingData = this.meetingsService.GetMeetingData<ChargeStudentNeededDataModel>(meetingId);
 
-            if (meetingData.Price < 1)
+            if (meetingData.Price <= 0)
             {
                 return Task.CompletedTask;
             }
@@ -106,6 +106,16 @@
             };
 
             this.studentsTransactionsRepository.AddAsync(transaction);
+            return this.studentsTransactionsRepository.SaveChangesAsync();
+        }
+
+        public Task SetAsPaidTransactionsAsync(List<StudentTransaction> allPaidTransactions)
+        {
+            foreach (var transaction in allPaidTransactions)
+            {
+                transaction.IsPaidToTeacher = true;
+            }
+
             return this.studentsTransactionsRepository.SaveChangesAsync();
         }
 

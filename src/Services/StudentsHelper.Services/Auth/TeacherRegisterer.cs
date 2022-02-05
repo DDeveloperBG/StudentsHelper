@@ -10,6 +10,7 @@
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Services.Payments;
 
     public class TeacherRegisterer : ITeacherRegisterer
     {
@@ -19,19 +20,22 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
         private readonly ICloudStorageService cloudStorageService;
+        private readonly IPaymentsService paymentsService;
 
         public TeacherRegisterer(
             IDeletableEntityRepository<Teacher> teachersRepository,
             IDeletableEntityRepository<School> schoolsRepository,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
-            ICloudStorageService cloudStorageService)
+            ICloudStorageService cloudStorageService,
+            IPaymentsService paymentsService)
         {
             this.teachersRepository = teachersRepository;
             this.schoolsRepository = schoolsRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.cloudStorageService = cloudStorageService;
+            this.paymentsService = paymentsService;
         }
 
         public async Task RegisterAsync(TeacherInputModel inputModel, ApplicationUser user)
@@ -52,12 +56,14 @@
             }
 
             string qualificationDocumentPath = await this.cloudStorageService.SaveFileAsync(inputModel.QualificationDocument, QualificationDocumentFolder);
+            var accountId = await this.paymentsService.CreateTeacherExpressConnectedAccountAsync(user.Email);
 
             Teacher teacher = new Teacher
             {
                 ApplicationUserId = user.Id,
                 SchoolId = inputModel.SchoolId,
                 QualificationDocumentPath = qualificationDocumentPath,
+                ExpressConnectedAccountId = accountId,
             };
 
             var role = await this.roleManager.FindByNameAsync(GlobalConstants.TeacherRoleName);

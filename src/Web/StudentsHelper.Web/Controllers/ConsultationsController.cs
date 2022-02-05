@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
     using Hangfire;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -32,7 +33,7 @@
             UserManager<ApplicationUser> userManager,
             IStudentsService studentsService,
             ITeachersService teachersService,
-            IStudentsTransactionsService studentsTransactionsService, 
+            IStudentsTransactionsService studentsTransactionsService,
             IDateTimeProvider dateTimeProvider)
         {
             this.consulationsService = consulationsService;

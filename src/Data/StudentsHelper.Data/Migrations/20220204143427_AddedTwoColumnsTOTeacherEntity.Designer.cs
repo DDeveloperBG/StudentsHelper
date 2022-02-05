@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentsHelper.Data;
 
@@ -11,9 +12,10 @@ using StudentsHelper.Data;
 namespace StudentsHelper.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220204143427_AddedTwoColumnsTOTeacherEntity")]
+    partial class AddedTwoColumnsTOTeacherEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -609,9 +611,6 @@ namespace StudentsHelper.Data.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPaidToTeacher")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -629,9 +628,7 @@ namespace StudentsHelper.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConsultationId")
-                        .IsUnique()
-                        .HasFilter("[ConsultationId] IS NOT NULL");
+                    b.HasIndex("ConsultationId");
 
                     b.HasIndex("SessionId");
 
@@ -665,6 +662,9 @@ namespace StudentsHelper.Data.Migrations
                         .HasColumnType("DECIMAL(5,2)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsExpressConnectedAccountConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRejected")
@@ -817,7 +817,7 @@ namespace StudentsHelper.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("StudentsHelper.Data.Models.Teacher", "Teacher")
-                        .WithMany("Consultations")
+                        .WithMany()
                         .HasForeignKey("TeacherId");
 
                     b.Navigation("Meeting");
@@ -880,8 +880,8 @@ namespace StudentsHelper.Data.Migrations
             modelBuilder.Entity("StudentsHelper.Data.Models.StudentTransaction", b =>
                 {
                     b.HasOne("StudentsHelper.Data.Models.Consultation", "Consultation")
-                        .WithOne("StudentTransaction")
-                        .HasForeignKey("StudentsHelper.Data.Models.StudentTransaction", "ConsultationId");
+                        .WithMany()
+                        .HasForeignKey("ConsultationId");
 
                     b.HasOne("StudentsHelper.Data.Models.Student", "Student")
                         .WithMany("Transactions")
@@ -935,11 +935,6 @@ namespace StudentsHelper.Data.Migrations
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("StudentsHelper.Data.Models.Consultation", b =>
-                {
-                    b.Navigation("StudentTransaction");
-                });
-
             modelBuilder.Entity("StudentsHelper.Data.Models.Meeting", b =>
                 {
                     b.Navigation("Consultation");
@@ -969,8 +964,6 @@ namespace StudentsHelper.Data.Migrations
 
             modelBuilder.Entity("StudentsHelper.Data.Models.Teacher", b =>
                 {
-                    b.Navigation("Consultations");
-
                     b.Navigation("ReceivedPayments");
 
                     b.Navigation("Reviews");

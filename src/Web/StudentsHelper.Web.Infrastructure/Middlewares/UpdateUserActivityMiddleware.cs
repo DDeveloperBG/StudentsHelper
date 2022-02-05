@@ -1,14 +1,22 @@
-﻿namespace StudentsHelper.Web.Infrastructure
+﻿namespace StudentsHelper.Web.Infrastructure.Middlewares
 {
     using System;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Http;
+
     using StudentsHelper.Common;
 
-    public static class Middlewares
+    public class UpdateUserActivityMiddleware
     {
-        public static Task AddUserActivityAsync(HttpContext context, Func<Task> next)
+        private readonly RequestDelegate next;
+
+        public UpdateUserActivityMiddleware(RequestDelegate next)
+        {
+            this.next = next;
+        }
+
+        public Task InvokeAsync(HttpContext context)
         {
             if (context.User.Identity.IsAuthenticated)
             {
@@ -20,7 +28,7 @@
                 return context.Response.WriteAsync("Status updated.");
             }
 
-            return next();
+            return this.next(context);
         }
     }
 }

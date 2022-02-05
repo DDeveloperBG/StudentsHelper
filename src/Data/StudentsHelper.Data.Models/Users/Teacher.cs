@@ -15,6 +15,7 @@
             this.Subjects = new HashSet<SchoolSubject>();
             this.Reviews = new HashSet<Review>();
             this.ReceivedPayments = new HashSet<StudentTransaction>();
+            this.Consultations = new HashSet<Consultation>();
             this.IsValidated = false;
             this.IsRejected = false;
         }
@@ -42,6 +43,11 @@
         public ICollection<Review> Reviews { get; set; }
 
         public ICollection<StudentTransaction> ReceivedPayments { get; set; }
+
+        public ICollection<Consultation> Consultations { get; set; }
+
+        [Required]
+        public string ExpressConnectedAccountId { get; set; }
 
         [ForeignKey(nameof(School))]
         public int SchoolId { get; set; }

@@ -16,6 +16,7 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.Payments;
     using StudentsHelper.Web.Infrastructure.Filters;
 
     [GuestFilter]

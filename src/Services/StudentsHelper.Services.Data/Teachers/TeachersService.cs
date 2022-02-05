@@ -52,6 +52,13 @@
                     .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
         }
 
+        public IEnumerable<T> GetAllAsTracked<T>()
+        {
+            return this.GetAll()
+                .Where(x => x.IsValidated && !x.IsRejected)
+                .To<T>();
+        }
+
         public string GetId(string userId)
         {
             return this.GetAllAsNoTracking()
@@ -129,6 +136,14 @@
 
             teacher.HourWage = teacherWage;
             return this.teachersRepository.SaveChangesAsync();
+        }
+
+        public string GetExpressConnectedAccountId(string teacherId)
+        {
+            return this.GetAllAsNoTracking()
+                .Where(x => x.Id == teacherId)
+                .Select(x => x.ExpressConnectedAccountId)
+                .Single();
         }
     }
 }

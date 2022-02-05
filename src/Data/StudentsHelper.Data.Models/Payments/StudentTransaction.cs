@@ -37,5 +37,7 @@
         public string StudentId { get; set; }
 
         public Student Student { get; set; }
+
+        public bool IsPaidToTeacher { get; set; }
     }
 }

@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Services\StudentsHelper.Services\StudentsHelper.Services.csproj" />
     <ProjectReference Include="..\..\StudentsHelper.Common\StudentsHelper.Common.csproj" />
   </ItemGroup>
 

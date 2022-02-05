@@ -110,7 +110,7 @@
             string studentId = this.studentsService.GetId(user.Id);
             string paymentUrl = await this
                 .paymentsService
-                .CreateCheckoutSession(
+                .CreateCheckoutSessionAsync(
                     studentId,
                     user.Email,
                     depositInput.DepositRequestMoneyAmount);

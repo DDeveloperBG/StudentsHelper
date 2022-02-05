@@ -54,5 +54,7 @@
         public string TeacherId { get; set; }
 
         public Teacher Teacher { get; set; }
+
+        public StudentTransaction StudentTransaction { get; set; }
     }
 }
