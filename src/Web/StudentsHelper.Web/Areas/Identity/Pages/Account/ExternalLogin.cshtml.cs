@@ -9,10 +9,13 @@
     using IdentityModel;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
@@ -29,6 +32,7 @@
         private readonly ITeacherRegisterer teacherRegister;
         private readonly IStudentRegisterer studentRegisterer;
         private readonly ICloudStorageService cloudStorageService;
+        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly ILogger<ExternalLoginModel> logger;
 
         public ExternalLoginModel(
@@ -37,7 +41,8 @@
             ILogger<ExternalLoginModel> logger,
             ITeacherRegisterer teacherRegister,
             IStudentRegisterer studentRegisterer,
-            ICloudStorageService cloudStorageService)
+            ICloudStorageService cloudStorageService,
+            IWebHostEnvironment webHostEnvironment)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -45,6 +50,7 @@
             this.teacherRegister = teacherRegister;
             this.studentRegisterer = studentRegisterer;
             this.cloudStorageService = cloudStorageService;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [BindProperty]
@@ -198,7 +204,7 @@
 
                             try
                             {
-                                await this.teacherRegister.RegisterAsync(this.TeacherModel, user);
+                                await this.teacherRegister.RegisterAsync(this.TeacherModel, user, this.webHostEnvironment.IsProduction());
                             }
                             catch (ArgumentException e)
                             {

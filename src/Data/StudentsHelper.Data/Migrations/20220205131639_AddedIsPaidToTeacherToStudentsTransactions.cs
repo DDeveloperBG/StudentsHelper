@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace StudentsHelper.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddedIsPaidToTeacherToStudentsTransactions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

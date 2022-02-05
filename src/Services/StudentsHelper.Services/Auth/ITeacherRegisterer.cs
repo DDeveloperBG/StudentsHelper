@@ -6,6 +6,6 @@
 
     public interface ITeacherRegisterer
     {
-        public Task RegisterAsync(TeacherInputModel inputModel, ApplicationUser user);
+        public Task RegisterAsync(TeacherInputModel inputModel, ApplicationUser user, bool isInProduction);
     }
 }

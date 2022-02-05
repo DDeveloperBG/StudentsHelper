@@ -6,7 +6,7 @@
     {
         Task<string> CreateCheckoutSessionAsync(string studentId, string studentEmail, int amaount);
 
-        Task<string> CreateTeacherExpressConnectedAccountAsync(string email);
+        Task<string> CreateTeacherExpressConnectedAccountAsync(string email, string teacherId, bool isInProduction);
 
         Task<string> CreateAccountLinkAsync(string accountId);
 

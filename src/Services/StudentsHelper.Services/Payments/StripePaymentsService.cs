@@ -54,7 +54,7 @@
             return session.Url;
         }
 
-        public async Task<string> CreateTeacherExpressConnectedAccountAsync(string email)
+        public async Task<string> CreateTeacherExpressConnectedAccountAsync(string email, string teacherId, bool isInProduction)
         {
             var options = new AccountCreateOptions
             {
@@ -71,9 +71,7 @@
                 BusinessProfile = new AccountBusinessProfileOptions
                 {
                     Mcc = "8299",
-
-                    // It causes problems for localhost
-                    // Url = $"{this.options.Value.Domain}/Teachers/Details?{nameof(teacherId)}={teacherId}",
+                    Url = isInProduction ? $"{this.options.Value.Domain}Teachers/Details?{nameof(teacherId)}={teacherId}" : null,
                 },
             };
 

@@ -38,7 +38,7 @@
             this.paymentsService = paymentsService;
         }
 
-        public async Task RegisterAsync(TeacherInputModel inputModel, ApplicationUser user)
+        public async Task RegisterAsync(TeacherInputModel inputModel, ApplicationUser user, bool isInProduction)
         {
             if (inputModel == null)
             {
@@ -56,15 +56,16 @@
             }
 
             string qualificationDocumentPath = await this.cloudStorageService.SaveFileAsync(inputModel.QualificationDocument, QualificationDocumentFolder);
-            var accountId = await this.paymentsService.CreateTeacherExpressConnectedAccountAsync(user.Email);
 
             Teacher teacher = new Teacher
             {
                 ApplicationUserId = user.Id,
                 SchoolId = inputModel.SchoolId,
                 QualificationDocumentPath = qualificationDocumentPath,
-                ExpressConnectedAccountId = accountId,
             };
+
+            var accountId = await this.paymentsService.CreateTeacherExpressConnectedAccountAsync(user.Email, teacher.Id, isInProduction);
+            teacher.ExpressConnectedAccountId = accountId;
 
             var role = await this.roleManager.FindByNameAsync(GlobalConstants.TeacherRoleName);
             await this.userManager.AddToRoleAsync(user, role.Name);

@@ -51,10 +51,14 @@
     public class Startup
     {
         private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment currentEnvironment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(
+            IConfiguration configuration,
+            IWebHostEnvironment currentEnvironment)
         {
             this.configuration = configuration;
+            this.currentEnvironment = currentEnvironment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -75,10 +79,11 @@
                            UseRecommendedIsolationLevel = true,
                            UsePageLocksOnDequeue = true,
                            DisableGlobalLocks = true,
+                           PrepareSchemaIfNecessary = true,
                        }).UseConsole());
             services.AddHangfireServer();
 
-            services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
+            services.AddDefaultIdentity<ApplicationUser>((x) => IdentityOptionsProvider.GetIdentityOptions(x, this.currentEnvironment.IsProduction()))
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication()
@@ -176,7 +181,7 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
@@ -188,7 +193,7 @@
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
 
-            if (env.IsDevelopment())
+            if (this.currentEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
@@ -212,6 +217,7 @@
 
             app.UseSession();
 
+            // Custom Middlewares: Start
             app.UseUpdateUserActivityMiddleware();
             app.UseSetTeacherConnectedAccountMiddleware();
 
@@ -219,6 +225,7 @@
                 "/hangfire",
                 new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
 
+            // Custom Middlewares: End
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var montlyPaymentsService = serviceScope.ServiceProvider.GetRequiredService<IMontlyPaymentsService>();
