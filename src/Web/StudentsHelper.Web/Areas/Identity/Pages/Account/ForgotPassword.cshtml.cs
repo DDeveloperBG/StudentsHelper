@@ -28,13 +28,6 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-        }
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (this.ModelState.IsValid)
@@ -65,6 +58,13 @@
             }
 
             return this.Page();
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
         }
     }
 }

@@ -40,14 +40,6 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Нов имейл")]
-            public string NewEmail { get; set; }
-        }
-
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -141,6 +133,14 @@
             };
 
             this.IsEmailConfirmed = await this.userManager.IsEmailConfirmedAsync(user);
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Нов имейл")]
+            public string NewEmail { get; set; }
         }
     }
 }

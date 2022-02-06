@@ -67,24 +67,26 @@
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddHangfire(
-               config => config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                   .UseSimpleAssemblyNameTypeSerializer().UseRecommendedSerializerSettings().UseSqlServerStorage(
-                       this.configuration.GetConnectionString("DefaultConnection"),
-                       new SqlServerStorageOptions
-                       {
-                           CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                           SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                           QueuePollInterval = TimeSpan.Zero,
-                           UseRecommendedIsolationLevel = true,
-                           UsePageLocksOnDequeue = true,
-                           DisableGlobalLocks = true,
-                           PrepareSchemaIfNecessary = true,
-                       }).UseConsole());
-            services.AddHangfireServer();
-
             services.AddDefaultIdentity<ApplicationUser>((x) => IdentityOptionsProvider.GetIdentityOptions(x, this.currentEnvironment.IsProduction()))
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddHangfire(
+                config => config
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(
+                        this.configuration.GetConnectionString("DefaultConnection"),
+                        new SqlServerStorageOptions
+                        {
+                            CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                            SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                            QueuePollInterval = TimeSpan.Zero,
+                            UseRecommendedIsolationLevel = true,
+                            UsePageLocksOnDequeue = true,
+                            DisableGlobalLocks = true,
+                        }));
+            services.AddHangfireServer();
 
             services.AddAuthentication()
                 .AddFacebook(facebookOptions =>
@@ -181,13 +183,15 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IRecurringJobManager recurringJobManager)
         {
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
+                this.SeedHangfireJobs(recurringJobManager);
+
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
@@ -221,22 +225,10 @@
             app.UseUpdateUserActivityMiddleware();
             app.UseSetTeacherConnectedAccountMiddleware();
 
+            // Custom Middlewares: End
             app.UseHangfireDashboard(
                 "/hangfire",
                 new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
-
-            // Custom Middlewares: End
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var montlyPaymentsService = serviceScope.ServiceProvider.GetRequiredService<IMontlyPaymentsService>();
-                appLifetime.ApplicationStarted.Register(() =>
-                {
-                    RecurringJob.AddOrUpdate(
-                        "PayMontlySalaries",
-                        () => montlyPaymentsService.PayMontlySalariesAsync(),
-                        Cron.Monthly);
-                });
-            }
 
             app.UseEndpoints(
                 endpoints =>
@@ -245,6 +237,15 @@
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });
+        }
+
+        private void SeedHangfireJobs(IRecurringJobManager recurringJobManager)
+        {
+            recurringJobManager
+                .AddOrUpdate<IMontlyPaymentsService>(
+                    "PayMontlySalaries",
+                    x => x.PayMontlySalariesAsync(),
+                    Cron.Monthly);
         }
 
         private class HangfireAuthorizationFilter : IDashboardAuthorizationFilter

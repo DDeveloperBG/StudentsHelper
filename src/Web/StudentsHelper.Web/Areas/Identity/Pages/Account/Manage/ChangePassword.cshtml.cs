@@ -31,25 +31,6 @@
         [TempData]
         public string StatusMessage { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [DataType(DataType.Password)]
-            [Display(Name = "Текуща парола")]
-            public string OldPassword { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "Новата парола трябва да бъде най-малко {2} и най-много {1} знака.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Нова парола")]
-            public string NewPassword { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Потвърждение на новата парола")]
-            [Compare(nameof(NewPassword), ErrorMessage = "Новата парола и паролата за потвърждение не съвпадат.")]
-            public string ConfirmPassword { get; set; }
-        }
-
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -96,6 +77,25 @@
             this.StatusMessage = "Паролата ви бе сменена.";
 
             return this.RedirectToPage();
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [DataType(DataType.Password)]
+            [Display(Name = "Текуща парола")]
+            public string OldPassword { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "Новата парола трябва да бъде най-малко {2} и най-много {1} знака.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Нова парола")]
+            public string NewPassword { get; set; }
+
+            [DataType(DataType.Password)]
+            [Display(Name = "Потвърждение на новата парола")]
+            [Compare(nameof(NewPassword), ErrorMessage = "Новата парола и паролата за потвърждение не съвпадат.")]
+            public string ConfirmPassword { get; set; }
         }
     }
 }

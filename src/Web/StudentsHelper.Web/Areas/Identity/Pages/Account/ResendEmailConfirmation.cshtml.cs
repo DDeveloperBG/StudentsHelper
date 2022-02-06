@@ -28,13 +28,6 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-        }
-
         public void OnGet()
         {
         }
@@ -71,6 +64,13 @@
 
             this.ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return this.Page();
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
         }
     }
 }

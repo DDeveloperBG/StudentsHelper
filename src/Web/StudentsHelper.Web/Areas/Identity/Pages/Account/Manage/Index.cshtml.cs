@@ -45,18 +45,6 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public class InputModel
-        {
-            [DataType(DataType.Upload)]
-            [MaxFileSize(ValidationConstants.PictureValidSize)]
-            [QualificationDocumentAllowedExtensionsAttribute]
-            public IFormFile ProfilePicture { get; set; }
-
-            [Phone]
-            [Display(Name = "Телефонен номер")]
-            public string PhoneNumber { get; set; }
-        }
-
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await this.userManager.GetUserAsync(this.User);
@@ -120,6 +108,18 @@
             {
                 PhoneNumber = phoneNumber,
             };
+        }
+
+        public class InputModel
+        {
+            [DataType(DataType.Upload)]
+            [MaxFileSize(ValidationConstants.PictureValidSize)]
+            [QualificationDocumentAllowedExtensionsAttribute]
+            public IFormFile ProfilePicture { get; set; }
+
+            [Phone]
+            [Display(Name = "Телефонен номер")]
+            public string PhoneNumber { get; set; }
         }
     }
 }

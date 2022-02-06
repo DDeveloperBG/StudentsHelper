@@ -13,7 +13,7 @@ namespace StudentsHelper.Data.Migrations
                 table: "Teachers",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsExpressConnectedAccountConfirmed",

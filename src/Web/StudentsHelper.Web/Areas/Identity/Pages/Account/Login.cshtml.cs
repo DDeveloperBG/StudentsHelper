@@ -43,30 +43,6 @@
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public class InputModel
-        {
-            [Display(Name = "Имейл")]
-            [Required(ErrorMessage = ValidationConstants.RequiredError)]
-            [StringLength(
-            ValidationConstants.EmailMaxLength,
-            MinimumLength = ValidationConstants.EmailMinLength,
-            ErrorMessage = "Имейла може да бъде най - малко {2} и максимум {1} символа дълъг.")]
-            [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
-            public string Email { get; set; }
-
-            [Display(Name = "Парола")]
-            [Required(ErrorMessage = ValidationConstants.RequiredError)]
-            [StringLength(
-                ValidationConstants.PasswordMaxLength,
-                MinimumLength = ValidationConstants.PasswordMinLength,
-                ErrorMessage = "Паролата трябва да бъде поне {2} и максимум {1} символа дълга.")]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-
-            [Display(Name = "Запомни ме")]
-            public bool RememberMe { get; set; }
-        }
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(this.ErrorMessage))
@@ -127,6 +103,30 @@
 
             // If we got this far, something failed, redisplay form
             return this.Page();
+        }
+
+        public class InputModel
+        {
+            [Display(Name = "Имейл")]
+            [Required(ErrorMessage = ValidationConstants.RequiredError)]
+            [StringLength(
+            ValidationConstants.EmailMaxLength,
+            MinimumLength = ValidationConstants.EmailMinLength,
+            ErrorMessage = "Имейла може да бъде най - малко {2} и максимум {1} символа дълъг.")]
+            [EmailAddress(ErrorMessage = "Невалиден имейл адрес")]
+            public string Email { get; set; }
+
+            [Display(Name = "Парола")]
+            [Required(ErrorMessage = ValidationConstants.RequiredError)]
+            [StringLength(
+                ValidationConstants.PasswordMaxLength,
+                MinimumLength = ValidationConstants.PasswordMinLength,
+                ErrorMessage = "Паролата трябва да бъде поне {2} и максимум {1} символа дълга.")]
+            [DataType(DataType.Password)]
+            public string Password { get; set; }
+
+            [Display(Name = "Запомни ме")]
+            public bool RememberMe { get; set; }
         }
     }
 }
