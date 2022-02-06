@@ -21,26 +21,37 @@
         public Task UpdateParticipantActivityAndIncreaseDurationAsync(string role, string meetingId, DateTime now)
         {
             var meeting = this.GetTrackedMeetingById(meetingId);
-
-            switch (role)
+            int difference;
+            if (role == GlobalConstants.StudentRoleName)
             {
-                case GlobalConstants.StudentRoleName:
-                    meeting.StudentLastActivity = now;
-                    break;
-                case GlobalConstants.TeacherRoleName:
+                meeting.StudentLastActivity = now;
+            }
+            else if (role == GlobalConstants.TeacherRoleName)
+            {
+                // In case teacher refreshes before the time becomes 1 minute
+                if (meeting.TeacherLastActivity == null)
+                {
                     meeting.TeacherLastActivity = now;
+                }
 
-                    // It doesn't matter either if it is for teacher or student, but it has to happen only once.
-                    if (meeting.StudentLastActivity != null && meeting.TeacherLastActivity != null)
+                difference = this.GetDatesDifferenceInSeconds(meeting.TeacherLastActivity.Value, now);
+                if (difference < 60)
+                {
+                    meeting.TeacherLastActivity = now;
+                    return this.meetingsRepository.SaveChangesAsync();
+                }
+
+                meeting.TeacherLastActivity = now;
+
+                // It doesn't matter either if it is for teacher or student, but it has to happen only once.
+                if (meeting.StudentLastActivity != null)
+                {
+                    difference = this.GetDatesDifferenceInSeconds(meeting.StudentLastActivity.Value, meeting.TeacherLastActivity.Value);
+                    if (difference <= 60)
                     {
-                        var difference = Math.Abs((meeting.StudentLastActivity.Value - meeting.TeacherLastActivity.Value).Seconds);
-                        if (difference <= 60)
-                        {
-                            meeting.DurationInMinutes++;
-                        }
+                        meeting.DurationInMinutes++;
                     }
-
-                    break;
+                }
             }
 
             return this.meetingsRepository.SaveChangesAsync();
@@ -61,6 +72,11 @@
                 .All()
                 .Where(x => x.Id == meetingId)
                 .Single();
+        }
+
+        private int GetDatesDifferenceInSeconds(DateTime x, DateTime y)
+        {
+            return Math.Abs((int)(x - y).TotalSeconds);
         }
     }
 }

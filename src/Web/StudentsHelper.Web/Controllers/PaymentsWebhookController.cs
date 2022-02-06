@@ -3,7 +3,9 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
 
     using Stripe;
@@ -15,13 +17,16 @@
     {
         private readonly string webhookSecret;
         private readonly IStudentsTransactionsService studentsTransactionsService;
+        // private readonly IWebHostEnvironment webHostEnvironment;
 
         public PaymentsWebhookController(
             IOptions<StripeOptions> options,
-            IStudentsTransactionsService studentsTransactionsService)
+            IStudentsTransactionsService studentsTransactionsService/*, 
+            IWebHostEnvironment webHostEnvironment*/)
         {
             this.webhookSecret = options.Value.WebhookSecret;
             this.studentsTransactionsService = studentsTransactionsService;
+            // this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpPost]
@@ -35,6 +40,12 @@
                     json,
                     this.Request.Headers["Stripe-Signature"],
                     this.webhookSecret);
+
+                // For now, I will still use stripe in test mode even in production for demo purposes!
+                //  if (stripeEvent.Livemode != this.webHostEnvironment.IsProduction())
+                //  {
+                //      return this.BadRequest();
+                //  }
 
                 if (stripeEvent.Type == Events.CheckoutSessionCompleted)
                 {

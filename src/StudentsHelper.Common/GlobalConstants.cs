@@ -8,7 +8,7 @@
 
         public const string ContactEmail = "dakataebg@students.softuni.bg";
 
-        public const string AdministratorRoleName = "Administrator";
+        public const string AdministratorRoleName = "administrator";
 
         public const string TeacherRoleName = "teacher";
 
