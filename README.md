@@ -1,6 +1,25 @@
 # StudentsHelper
 Web Application to help students with their homework, lessons, etc. With immediate consultations about the topic made with a professional teacher on the subject.
 
+## Application flow
+
+ Student
+* Registers
+* Adds money to his balance
+* Looks for a teacher at the specific topic
+* Books consultation at teacher details
+* When start time comes he joins the consultation
+
+Teacher
+* Registers
+* Adds information to Stripe about his bank account so that he can receive his monthly salary
+* Waits to be approved by Admin so that he can be listed to Students
+* When a student books him he can see the consultation on the *Consultations* page
+* When consultation start time comes he can join
+
+Admin
+* Confirms teachers
+
 ## Roles
 
 * Administrator
@@ -11,9 +30,9 @@ Web Application to help students with their homework, lessons, etc. With immedia
 
 Site guest (**visitor**) 
 * Can only visit shared pages (*Home*, *All Teachers*, *Contact Us*, *Register*, *Login*).
-* Can send e-mail to site owner.
+* Can send e-mail to the site owner.
 
-**Administrator** - created from site owner
+**Administrator** - seeded automatically
 * Manage teachers.
 * Manage Hangfire dashboard.
 
@@ -51,6 +70,14 @@ Site guest (**visitor**)
  Using ASP.NET-MVC-Template originally developed by:
 - [Nikolay Kostov](https://github.com/NikolayIT)
 - [Vladislav Karamfilov](https://github.com/vladislav-karamfilov)
+
+## :v: Show your opinion
+
+Give a :star: if you like this project!
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Author
 
