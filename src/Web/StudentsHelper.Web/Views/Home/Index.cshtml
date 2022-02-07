@@ -10,7 +10,7 @@
 
 @if (User.IsInRole(GlobalConstants.TeacherRoleName))
 {
-    <h5>Възнагражденията от всички проведени уроци се събират и се изплащат в края на всеки месец.<br />Таксата на сайта е @(GlobalConstants.WebsiteMonthPercentageTax * 100)% от месечната сума.</h5>
+    <h5 id="teacher-pricing-info">Възнагражденията от всички проведени уроци се събират и се изплащат в края на всеки месец.<br />Таксата на сайта е @(GlobalConstants.WebsiteMonthPercentageTax * 100)% от месечната сума.</h5>
 }
 
 @if (!User.Identity.IsAuthenticated)

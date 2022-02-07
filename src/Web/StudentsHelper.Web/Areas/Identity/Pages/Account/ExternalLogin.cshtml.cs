@@ -23,7 +23,9 @@
     using StudentsHelper.Web.Infrastructure.Alerts;
 
     [AllowAnonymous]
+#pragma warning disable SA1649 // File name should match first type name
     public class ExternalLoginModel : PageModel
+#pragma warning restore SA1649 // File name should match first type name
     {
         private const string UserRoleKey = "userRole";
 

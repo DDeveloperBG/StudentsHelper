@@ -1,11 +1,11 @@
 ﻿namespace StudentsHelper.Web.Infrastructure.Middlewares
 {
-    using System;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Http;
 
     using StudentsHelper.Common;
+    using StudentsHelper.Services.Time;
 
     public class UpdateUserActivityMiddleware
     {
@@ -16,11 +16,11 @@
             this.next = next;
         }
 
-        public Task InvokeAsync(HttpContext context)
+        public Task InvokeAsync(HttpContext context, IDateTimeProvider dateTimeProvider)
         {
             if (context.User.Identity.IsAuthenticated)
             {
-                GlobalVariables.UsersActivityDictionary[context.User.Identity.Name] = DateTime.UtcNow;
+                GlobalVariables.UsersActivityDictionary[context.User.Identity.Name] = dateTimeProvider.GetUtcNow();
             }
 
             if (context.Request.Query.ContainsKey("userStatusUpdate"))

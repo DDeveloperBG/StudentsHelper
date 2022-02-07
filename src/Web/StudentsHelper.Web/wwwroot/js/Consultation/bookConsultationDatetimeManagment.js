@@ -5,7 +5,16 @@
     startTimeInput.value = timeNowFormatted;
     startTimeInput.setAttribute('min', timeNowFormatted);
 
-    document.querySelector('form').addEventListener('submit', () => {
+    const formEl = document.querySelector('form');
+    formEl.addEventListener('submit', (e) => {
+        if (!isValidCurrentForm()) { e.preventDefault(); return; }
+        startTimeInput.removeAttribute('min');
         startTimeInput.value = new moment(startTimeInput.value, format).utc().format(format);
     });
+
+    function isValidCurrentForm() {
+        const inputFields = Array.from(formEl.querySelectorAll('[name]'));
+
+        return inputFields.every(x => $(x).valid());
+    }
 });

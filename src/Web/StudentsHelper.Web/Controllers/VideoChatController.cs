@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Web.Controllers
 {
-    using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -51,7 +50,7 @@
 
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!this.consulationsService.IsConsultationActive(meetingId, userId))
+            if (!this.consulationsService.IsConsultationActive(meetingId, userId, this.dateTimeProvider.GetUtcNow()))
             {
                 return this.Redirect("/").WithDanger("Невалидни данни!");
             }
@@ -80,7 +79,7 @@
             await this.UpdateParticipantStatusAsync(meetingId);
 
             var userId = this.userManager.GetUserId(this.User);
-            if (!this.consulationsService.IsConsultationActive(meetingId, userId))
+            if (!this.consulationsService.IsConsultationActive(meetingId, userId, this.dateTimeProvider.GetUtcNow()))
             {
                 return this.Redirect("/").WithInfo("Събранието приключи.");
             }

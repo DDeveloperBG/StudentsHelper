@@ -36,7 +36,7 @@
             await this.studentsTransactionsRepository.SaveChangesAsync();
         }
 
-        public Task MarkPaymentAsCompletedAsync(string sessionId)
+        public Task MarkPaymentAsCompletedAsync(string sessionId, DateTime utcNow)
         {
             var transaction = this.studentsTransactionsRepository
                 .All()
@@ -44,7 +44,7 @@
                 .SingleOrDefault();
 
             transaction.IsCompleted = true;
-            transaction.PaymentDate = DateTime.UtcNow;
+            transaction.PaymentDate = utcNow;
 
             return this.studentsTransactionsRepository.SaveChangesAsync();
         }

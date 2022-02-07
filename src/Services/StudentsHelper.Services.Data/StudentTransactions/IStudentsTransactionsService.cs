@@ -10,7 +10,7 @@
     {
         Task AddStudentTransaction(string studentId, decimal amount, string sessionId);
 
-        Task MarkPaymentAsCompletedAsync(string sessionId);
+        Task MarkPaymentAsCompletedAsync(string sessionId, DateTime now);
 
         decimal GetStudentBalance(string studentId);
 

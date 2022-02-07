@@ -71,6 +71,7 @@
             var viewModel = new BookConsultationInputModel
             {
                 TeacherId = teacherId,
+                StartTime = this.dateTimeProvider.GetUtcNow(),
             };
 
             return this.View(viewModel);
@@ -93,7 +94,7 @@
                 return responce.WithDanger("Невалидни данни");
             }
 
-            if ((DateTime.UtcNow - inputModel.StartTime).TotalMilliseconds > 0)
+            if ((this.dateTimeProvider.GetUtcNow() - inputModel.StartTime).TotalMilliseconds > 0)
             {
                 this.HttpContext.Session.Remove("returnUrl");
                 return responce.WithDanger("Невалидни данни");
@@ -155,7 +156,7 @@
             }
 
             var studentId = this.studentsService.GetId(studentUser.Id);
-            var viewModel = this.consulationsService.GetStudentConsultations<StudentConsultationViewModel>(studentId)
+            var viewModel = this.consulationsService.GetStudentConsultations<StudentConsultationViewModel>(studentId, this.dateTimeProvider.GetUtcNow())
                 .OrderBy(x => x.ConsultationDetails.StartTime);
 
             return this.View(viewModel);
@@ -171,7 +172,7 @@
             }
 
             var teacherId = this.teachersService.GetId(teacherUser.Id);
-            var viewModel = this.consulationsService.GetTeacherConsultations<TeacherConsultationsViewModel>(teacherId)
+            var viewModel = this.consulationsService.GetTeacherConsultations<TeacherConsultationsViewModel>(teacherId, this.dateTimeProvider.GetUtcNow())
                 .OrderBy(x => x.ConsultationDetails.StartTime);
 
             return this.View(viewModel);

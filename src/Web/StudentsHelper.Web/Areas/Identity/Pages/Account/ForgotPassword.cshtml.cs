@@ -14,7 +14,9 @@
     using StudentsHelper.Data.Models;
 
     [AllowAnonymous]
+#pragma warning disable SA1649 // File name should match first type name
     public class ForgotPasswordModel : PageModel
+#pragma warning restore SA1649 // File name should match first type name
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IEmailSender emailSender;
@@ -39,8 +41,6 @@
                     return this.RedirectToPage("./ForgotPasswordConfirmation");
                 }
 
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await this.userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = this.Url.Page(
@@ -52,7 +52,7 @@
                 await this.emailSender.SendEmailAsync(
                     this.Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Моля, нулирайте паролата си, като <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>кликнете тук</a>.");
 
                 return this.RedirectToPage("./ForgotPasswordConfirmation");
             }

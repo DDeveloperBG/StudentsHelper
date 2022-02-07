@@ -6,6 +6,13 @@ main {
     text-align: center;
 }
 
+#teacher-pricing-info {
+    border-radius: 0.5rem;
+    background-color: rgb(30 215 96 / 43%);
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
 #imp_content {
     background: linear-gradient(90deg, rgba(150,240,182,0.31976540616246496) 0%, rgba(150,240,182,0.908000700280112) 0%), url('/img/imp_content_bg.jpeg'), no-repeat;
     text-align: center;

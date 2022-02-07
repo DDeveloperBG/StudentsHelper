@@ -21,7 +21,7 @@
                 ApiKey = this.apiKey,
                 MeetingId = meetingId,
 
-                RedirectOnLeave = $"https://{this.host}/",
+                RedirectOnLeave = this.host,
 
                 MicEnabled = true,
                 WebcamEnabled = true,

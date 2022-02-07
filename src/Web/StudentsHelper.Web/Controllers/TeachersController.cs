@@ -15,6 +15,7 @@
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.Time;
     using StudentsHelper.Web.Infrastructure.Alerts;
 
     public class TeachersController : Controller
@@ -25,6 +26,7 @@
         private readonly IReviewsService reviewsService;
         private readonly ICloudStorageService cloudStorageService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IDateTimeProvider dateTimeProvider;
 
         public TeachersController(
             ITeachersService teachersService,
@@ -32,7 +34,8 @@
             IReviewsService reviewsService,
             ICloudStorageService cloudStorageService,
             IRepository<SchoolSubject> schoolSubjects,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IDateTimeProvider dateTimeProvider)
         {
             this.teachersService = teachersService;
             this.studentsService = studentsService;
@@ -40,6 +43,7 @@
             this.reviewsService = reviewsService;
             this.cloudStorageService = cloudStorageService;
             this.userManager = userManager;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public IActionResult All(int subjectId)
@@ -52,7 +56,7 @@
 
             this.HttpContext.Session.Set("subjectId", BitConverter.GetBytes(subjectId));
 
-            DateTime now = DateTime.UtcNow;
+            DateTime utcNow = this.dateTimeProvider.GetUtcNow();
             DateTime emptyTime = default;
             var teachers = this.reviewsService.GetTeachersRating(this.teachersService.GetAllOfType(subjectId));
             foreach (var teacher in teachers)
@@ -66,7 +70,7 @@
                 }
                 else
                 {
-                    teacher.IsActive = (now - lastTimeActive).Minutes < 2;
+                    teacher.IsActive = (utcNow - lastTimeActive).Minutes < 2;
                 }
             }
 

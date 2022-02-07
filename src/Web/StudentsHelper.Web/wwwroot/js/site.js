@@ -1,5 +1,6 @@
 ﻿window.addEventListener('load', () => {
-    document.getElementById('navbar-profile-pic').addEventListener('click', showProfilePic);
+    var profilePicEl = document.getElementById('navbar-profile-pic');
+    if (profilePicEl != null) profilePicEl.addEventListener('click', showProfilePic);
 
     function showProfilePic(e) {
         const link = e.currentTarget.querySelector('a');

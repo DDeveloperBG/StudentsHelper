@@ -10,7 +10,9 @@
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Data.Models;
 
+#pragma warning disable SA1649 // File name should match first type name
     public class GenerateRecoveryCodesModel : PageModel
+#pragma warning restore SA1649 // File name should match first type name
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<GenerateRecoveryCodesModel> logger;

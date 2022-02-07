@@ -18,20 +18,20 @@
             this.consultationsRepository = consultationsRepository;
         }
 
-        public IEnumerable<T> GetTeacherConsultations<T>(string teacherId)
+        public IEnumerable<T> GetTeacherConsultations<T>(string teacherId, DateTime utcNow)
         {
             return this.consultationsRepository
                 .AllAsNoTracking()
-                .Where(x => x.TeacherId == teacherId && x.EndTime > DateTime.UtcNow)
+                .Where(x => x.TeacherId == teacherId && x.EndTime > utcNow)
                 .To<T>()
                 .ToList();
         }
 
-        public IEnumerable<T> GetStudentConsultations<T>(string studentId)
+        public IEnumerable<T> GetStudentConsultations<T>(string studentId, DateTime utcNow)
         {
             return this.consultationsRepository
                 .AllAsNoTracking()
-                .Where(x => x.StudentId == studentId && x.EndTime > DateTime.UtcNow)
+                .Where(x => x.StudentId == studentId && x.EndTime > utcNow)
                 .To<T>()
                 .ToList();
         }
@@ -54,16 +54,14 @@
             return consulation;
         }
 
-        public bool IsConsultationActive(string meetingId, string userId)
+        public bool IsConsultationActive(string meetingId, string userId, DateTime utcNow)
         {
-            var now = DateTime.UtcNow;
-
             var count = this.consultationsRepository
                 .All()
                 .Where(x =>
                     x.MeetingId == meetingId
                     && (x.Teacher.ApplicationUserId == userId || x.Student.ApplicationUserId == userId)
-                    && (now >= x.StartTime && now <= x.EndTime))
+                    && (utcNow >= x.StartTime && utcNow <= x.EndTime))
                 .Count();
 
             return count == 1;

@@ -6,16 +6,20 @@
 
     using StudentsHelper.Common;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Services.Time;
     using StudentsHelper.Web.ViewModels.User;
 
     public class UserProfilePictureViewComponent : ViewComponent
     {
         private readonly ICloudStorageService cloudStorageService;
+        private readonly IDateTimeProvider dateTimeProvider;
 
         public UserProfilePictureViewComponent(
-            ICloudStorageService cloudStorageService)
+            ICloudStorageService cloudStorageService,
+            IDateTimeProvider dateTimeProvider)
         {
             this.cloudStorageService = cloudStorageService;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public IViewComponentResult Invoke(string picturePath, string email = null, bool? isActive = null)
@@ -37,7 +41,7 @@
             if (isActive == null)
             {
                 GlobalVariables.UsersActivityDictionary.TryGetValue(email, out DateTime lastTimeActive);
-                isActive = (DateTime.UtcNow - lastTimeActive).Minutes < 2;
+                isActive = (this.dateTimeProvider.GetUtcNow() - lastTimeActive).Minutes < 2;
             }
 
             var viewModel = new UserProfilePictureViewModel

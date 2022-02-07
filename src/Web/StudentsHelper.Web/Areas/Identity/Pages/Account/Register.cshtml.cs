@@ -18,12 +18,13 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Auth;
-    using StudentsHelper.Services.Payments;
     using StudentsHelper.Web.Infrastructure.Filters;
 
     [GuestFilter]
     [AllowAnonymous]
+#pragma warning disable SA1649 // File name should match first type name
     public class RegisterModel : PageModel
+#pragma warning restore SA1649 // File name should match first type name
     {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;

@@ -1,5 +1,5 @@
 ﻿@using StudentsHelper.Common
-
+@inject StudentsHelper.Services.Time.IDateTimeProvider timeProvider
 @model IEnumerable<StudentsHelper.Web.ViewModels.Consultations.StudentConsultationViewModel>
 
 @{
@@ -19,7 +19,7 @@
         </tr>
 
         @{
-            var now = DateTime.UtcNow;
+            var now = timeProvider.GetUtcNow();
         }
         @foreach (var consultation in Model)
         {

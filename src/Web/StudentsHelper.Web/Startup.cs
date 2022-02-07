@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
 
     using Hangfire;
-    using Hangfire.Console;
     using Hangfire.Dashboard;
     using Hangfire.SqlServer;
 
