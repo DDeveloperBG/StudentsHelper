@@ -5,13 +5,15 @@
     public class VideoChat : IVideoChat
     {
         private readonly string apiKey;
+        private readonly string host;
 
-        public VideoChat(string apiKey)
+        public VideoChat(string apiKey, string host)
         {
             this.apiKey = apiKey;
+            this.host = host;
         }
 
-        public UserConfiguration GetUserDefaultConfiguration(string userName, string meetingId, string host)
+        public UserConfiguration GetUserDefaultConfiguration(string userName, string meetingId)
         {
             UserConfiguration userConfigs = new UserConfiguration
             {
@@ -19,9 +21,7 @@
                 ApiKey = this.apiKey,
                 MeetingId = meetingId,
 
-                // brandingEnabled: true,
-                // brandLogoURL: logo url,
-                RedirectOnLeave = $"https://{host}/",
+                RedirectOnLeave = $"https://{this.host}/",
 
                 MicEnabled = true,
                 WebcamEnabled = true,
@@ -67,9 +67,9 @@
             return userConfigs;
         }
 
-        public UserConfiguration GetUserConfigurations(string userName, string meetingId, string host)
+        public UserConfiguration GetUserConfigurations(string userName, string meetingId)
         {
-            return this.GetUserDefaultConfiguration(userName, meetingId, host);
+            return this.GetUserDefaultConfiguration(userName, meetingId);
         }
     }
 }

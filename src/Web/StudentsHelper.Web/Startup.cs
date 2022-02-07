@@ -174,7 +174,8 @@
                     this.configuration["SendGrid:ApiKey"]));
             services.AddTransient<IVideoChat>(_
                 => new VideoChat(
-                        this.configuration["VideoSDK:APIKeySid"]));
+                        this.configuration["VideoSDK:APIKeySid"],
+                        this.configuration["DOMAIN"]));
             services.AddTransient<ICloudStorageService>(_
                => new CloudinaryService(
                        this.configuration["Cloudinary:CloudName"],

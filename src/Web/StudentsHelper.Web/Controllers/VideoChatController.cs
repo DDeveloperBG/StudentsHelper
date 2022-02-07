@@ -71,7 +71,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
-            return this.Json(this.videoChat.GetUserConfigurations(user.Name, meetingId, this.Request.Host.Value));
+            return this.Json(this.videoChat.GetUserConfigurations(user.Name, meetingId));
         }
 
         public async Task<IActionResult> UpdatePartiacipantStatus(string meetingId)
