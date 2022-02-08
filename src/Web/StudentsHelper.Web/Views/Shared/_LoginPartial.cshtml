@@ -4,16 +4,50 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject StudentsHelper.Services.CloudStorage.ICloudStorageService CloudStorage
+@inject StudentsHelper.Services.Data.Teachers.ITeachersService teachersService
 
 <ul class="navbar-nav">
     @if (this.SignInManager.IsSignedIn(this.User))
     {
-        <li id="navbar-profile-pic" class="nav-item row mr-1">
-            @{
-                var user = await this.UserManager.GetUserAsync(this.User);
-                var userName = user.Name;
-                var profilePicUrl = this.CloudStorage.GetImageUri(user.PicturePath, 45, 45);
+        var user = await this.UserManager.GetUserAsync(this.User);
+        var userName = user.Name;
+        var profilePicUrl = this.CloudStorage.GetImageUri(user.PicturePath, 45, 45);
+
+        {
+            string userRoleNameOnBG;
+            string roleBorderColor = "#1DB954";
+            string roleNameSpanColor = "#4cec85";
+            string additionalRoleSpanAttributes = string.Empty;
+
+            if (this.User.IsInRole(GlobalConstants.StudentRoleName)) { userRoleNameOnBG = "ученик"; }
+            else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+            {
+                if (!GlobalVariables.TeachersAccountStatus.TryGetValue(this.User.Identity.Name, out bool isConfirmed))
+                {
+                    if (teachersService.IsTeacherConfirmed(user.Id))
+                    {
+                        GlobalVariables.TeachersAccountStatus[this.User.Identity.Name] = true;
+                        isConfirmed = true;
+                    }
+                }
+
+                if (!isConfirmed)
+                {
+                    roleBorderColor = "#848484";
+                    roleNameSpanColor = "#acacac";
+                    additionalRoleSpanAttributes = "data-toggle='tooltip' data-placement='bottom' title='профила ви не е проверен все още'";
+                }
+
+                userRoleNameOnBG = "учител";
             }
+            else { userRoleNameOnBG = "админ"; }
+
+            <li id="user-role-display-li" class="mr-3 nav-item" style="border: 3px solid @roleBorderColor;">
+                <span class="nav-link p-0 text-center" style="color: @roleNameSpanColor;" @Html.Raw(additionalRoleSpanAttributes)>@userRoleNameOnBG</span>
+            </li>
+        }
+
+        <li id="navbar-profile-pic" class="nav-item row mr-1 ml-0">
             <a class="nav-link pl-3" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 @userName
             </a>

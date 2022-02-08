@@ -145,5 +145,13 @@
                 .Select(x => x.ExpressConnectedAccountId)
                 .Single();
         }
+
+        public bool IsTeacherConfirmed(string userId)
+        {
+            return this.GetAllAsNoTracking()
+                .Where(x => x.ApplicationUserId == userId)
+                .Select(x => x.IsValidated)
+                .Single();
+        }
     }
 }

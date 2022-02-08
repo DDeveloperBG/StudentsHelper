@@ -35,5 +35,7 @@
         Task ChangeTeacherHourWageAsync(string teacherId, decimal teacherWage);
 
         string GetExpressConnectedAccountId(string teacherId);
+
+        bool IsTeacherConfirmed(string userId);
     }
 }

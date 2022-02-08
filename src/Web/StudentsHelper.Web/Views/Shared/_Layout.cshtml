@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="author" content="Daniel Yordanov">
-    <meta name="description" content=@GlobalConstants.SiteDescription>
+    <meta name="description" content=@Html.Raw("\"" + GlobalConstants.SiteDescription + "\"")>
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
     <partial name="_Favicons" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />

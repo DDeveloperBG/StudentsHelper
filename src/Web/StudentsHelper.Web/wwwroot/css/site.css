@@ -6,6 +6,12 @@
     display: none;
 }
 
+#user-role-display-li {
+    border-radius: 20px;
+    width: 6rem;
+    height: 2.4rem;
+}
+
 .active {
     background-color: #1AD057 !important;
 }
