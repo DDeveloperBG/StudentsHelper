@@ -122,6 +122,8 @@
                         options.Secure = CookieSecurePolicy.Always;
                     });
 
+            services.AddApplicationInsightsTelemetry();
+
             services.AddControllersWithViews(
                 options =>
                     {
