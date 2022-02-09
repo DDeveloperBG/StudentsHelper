@@ -14,7 +14,7 @@
     public class AdminSeeder : ISeeder
     {
         private const string AdminName = "Admin";
-        private const string AdminUsername = "daniel123@dir.bg";
+        private const string AdminUsername = "Admin:Username";
         private const string AdminPasswordKey = "Admin:Password";
 
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)

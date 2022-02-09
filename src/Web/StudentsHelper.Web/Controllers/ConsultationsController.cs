@@ -45,7 +45,7 @@
         }
 
         [Authorize(Roles = GlobalConstants.StudentRoleName)]
-        public async Task<IActionResult> BookConsultation(int subjectId, string teacherId, string returnUrl = null)
+        public async Task<IActionResult> BookConsultation(string teacherId, string returnUrl = null)
         {
             var hourWage = this.teachersService.GetHourWage(teacherId);
 

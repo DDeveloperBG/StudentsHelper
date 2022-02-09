@@ -1,6 +1,7 @@
 ﻿namespace StudentsHelper.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -12,11 +13,15 @@
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Services.Data.Location;
     using StudentsHelper.Services.Data.Ratings;
+    using StudentsHelper.Services.Data.Ratings.Models;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Time;
     using StudentsHelper.Web.Infrastructure.Alerts;
+    using StudentsHelper.Web.ViewModels.Locations;
+    using StudentsHelper.Web.ViewModels.Teachers;
 
     public class TeachersController : Controller
     {
@@ -27,6 +32,7 @@
         private readonly ICloudStorageService cloudStorageService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly ILocationService locationService;
 
         public TeachersController(
             ITeachersService teachersService,
@@ -35,7 +41,8 @@
             ICloudStorageService cloudStorageService,
             IRepository<SchoolSubject> schoolSubjects,
             UserManager<ApplicationUser> userManager,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ILocationService locationService)
         {
             this.teachersService = teachersService;
             this.studentsService = studentsService;
@@ -44,39 +51,39 @@
             this.cloudStorageService = cloudStorageService;
             this.userManager = userManager;
             this.dateTimeProvider = dateTimeProvider;
+            this.locationService = locationService;
         }
 
-        public IActionResult All(int subjectId)
+        public IActionResult All(int subjectId, LocationInputModel locationInputModel)
         {
-            var name = this.schoolSubjects.AllAsNoTracking().Where(x => x.Id == subjectId).Select(x => x.Name).SingleOrDefault();
-            if (name == null)
+            var subjectName = this.GetSubjectName(subjectId);
+            if (subjectName == null)
             {
                 return this.Redirect("/").WithDanger("Невалидни данни!");
             }
 
-            this.HttpContext.Session.Set("subjectId", BitConverter.GetBytes(subjectId));
+            this.SetSubjectIdInSession(subjectId);
 
-            DateTime utcNow = this.dateTimeProvider.GetUtcNow();
-            DateTime emptyTime = default;
-            var teachers = this.reviewsService.GetTeachersRating(this.teachersService.GetAllOfType(subjectId));
-            foreach (var teacher in teachers)
+            IEnumerable<TeacherWithRating> teachers;
+            if (locationInputModel.RegionId > 0)
             {
-                GlobalVariables.UsersActivityDictionary
-                    .TryGetValue(teacher.ApplicationUserEmail, out DateTime lastTimeActive);
-
-                if (lastTimeActive == emptyTime)
-                {
-                    teacher.IsActive = false;
-                }
-                else
-                {
-                    teacher.IsActive = (utcNow - lastTimeActive).Minutes < 2;
-                }
+                teachers = this.GetTeachersOfSubjectTypeWithRatingInLocation(subjectId, locationInputModel);
+            }
+            else
+            {
+                teachers = this.GetTeachersOfSubjectTypeWithRating(subjectId);
             }
 
-            teachers = teachers.OrderByDescending(x => x.IsActive).ThenByDescending(x => x.AverageRating).ThenBy(x => x.HourWage);
+            this.ChangeTeachersIsActiveState(teachers, this.dateTimeProvider.GetUtcNow());
 
-            return this.View(teachers);
+            var viewModel = new TeachersOfSubjectType<TeacherWithRating>
+            {
+                Teachers = this.OrderByDefaultCriteria(teachers),
+                SubjectId = subjectId,
+                SubjectName = subjectName,
+            };
+
+            return this.View(viewModel);
         }
 
         [Authorize]
@@ -99,6 +106,67 @@
                 .GetImageUri(teacher.ApplicationUserPicturePath, 100, 100);
 
             return this.View(teacher);
+        }
+
+        private IEnumerable<TeacherWithRating> OrderByDefaultCriteria(
+            IEnumerable<TeacherWithRating> teachers)
+        {
+            return teachers
+                .OrderByDescending(x => x.IsActive)
+                .ThenByDescending(x => x.AverageRating)
+                .ThenBy(x => x.HourWage);
+        }
+
+        private IEnumerable<TeacherWithRating> GetTeachersOfSubjectTypeWithRating(int subjectId)
+        {
+            return this.reviewsService
+                .GetTeachersRating(this.teachersService.GetAllOfType(subjectId));
+        }
+
+        private IEnumerable<TeacherWithRating> GetTeachersOfSubjectTypeWithRatingInLocation(int subjectId, LocationInputModel locationInputModel)
+        {
+            return this.reviewsService
+                .GetTeachersRating(
+                    this.teachersService.GetAllOfType(
+                        subjectId,
+                        this.locationService.GetTeachersInLocation(
+                            locationInputModel.RegionId,
+                            locationInputModel.TownshipId,
+                            locationInputModel.PopulatedAreaId,
+                            locationInputModel.SchoolId)));
+        }
+
+        private string GetSubjectName(int subjectId)
+        {
+            return this.schoolSubjects.AllAsNoTracking().Where(x => x.Id == subjectId).Select(x => x.Name).SingleOrDefault();
+        }
+
+        private void ChangeTeachersIsActiveState(IEnumerable<TeacherWithRating> teachers, DateTime utcNow)
+        {
+            foreach (var teacher in teachers)
+            {
+                GlobalVariables.UsersActivityDictionary
+                    .TryGetValue(teacher.ApplicationUserEmail, out DateTime lastTimeActive);
+
+                teacher.IsActive = this.IsTeacherActive(utcNow, lastTimeActive);
+            }
+        }
+
+        private void SetSubjectIdInSession(int subjectId)
+        {
+            this.HttpContext.Session.Set("subjectId", BitConverter.GetBytes(subjectId));
+        }
+
+        private bool IsTeacherActive(DateTime utcNow, DateTime lastTimeActive)
+        {
+            if (lastTimeActive == default(DateTime))
+            {
+                return false;
+            }
+            else
+            {
+                return (utcNow - lastTimeActive).TotalMinutes < 2;
+            }
         }
     }
 }

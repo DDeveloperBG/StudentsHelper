@@ -1,0 +1,37 @@
+﻿@page
+@using StudentsHelper.Common;
+@model TeacherSchoolModel
+@{
+    ViewData["Title"] = "Училище";
+    ViewData["ActivePage"] = ManageNavPages.TeacherSchool;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" class="mt-2 ml-4" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Област:</label>
+                <select asp-for="Input.RegionId" class="form-control" past-value=@Model.Input.RegionId></select>
+            </div>
+            <div class="form-group">
+                <label>Община:</label>
+                <select asp-for="Input.TownshipId" class="form-control" past-value=@Model.Input.TownshipId></select>
+            </div>
+            <div class="form-group">
+                <label>Населено място:</label>
+                <select asp-for="Input.PopulatedAreaId" class="form-control" past-value=@Model.Input.PopulatedAreaId></select>
+            </div>
+            <div class="form-group">
+                <label>Училище:</label>
+                <select asp-for="Input.SchoolId" class="form-control" past-value=@Model.Input.SchoolId></select>
+            </div>
+            <button id="update-profile-button" type="submit" class="btn btn-primary">Запази</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/Locations/teacherProfileLocationLoader.js" asp-append-version="true"></script>
+}

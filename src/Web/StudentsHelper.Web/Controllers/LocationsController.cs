@@ -19,11 +19,24 @@
         {
             this.locationLoaders = new Dictionary<string, ILocationLoader>
             {
+                // For Registration page
                 { "regions", regionsLoader },
                 { "townships", townshipsLoader },
                 { "populatedAreas", populatedAreasLoader },
                 { "Input.TeacherModel.SchoolId", schoolsLoader },
                 { "TeacherModel.SchoolId", schoolsLoader },
+
+                // For AllTeachers page
+                { "regionId", regionsLoader },
+                { "townshipId", townshipsLoader },
+                { "populatedAreaId", populatedAreasLoader },
+                { "schoolId", schoolsLoader },
+
+                // For TeacherSchool page
+                { "Input.RegionId", regionsLoader },
+                { "Input.TownshipId", townshipsLoader },
+                { "Input.PopulatedAreaId", populatedAreasLoader },
+                { "Input.SchoolId", schoolsLoader },
             };
         }
 

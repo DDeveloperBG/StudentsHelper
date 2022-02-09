@@ -38,16 +38,16 @@
                 .ToList();
         }
 
-        public IEnumerable<T> GetAllOfType<T>(int subjectId)
-        {
-            return this.GetAllOfType(subjectId)
-                .To<T>()
-                .ToList();
-        }
-
         public IQueryable<Teacher> GetAllOfType(int subjectId)
         {
             return this.GetAllAsNoTracking()
+                .Where(x => x.Subjects
+                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
+        }
+
+        public IQueryable<Teacher> GetAllOfType(int subjectId, IQueryable<Teacher> teachers)
+        {
+            return teachers
                 .Where(x => x.Subjects
                     .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
         }

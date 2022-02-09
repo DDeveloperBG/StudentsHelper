@@ -8,9 +8,9 @@
 
     public interface ITeachersService
     {
-        IEnumerable<T> GetAllOfType<T>(int subjectId);
-
         IQueryable<Teacher> GetAllOfType(int subjectId);
+
+        IQueryable<Teacher> GetAllOfType(int subjectId, IQueryable<Teacher> teachers);
 
         IEnumerable<T> GetAllRejected<T>();
 

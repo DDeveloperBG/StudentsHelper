@@ -10,6 +10,8 @@
 
         public static string Balance => "Balance";
 
+        public static string TeacherSchool => "TeacherSchool";
+
         public static string Email => "Email";
 
         public static string ChangePassword => "ChangePassword";
@@ -27,6 +29,8 @@
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string BalanceNavClass(ViewContext viewContext) => PageNavClass(viewContext, Balance);
+
+        public static string TeacherSchoolNavClass(ViewContext viewContext) => PageNavClass(viewContext, TeacherSchool);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 

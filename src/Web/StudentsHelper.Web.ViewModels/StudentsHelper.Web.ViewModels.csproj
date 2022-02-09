@@ -24,8 +24,4 @@
     <ProjectReference Include="..\..\StudentsHelper.Common\StudentsHelper.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Teachers\" />
-  </ItemGroup>
-
 </Project>

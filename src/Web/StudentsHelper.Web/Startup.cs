@@ -30,6 +30,7 @@
     using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Consulations;
+    using StudentsHelper.Services.Data.Location;
     using StudentsHelper.Services.Data.LocationLoaders;
     using StudentsHelper.Services.Data.Meetings;
     using StudentsHelper.Services.Data.Paging;
@@ -150,6 +151,11 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
+            services.AddTransient<RegionsLoader>();
+            services.AddTransient<TownshipsLoader>();
+            services.AddTransient<PopulatedAreasLoader>();
+            services.AddTransient<SchoolsLoader>();
+            services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<IMontlyPaymentsService, MontlyPaymentsService>();
             services.AddTransient<IMeetingsService, MeetingsService>();
             services.AddTransient<IDateTimeProvider, CustomDateTimeProvider>();
@@ -158,10 +164,6 @@
             services.AddTransient<IStudentsService, StudentsService>();
             services.AddTransient<IReviewsService, ReviewsService>();
             services.AddTransient<IPagingService, PagingService>();
-            services.AddTransient<RegionsLoader>();
-            services.AddTransient<TownshipsLoader>();
-            services.AddTransient<PopulatedAreasLoader>();
-            services.AddTransient<SchoolsLoader>();
             services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
             services.AddTransient<IStudentRegisterer, StudentRegisterer>();
             services.AddTransient<IPaymentsService, StripePaymentsService>();
