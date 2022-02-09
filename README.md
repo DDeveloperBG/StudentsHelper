@@ -2,6 +2,7 @@
 
 # StudentsHelper
 Web Application to help students with their homework, lessons, etc. With immediate consultations about the topic made with a professional teacher on the subject.
+**[Website URL](https://studentshelper.azurewebsites.net/)**
 
 [![GitHub license](https://img.shields.io/github/license/DDeveloperBG/StudentsHelper?color=brightgreen)](https://github.com/DDeveloperBG/StudentsHelper/blob/master/LICENSE)
 
