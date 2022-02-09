@@ -3,6 +3,8 @@
 # StudentsHelper
 Web Application to help students with their homework, lessons, etc. With immediate consultations about the topic made with a professional teacher on the subject.
 
+[![GitHub license](https://img.shields.io/github/license/DDeveloperBG/StudentsHelper?color=brightgreen)](https://github.com/DDeveloperBG/StudentsHelper/blob/master/LICENSE)
+
 ## Application flow
 
  Student
@@ -63,6 +65,11 @@ Site guest (**visitor**)
 * Stripe
 * Videosdk.live
 * Moment.js
+
+## Database Diagram
+**[URL](https://github.com/DDeveloperBG/StudentsHelperRepoGallery/blob/master/DatabaseDiagram.png)**
+
+<img src="https://github.com/DDeveloperBG/StudentsHelperRepoGallery/blob/master/DatabaseDiagram.png?raw=true" alt="SH">
 
 ## Screenshots and description
 * Home page for unregistered users:
