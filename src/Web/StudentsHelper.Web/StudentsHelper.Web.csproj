@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<UserSecretsId>aspnet-StudentsHelper-BBB373B5-EF3F-4DBB-B8AA-7152CEC275BF</UserSecretsId>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
