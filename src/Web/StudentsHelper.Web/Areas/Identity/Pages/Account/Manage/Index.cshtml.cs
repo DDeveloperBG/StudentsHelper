@@ -33,9 +33,6 @@
             this.usersRepository = usersRepository;
         }
 
-        [Display(Name = "Потребителско име")]
-        public string Username { get; set; }
-
         [TempData]
         public string ProfilePictureUrl { get; set; }
 
@@ -90,6 +87,20 @@
                 }
             }
 
+            if (this.Input.Name != user.Name)
+            {
+                try
+                {
+                    user.Name = this.Input.Name;
+                    await this.usersRepository.SaveChangesAsync();
+                }
+                catch (System.Exception)
+                {
+                    this.StatusMessage = "Error: Неочаквана грешка при опит за задаване на телефонен номер.";
+                    return this.RedirectToPage();
+                }
+            }
+
             await this.signInManager.RefreshSignInAsync(user);
             this.StatusMessage = "Вашият профил бе актуализиран";
             return this.RedirectToPage();
@@ -97,16 +108,15 @@
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            var userName = await this.userManager.GetUserNameAsync(user);
             var phoneNumber = await this.userManager.GetPhoneNumberAsync(user);
             var profilePicUrl = this.cloudStorageService.GetImageUri(user.PicturePath, 130, 130);
 
-            this.Username = userName;
             this.ProfilePictureUrl = profilePicUrl;
 
             this.Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
+                Name = user.Name,
             };
         }
 
@@ -116,6 +126,14 @@
             [MaxFileSize(ValidationConstants.PictureValidSize)]
             [QualificationDocumentAllowedExtensionsAttribute]
             public IFormFile ProfilePicture { get; set; }
+
+            [Display(Name = "Име")]
+            [StringLength(
+                ValidationConstants.NameMaxLength,
+                MinimumLength = ValidationConstants.NameMinLength,
+                ErrorMessage = "Името може да бъде най - малко {2} и максимум {1} символа дълго.")]
+            [Required(ErrorMessage = ValidationConstants.RequiredError)]
+            public string Name { get; set; }
 
             [Phone]
             [Display(Name = "Телефонен номер")]

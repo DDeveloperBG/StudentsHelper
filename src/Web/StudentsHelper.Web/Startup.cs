@@ -65,7 +65,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+                options => options.UseSqlServer("Server=.;Database=StudentsHelper;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
             services.AddDefaultIdentity<ApplicationUser>((x) => IdentityOptionsProvider.GetIdentityOptions(x, this.currentEnvironment.IsProduction()))
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
