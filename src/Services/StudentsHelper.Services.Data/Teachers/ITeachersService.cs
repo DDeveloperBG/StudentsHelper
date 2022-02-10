@@ -18,7 +18,9 @@
 
         string GetId(string userId);
 
-        T GetOne<T>(string id, bool isRejected);
+        Teacher GetOneWithSubjectsTracked(string id);
+
+        T GetOne<T>(string id);
 
         Task RejectTeacherAsync(string id);
 
@@ -37,5 +39,9 @@
         string GetExpressConnectedAccountId(string teacherId);
 
         bool IsTeacherConfirmed(string userId);
+
+        Task DeleteTeacherAsync(string userId);
+
+        Task UpdateAsync(Teacher teacher);
     }
 }

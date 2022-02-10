@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
@@ -13,13 +15,16 @@
     {
         private readonly IDeletableEntityRepository<Teacher> teachersRepository;
         private readonly IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public TeachersService(
             IDeletableEntityRepository<Teacher> teachersRepository,
-            IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository)
+            IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository,
+            UserManager<ApplicationUser> userManager)
         {
             this.teachersRepository = teachersRepository;
             this.schoolSubjectsRepository = schoolSubjectsRepository;
+            this.userManager = userManager;
         }
 
         public IEnumerable<T> GetAllNotConfirmed<T>()
@@ -67,12 +72,20 @@
                 .SingleOrDefault();
         }
 
-        public T GetOne<T>(string id, bool isRejected)
+        public T GetOne<T>(string id)
         {
             return this.GetAllAsNoTracking()
-                .Where(x => x.Id == id && x.IsRejected == isRejected)
+                .Where(x => x.Id == id)
                 .To<T>()
                 .SingleOrDefault();
+        }
+
+        public Teacher GetOneWithSubjectsTracked(string id)
+        {
+            return this.GetAll()
+                .Where(x => x.Id == id)
+                .Include(g => g.Subjects)
+                .Single();
         }
 
         public Task RejectTeacherAsync(string id)
@@ -152,6 +165,22 @@
                 .Where(x => x.ApplicationUserId == userId)
                 .Select(x => x.IsValidated)
                 .Single();
+        }
+
+        public async Task DeleteTeacherAsync(string userId)
+        {
+            await this.userManager.RemoveFromRoleAsync(new ApplicationUser { Id = userId }, GlobalConstants.TeacherRoleName);
+
+            var deletedUser = await this.userManager.FindByNameAsync(GlobalConstants.DeletedUserUsername);
+            this.teachersRepository.All().Where(x => x.ApplicationUserId == userId).SingleOrDefault().ApplicationUser = deletedUser;
+
+            await this.teachersRepository.SaveChangesAsync();
+        }
+
+        public Task UpdateAsync(Teacher teacher)
+        {
+            this.teachersRepository.Update(teacher);
+            return this.teachersRepository.SaveChangesAsync();
         }
     }
 }

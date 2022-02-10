@@ -1,0 +1,77 @@
+﻿@model StudentsHelper.Web.ViewModels.Administration.Teachers.TeacherDetailedViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Учител</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label>Снимка</label>
+                <input asp-for="ApplicationUserPicturePath" class="form-control" />
+                <span asp-validation-for="ApplicationUserPicturePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Име</label>
+                <input asp-for="ApplicationUserName" class="form-control" />
+                <span asp-validation-for="ApplicationUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Имейл</label>
+                <input asp-for="ApplicationUserEmail" class="form-control" />
+                <span asp-validation-for="ApplicationUserEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Документ за квалификация</label>
+                <input asp-for="QualificationDocumentPath" class="form-control" />
+                <span asp-validation-for="QualificationDocumentPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Предмети:</label>
+                <div class="ml-5">
+                    <select asp-for=SelectedSubjectsIds class="form-control">
+                        @foreach (var item in Model.AllSubjects)
+                        {
+                            // I use the if because option tag helper prohibits code inside it
+                            bool isSelected = Model.Subjects.Any(x => x.Name == item.Name);
+                            @if (isSelected)
+                            {
+                                <option value=@(item.Id) selected>@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value=@(item.Id)>@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="border: 1px solid #ced4da; border-radius: 5px;">
+                <div class="pl-3 pt-2">
+                    <div>
+                        <label>Валидиран ли е:</label>
+                        <input asp-for="IsValidated" class="ml-2" />
+                    </div>
+                    <div>
+                        <label>Отхвърлен ли е:</label>
+                        <input asp-for="IsRejected" class="ml-2" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Запази" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">Обратно</a>
+</div>
+

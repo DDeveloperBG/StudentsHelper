@@ -1,0 +1,53 @@
+﻿@model StudentsHelper.Web.ViewModels.Administration.Teachers.TeacherDetailedViewModel
+
+@{
+    ViewData["Title"] = "Детайли";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Учител</h4>
+    <hr />
+    <table class="table table-striped">
+        <tbody>
+            <tr class="row">
+                <td>Снимка:</td>
+                <td style="width: fit-content;">
+                    <vc:user-profile-picture picture-path="@Model.ApplicationUserPicturePath"></vc:user-profile-picture>
+                </td>
+            </tr>
+            <tr class="row">
+                <td>Име:</td>
+                <td>@Model.ApplicationUserName</td>
+            </tr>
+            <tr class="row">
+                <td>Имейл:</td>
+                <td>@Model.ApplicationUserEmail</td>
+            </tr>
+            <tr class="row">
+                <td>Документ за квалификация:</td>
+                <td>@Model.QualificationDocumentPath</td>
+            </tr>
+            <tr class="row">
+                <td>Предмети:</td>
+                @foreach (var item in Model.Subjects)
+                {
+                    <td>| @item.Name |</td>
+                }
+            </tr>
+            <tr class="row">
+                <td>Валидиран ли е:</td>
+                <td class="font-weight-bold" style="color: @(Model.IsValidated ? "green" : "red")">@(Model.IsValidated ? "Да" : "Не")</td>
+            </tr>
+            <tr class="row">
+                <td>Отхвърлен ли е:</td>
+                <td class="font-weight-bold" style="color: @(Model.IsRejected ? "red" : "green")">@(Model.IsRejected ? "Да" : "Не")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="AllTeachers" class="btn btn-primary">Обратно</a>
+</div>

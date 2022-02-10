@@ -1,14 +1,19 @@
 ﻿namespace StudentsHelper.Web.Areas.Administration.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using StudentsHelper.Common;
+    using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Subjects;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Web.Infrastructure.Alerts;
     using StudentsHelper.Web.ViewModels.Administration.Teachers;
@@ -19,17 +24,20 @@
         private readonly ISchoolSubjectsService schoolSubjectsService;
         private readonly ICloudStorageService cloudStorageService;
         private readonly IEmailSender emailSender;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public TeachersController(
             ITeachersService teachersService,
             ISchoolSubjectsService schoolSubjectsService,
             ICloudStorageService cloudStorageService,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            UserManager<ApplicationUser> userManager)
         {
             this.teachersService = teachersService;
             this.schoolSubjectsService = schoolSubjectsService;
             this.cloudStorageService = cloudStorageService;
             this.emailSender = emailSender;
+            this.userManager = userManager;
         }
 
         public IActionResult AllToApprove()
@@ -52,7 +60,7 @@
 
         public IActionResult SetTeacherData(string teacherId)
         {
-            var teacherData = this.teachersService.GetOne<TeacherDetailsViewModel>(teacherId, false);
+            var teacherData = this.teachersService.GetOne<TeacherDetailsViewModel>(teacherId);
             teacherData.Subjects = this.schoolSubjectsService.GetAll<SchoolSubjectPickViewModel>();
             teacherData.ApplicationUserPicturePath = this.cloudStorageService.GetImageUri(teacherData.ApplicationUserPicturePath);
             teacherData.QualificationDocumentPath = this.cloudStorageService.GetImageUri(teacherData.QualificationDocumentPath);
@@ -85,6 +93,131 @@
             await this.teachersService.RejectTeacherAsync(teacherId);
 
             return this.RedirectToAction(nameof(this.AllToApprove)).WithSuccess("Задачата бе изпълнена успешно.");
+        }
+
+        public IActionResult AllTeachers()
+        {
+            var teachers = this.teachersService.GetAllAsNoTracking().To<TeacherForAllTeachersListViewModel>().ToList();
+
+            return this.View(teachers);
+        }
+
+        public IActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var teacher = this.teachersService.GetOne<TeacherDetailedViewModel>(id);
+            if (teacher == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(teacher);
+        }
+
+        public IActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var teacher = this.teachersService.GetOne<TeacherDetailedViewModel>(id);
+            if (teacher == null)
+            {
+                return this.NotFound();
+            }
+
+            teacher.AllSubjects = this.schoolSubjectsService.GetAll<SchoolSubjectPickViewModel>();
+
+            return this.View(teacher);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAsync(string id, TeacherDetailedViewModel teacherData)
+        {
+            if (id != teacherData.Id)
+            {
+                return this.NotFound();
+            }
+
+            var allTeacherPageRedirect = this.RedirectToAction(nameof(this.AllTeachers));
+
+            if (this.ModelState.IsValid)
+            {
+                var teacher = this.teachersService.GetOneWithSubjectsTracked(id);
+
+                if (teacher == null)
+                {
+                    return allTeacherPageRedirect.WithWarning("Учителя не бе намерен!");
+                }
+
+                teacher.ApplicationUser = await this.userManager.FindByIdAsync(teacher.ApplicationUserId);
+
+                if (teacher.ApplicationUser.Name != teacherData.ApplicationUserName)
+                {
+                    teacher.ApplicationUser.Name = teacherData.ApplicationUserName;
+                }
+
+                if (teacher.ApplicationUser.Email != teacherData.ApplicationUserEmail)
+                {
+                    teacher.ApplicationUser.Email = teacherData.ApplicationUserEmail;
+                }
+
+                if (teacher.ApplicationUser.PicturePath != teacherData.ApplicationUserPicturePath)
+                {
+                    teacher.ApplicationUser.PicturePath = teacherData.ApplicationUserPicturePath;
+                }
+
+                if (teacher.QualificationDocumentPath != teacherData.QualificationDocumentPath)
+                {
+                    teacher.QualificationDocumentPath = teacherData.QualificationDocumentPath;
+                }
+
+                if (teacher.IsValidated != teacherData.IsValidated &&
+                    teacher.IsRejected != teacherData.IsRejected &&
+                    (teacherData.IsValidated || teacherData.IsRejected) &&
+                    teacherData.IsValidated != teacherData.IsRejected)
+                {
+                    if (teacher.IsValidated && !teacherData.SelectedSubjectsIds.Any())
+                    {
+                        return allTeacherPageRedirect.WithWarning("Невалидни данни!");
+                    }
+
+                    teacher.IsValidated = teacherData.IsValidated;
+                    teacher.IsRejected = teacherData.IsRejected;
+                }
+
+                if (teacher.IsValidated && teacherData.SelectedSubjectsIds.Any())
+                {
+                    var all = this.schoolSubjectsService.GetAllRaw();
+
+                    foreach (var subject in teacherData.SelectedSubjectsIds)
+                    {
+                        if (!teacher.Subjects.Any(x => x.Id == subject))
+                        {
+                            teacher.Subjects.Add(all.Single(x => x.Id == subject));
+                        }
+                    }
+
+                    foreach (var subject in teacher.Subjects)
+                    {
+                        if (!teacherData.SelectedSubjectsIds.Any(x => x == subject.Id))
+                        {
+                            teacher.Subjects.Remove(subject);
+                        }
+                    }
+                }
+
+                await this.teachersService.UpdateAsync(teacher);
+
+                return allTeacherPageRedirect.WithSuccess("Успешно се изпълни!");
+            }
+
+            return allTeacherPageRedirect.WithWarning("Невалидни данни!");
         }
 
         private Task SendEmailResponce(string to, string message)

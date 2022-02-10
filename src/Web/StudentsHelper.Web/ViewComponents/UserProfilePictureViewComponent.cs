@@ -24,11 +24,6 @@
 
         public IViewComponentResult Invoke(string picturePath, string email = null, bool? isActive = null)
         {
-            if (email == null && isActive == null)
-            {
-                throw new Exception("Either Email or IsActive should have value!");
-            }
-
             if (string.IsNullOrWhiteSpace(picturePath))
             {
                 picturePath = GlobalConstants.NoProfilePicturePath;
@@ -38,7 +33,7 @@
                 picturePath = this.cloudStorageService.GetImageUri(picturePath, 50, 50);
             }
 
-            if (isActive == null)
+            if (isActive == null && !string.IsNullOrWhiteSpace(email))
             {
                 GlobalVariables.UsersActivityDictionary.TryGetValue(email, out DateTime lastTimeActive);
                 isActive = (this.dateTimeProvider.GetUtcNow() - lastTimeActive).Minutes < 2;
@@ -47,7 +42,7 @@
             var viewModel = new UserProfilePictureViewModel
             {
                 PicturePath = picturePath,
-                IsActive = isActive.Value,
+                IsActive = isActive,
             };
 
             return this.View(viewModel);

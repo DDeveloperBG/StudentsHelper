@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
@@ -12,8 +11,9 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data;
     using StudentsHelper.Data.Common;
-    using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.Data.Students;
+    using StudentsHelper.Services.Data.Teachers;
 
 #pragma warning disable SA1649 // File name should match first type name
     public class DeletePersonalDataModel : PageModel
@@ -22,8 +22,8 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<DeletePersonalDataModel> logger;
-        private readonly IRepository<Teacher> teachersRepository;
-        private readonly IRepository<Student> studentsRepository;
+        private readonly ITeachersService teachersService;
+        private readonly IStudentsService studentsService;
         private readonly ApplicationDbContext dbContext;
         private readonly IDbQueryRunner dbQueryRunner;
 
@@ -31,16 +31,16 @@
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<DeletePersonalDataModel> logger,
-            IRepository<Teacher> teachersRepository,
-            IRepository<Student> studentsRepository,
+            ITeachersService teachersService,
+            IStudentsService studentsService,
             ApplicationDbContext dbContext,
             IDbQueryRunner dbQueryRunner)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
-            this.teachersRepository = teachersRepository;
-            this.studentsRepository = studentsRepository;
+            this.teachersService = teachersService;
+            this.studentsService = studentsService;
             this.dbContext = dbContext;
             this.dbQueryRunner = dbQueryRunner;
         }
@@ -82,19 +82,13 @@
 
             using (var transaction = this.dbContext.Database.BeginTransaction())
             {
-                var deletedUser = await this.userManager.FindByNameAsync(GlobalConstants.DeletedUserUsername);
-
                 if (this.User.IsInRole(GlobalConstants.StudentRoleName))
                 {
-                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.StudentRoleName);
-                    this.studentsRepository.All().Where(x => x.ApplicationUserId == user.Id).SingleOrDefault().ApplicationUser = deletedUser;
-                    await this.studentsRepository.SaveChangesAsync();
+                    await this.studentsService.DeleteStudentAsync(user.Id);
                 }
                 else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
                 {
-                    await this.userManager.RemoveFromRoleAsync(user, GlobalConstants.TeacherRoleName);
-                    this.teachersRepository.All().Where(x => x.ApplicationUserId == user.Id).SingleOrDefault().ApplicationUser = deletedUser;
-                    await this.teachersRepository.SaveChangesAsync();
+                    await this.teachersService.DeleteTeacherAsync(user.Id);
                 }
 
                 var externalLogins = await this.userManager.GetLoginsAsync(user);
@@ -107,8 +101,6 @@
                 await this.dbQueryRunner.RunQueryAsync(
                     @"DELETE FROM [StudentsHelper].[dbo].[AspNetUserTokens] WHERE UserId = {0}",
                     user.Id);
-
-                await this.dbContext.SaveChangesAsync();
 
                 var result = await this.userManager.DeleteAsync(user);
                 var userId = await this.userManager.GetUserIdAsync(user);

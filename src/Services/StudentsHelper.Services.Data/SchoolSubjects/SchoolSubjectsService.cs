@@ -18,7 +18,21 @@
 
         public IEnumerable<T> GetAll<T>()
         {
-            return this.schoolSubjectsRepository.All().To<T>().ToList();
+            return this.schoolSubjectsRepository.AllAsNoTracking().To<T>().ToList();
+        }
+
+        public IEnumerable<SchoolSubject> GetAllRaw()
+        {
+            return this.schoolSubjectsRepository.AllAsNoTracking().ToList();
+        }
+
+        public IEnumerable<int> GetTeacherSubjectsIds(string teacherId)
+        {
+            return this.schoolSubjectsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Teachers.Any(x => x.Id == teacherId))
+                .Select(x => x.Id)
+                .ToList();
         }
     }
 }

@@ -6,7 +6,7 @@
     using StudentsHelper.Services.Data.Subjects;
     using StudentsHelper.Services.Mapping;
 
-    public class TeacherEdit : IMapFrom<Teacher>
+    public class TeacherDetailedViewModel : IMapFrom<Teacher>
     {
         public string Id { get; set; }
 
@@ -22,6 +22,10 @@
 
         public bool IsRejected { get; set; }
 
+        public HashSet<int> SelectedSubjectsIds { get; set; }
+
         public IEnumerable<SchoolSubjectPickViewModel> Subjects { get; set; }
+
+        public IEnumerable<SchoolSubjectPickViewModel> AllSubjects { get; set; }
     }
 }
