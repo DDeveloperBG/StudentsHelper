@@ -8,6 +8,8 @@
 
         public const string ContactEmail = "dakataebg@students.softuni.bg";
 
+        public const string FacebookPageURL = "https://www.facebook.com/Students-Helper-109858771554319";
+
         public const string AdministratorRoleName = "administrator";
 
         public const string TeacherRoleName = "teacher";
