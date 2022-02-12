@@ -40,6 +40,10 @@
       "provider": "cdnjs",
       "library": "moment.js@2.29.1",
       "destination": "wwwroot/moment.js/"
+    },
+    {
+      "library": "fullcalendar@5.10.2",
+      "destination": "wwwroot/lib/fullcalendar/"
     }
   ]
 }

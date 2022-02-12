@@ -6,6 +6,12 @@
     ViewData["Title"] = "Консултации";
 }
 
+<div class="position-absolute">
+    <a asp-area="" asp-controller="Consultations" asp-action="Calendar" class="btn">
+        <img src="/img/calendar-icon.png" alt="Календар" class="img-fluid" style="width: 50px;">
+    </a>
+</div>
+
 <h1 class="text-center mt-2 mb-4">@ViewData["Title"]</h1>
 
 <div style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">

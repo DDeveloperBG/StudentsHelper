@@ -57,7 +57,7 @@
         public bool IsConsultationActive(string meetingId, string userId, DateTime utcNow)
         {
             var count = this.consultationsRepository
-                .All()
+                .AllAsNoTracking()
                 .Where(x =>
                     x.MeetingId == meetingId
                     && (x.Teacher.ApplicationUserId == userId || x.Student.ApplicationUserId == userId)
@@ -65,6 +65,24 @@
                 .Count();
 
             return count == 1;
+        }
+
+        public Task UpdateConsultationStartTimeAsync(string consultationId, DateTime startTime)
+        {
+            var consultation = this.GetTrackedConsultation(consultationId);
+
+            consultation.EndTime = startTime + consultation.Duration;
+            consultation.StartTime = startTime;
+
+            return this.consultationsRepository.SaveChangesAsync();
+        }
+
+        private Consultation GetTrackedConsultation(string consultationId)
+        {
+            return this.consultationsRepository
+                .All()
+                .Where(x => x.Id == consultationId)
+                .Single();
         }
     }
 }

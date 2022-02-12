@@ -1,0 +1,23 @@
+﻿@using StudentsHelper.Web.ViewModels.Consultations
+@model IEnumerable<ConsultationCalendarEventViewModel>
+
+@section Css {
+<link rel="stylesheet" href="~/lib/fullcalendar/main.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/calendar.min.css" asp-append-version="true" />
+}
+
+<div id="calendar-wrapper" class="col-10 p-4 ml-auto mr-auto">
+    <div id='calendar'></div>
+</div>
+
+@section BeforeBootstrapJsScripts{
+<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+}
+
+@section Scripts{
+<script src="~/moment.js/moment.min.js" asp-append-version="true"></script>
+<script src="~/lib/fullcalendar/main.min.js" asp-append-version="true"></script>
+<script src="~/lib/fullcalendar/locales-all.min.js" asp-append-version="true"></script>
+
+<script src="~/js/Calendar/consultations-calendar.min.js" asp-append-version="true"></script>
+}

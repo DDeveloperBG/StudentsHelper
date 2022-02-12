@@ -15,5 +15,7 @@
         Task<Consultation> AddConsultationAsync(DateTime startTime, DateTime endTime, decimal hourWage, string reason, int subjectId, string studentId, string teacherId);
 
         bool IsConsultationActive(string meetingId, string userId, DateTime utcNow);
+
+        Task UpdateConsultationStartTimeAsync(string consultationId, DateTime startTime);
     }
 }

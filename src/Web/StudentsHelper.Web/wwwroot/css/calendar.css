@@ -1,0 +1,30 @@
+﻿body {
+    background-color: #F5F6F8;
+}
+
+#calendar-wrapper {
+    background: #fff;
+    border-top: 4px solid #fac863;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+    flex-grow: 1;
+    margin-top: 36px;
+    padding-top: 85px;
+    position: relative;
+}
+
+.fc-col-header-cell-cushion {
+    text-transform: capitalize;
+    color: black;
+}
+
+.fc-daygrid-day-number {
+    color: black;
+}
+
+td.fc-timegrid-axis.fc-scrollgrid-shrink {
+    text-align: center;
+}
+
+.fc .fc-button:focus {
+    box-shadow: none!important;
+}

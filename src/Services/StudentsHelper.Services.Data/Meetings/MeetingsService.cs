@@ -2,7 +2,10 @@
 {
     using System;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
+
+    using Hangfire;
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
@@ -18,37 +21,45 @@
             this.meetingsRepository = meetingsRepository;
         }
 
-        public Task UpdateParticipantActivityAndIncreaseDurationAsync(string role, string meetingId, DateTime now)
+        public Task UpdateParticipantActivityAndIncreaseDurationAsync(string role, string meetingId, DateTime utcNow, Expression<Action> scheduleChargeStudent)
         {
             var meeting = this.GetTrackedMeetingById(meetingId);
             int difference;
             if (role == GlobalConstants.StudentRoleName)
             {
-                meeting.StudentLastActivity = now;
+                meeting.StudentLastActivity = utcNow;
             }
             else if (role == GlobalConstants.TeacherRoleName)
             {
                 // In case teacher refreshes before the time becomes 1 minute
                 if (meeting.TeacherLastActivity == null)
                 {
-                    meeting.TeacherLastActivity = now;
+                    meeting.TeacherLastActivity = utcNow;
                 }
 
-                difference = this.GetDatesDifferenceInSeconds(meeting.TeacherLastActivity.Value, now);
+                difference = this.GetDatesDifferenceInSeconds(meeting.TeacherLastActivity.Value, utcNow);
                 if (difference < 60)
                 {
-                    meeting.TeacherLastActivity = now;
+                    meeting.TeacherLastActivity = utcNow;
                     return this.meetingsRepository.SaveChangesAsync();
                 }
 
-                meeting.TeacherLastActivity = now;
+                meeting.TeacherLastActivity = utcNow;
 
-                // It doesn't matter either if it is for teacher or student, but it has to happen only once.
+                // It doesn't matter either if it happens when called by teacher or student, but it has to happen only for one type.
                 if (meeting.StudentLastActivity != null)
                 {
                     difference = this.GetDatesDifferenceInSeconds(meeting.StudentLastActivity.Value, meeting.TeacherLastActivity.Value);
                     if (difference <= 60)
                     {
+                        // Important !!!
+                        if (meeting.DurationInMinutes == 0)
+                        {
+                            BackgroundJob.Schedule(
+                                scheduleChargeStudent,
+                                this.GetConsultationEndTimeByMeetingId(meetingId) - utcNow);
+                        }
+
                         meeting.DurationInMinutes++;
                     }
                 }
@@ -77,6 +88,15 @@
         private int GetDatesDifferenceInSeconds(DateTime x, DateTime y)
         {
             return Math.Abs((int)(x - y).TotalSeconds);
+        }
+
+        private DateTime GetConsultationEndTimeByMeetingId(string id)
+        {
+            return this.meetingsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .Select(x => x.Consultation.EndTime)
+                .Single();
         }
     }
 }

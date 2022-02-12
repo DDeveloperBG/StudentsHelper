@@ -1,14 +1,15 @@
 ﻿namespace StudentsHelper.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
-    using Hangfire;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Consulations;
@@ -19,6 +20,7 @@
     using StudentsHelper.Web.Infrastructure.Alerts;
     using StudentsHelper.Web.ViewModels.Consultations;
 
+    [Authorize]
     public class ConsultationsController : Controller
     {
         private readonly IConsulationsService consulationsService;
@@ -94,7 +96,8 @@
                 return responce.WithDanger("Невалидни данни");
             }
 
-            if ((this.dateTimeProvider.GetUtcNow() - inputModel.StartTime).TotalMilliseconds > 0)
+            var utcNow = this.dateTimeProvider.GetUtcNow();
+            if ((utcNow - inputModel.StartTime).TotalMilliseconds > 0)
             {
                 this.HttpContext.Session.Remove("returnUrl");
                 return responce.WithDanger("Невалидни данни");
@@ -135,14 +138,10 @@
 
             int subjectId = BitConverter.ToInt32(outputBytesForSubject);
 
-            var consultation = await this.consulationsService.AddConsultationAsync(inputModel.StartTime, endTime, hourWage.Value, inputModel.Reason, subjectId, studentId, inputModel.TeacherId);
-
-            // Important !!!
-            var jobId = BackgroundJob.Schedule(
-                () => this.studentsTransactionsService.ChargeStudentAsync(consultation.MeetingId, this.dateTimeProvider.GetUtcNow()),
-                consultation.Duration);
+            await this.consulationsService.AddConsultationAsync(inputModel.StartTime, endTime, hourWage.Value, inputModel.Reason, subjectId, studentId, inputModel.TeacherId);
 
             this.HttpContext.Session.Remove("returnUrl");
+
             return responce.WithSuccess("Успешно резервирахте консултация.");
         }
 
@@ -176,6 +175,61 @@
                 .OrderBy(x => x.ConsultationDetails.StartTime);
 
             return this.View(viewModel);
+        }
+
+        public IActionResult Calendar()
+        {
+            return this.View();
+        }
+
+        public async Task<IActionResult> GetCalendarConsultationsAsync()
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            if (user == null)
+            {
+                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+            }
+
+            IEnumerable<ConsultationCalendarEventViewModel> consultations;
+            var utcNow = this.dateTimeProvider.GetUtcNow();
+            if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+            {
+                var teacherId = this.teachersService.GetId(user.Id);
+                consultations = this.consulationsService.GetTeacherConsultations<ConsultationCalendarEventViewModel>(teacherId, utcNow);
+            }
+            else if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+            {
+                var studentId = this.studentsService.GetId(user.Id);
+                consultations = this.consulationsService.GetStudentConsultations<ConsultationCalendarEventViewModel>(studentId, utcNow);
+            }
+            else
+            {
+                return null;
+            }
+
+            return this.Json(consultations);
+        }
+
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> ChangeConsultationStartTimeAsync([FromBody] UpdateConsultationInputModel input)
+        {
+            var utcNow = this.dateTimeProvider.GetUtcNow();
+            if (input.StartTime < utcNow)
+            {
+                return this.BadRequest();
+            }
+
+            try
+            {
+                await this.consulationsService.UpdateConsultationStartTimeAsync(input.ConsultationId, input.StartTime);
+            }
+            catch (Exception)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Json(new { success = true });
         }
     }
 }

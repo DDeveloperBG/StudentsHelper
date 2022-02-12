@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-
-namespace StudentsHelper.Services.Data.Students
+﻿namespace StudentsHelper.Services.Data.Students
 {
+    using System.Threading.Tasks;
+
     public interface IStudentsService
     {
         string GetId(string userId);

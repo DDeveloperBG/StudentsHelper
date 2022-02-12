@@ -106,10 +106,17 @@
             }
             else
             {
-                throw new System.Exception();
+                throw new System.Exception("User is in incorrect role!");
             }
 
-            return this.meetingsService.UpdateParticipantActivityAndIncreaseDurationAsync(role, meetingId, this.dateTimeProvider.GetUtcNow());
+            var utcNow = this.dateTimeProvider.GetUtcNow();
+
+            return this.meetingsService
+                .UpdateParticipantActivityAndIncreaseDurationAsync(
+                    role,
+                    meetingId,
+                    utcNow,
+                    () => this.studentsTransactionsService.ChargeStudentAsync(meetingId, utcNow));
         }
 
         private bool StudentHasEnoughMoneyToContinue(string meetingId)
