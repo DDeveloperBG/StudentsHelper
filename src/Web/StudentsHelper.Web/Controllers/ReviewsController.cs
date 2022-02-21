@@ -12,7 +12,7 @@
     using StudentsHelper.Web.Infrastructure.Alerts;
     using StudentsHelper.Web.ViewModels.Reviews;
 
-    public class ReviewsController : Controller
+    public class ReviewsController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IStudentsService studentsService;

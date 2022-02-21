@@ -45,6 +45,16 @@
 
         public DbSet<StudentTransaction> StudentsTransactions { get; set; }
 
+        public DbSet<Consultation> Consultations { get; set; }
+
+        public DbSet<Meeting> Meetings { get; set; }
+
+        public DbSet<ChatGroup> ChatGroups { get; set; }
+
+        public DbSet<ChatGroupUsers> ChatGroupUsers { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

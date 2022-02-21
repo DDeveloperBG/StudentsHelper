@@ -17,13 +17,22 @@
     {
         <div style="position: absolute;" class="m-3">
             <h5>@Model.HourWage лв/час</h5>
-            <a 
-                asp-area=""
-                asp-controller="Consultations" 
-                asp-action="BookConsultation" 
-                asp-route-teacherId="@Model.Id" 
-                asp-route-returnUrl=@($"{Context.Request.Path}{Context.Request.QueryString}")
-                style="font-weight: 600;" class="btn btn-warning p-1">Резервирай час</a>
+            <a asp-area=""
+           asp-controller="Consultations"
+           asp-action="BookConsultation"
+           asp-route-teacherId="@Model.Id"
+           asp-route-returnUrl=@($"{Context.Request.Path}{Context.Request.QueryString}")
+           style="font-weight: 600;" class="btn btn-warning p-1">Резервирай час</a>
+        </div>
+
+        <div class="m-3" style="position: absolute; right: 0;">
+            <a
+            asp-area=""
+           asp-controller="Chat"
+           asp-action="StartChat"
+           asp-route-teacherUserId="@Model.ApplicationUserId">
+                <img src="/img/chat-icon.png" alt="Chat" style="width: 60px;">
+            </a>
         </div>
     }
     <div>

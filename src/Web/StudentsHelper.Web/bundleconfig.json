@@ -92,5 +92,11 @@
     "inputFiles": [
       "wwwroot/css/calendar.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/chatRoom.min.css",
+    "inputFiles": [
+      "wwwroot/css/chatRoom.css"
+    ]
   }
 ]

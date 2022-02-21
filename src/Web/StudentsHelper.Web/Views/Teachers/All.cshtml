@@ -43,7 +43,8 @@
         @foreach (var item in Model.Teachers)
         {
             <div class="mb-2 p-2 row" style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%); border-radius: 6px;">
-                <vc:user-profile-picture picture-path="@item.ApplicationUserPicturePath" is-active="@item.IsActive"></vc:user-profile-picture>
+                <vc:user-profile-picture picture-path="@item.ApplicationUserPicturePath" is-active="@item.IsActive" email="@item.ApplicationUserEmail">
+                </vc:user-profile-picture>
                 <p class="col-4 m-auto">
                     @item.ApplicationUserName
                 </p>

@@ -16,7 +16,7 @@
     using StudentsHelper.Web.ViewModels.Meetings;
 
     [Authorize]
-    public class VideoChatController : Controller
+    public class VideoChatController : BaseController
     {
         private readonly IVideoChat videoChat;
         private readonly IConsulationsService consulationsService;

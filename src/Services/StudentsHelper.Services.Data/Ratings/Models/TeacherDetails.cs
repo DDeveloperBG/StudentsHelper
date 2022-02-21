@@ -9,6 +9,8 @@
 
         public string Id { get; set; }
 
+        public string ApplicationUserId { get; set; }
+
         public string ApplicationUserEmail { get; set; }
 
         public string ApplicationUserName { get; set; }

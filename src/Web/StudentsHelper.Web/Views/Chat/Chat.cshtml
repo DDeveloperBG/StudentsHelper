@@ -1,0 +1,114 @@
+﻿@using StudentsHelper.Web.ViewModels.Chat
+@model ChatViewModel
+@{
+    ViewData["Title"] = "Чат";
+}
+
+@section Css
+{
+<link rel="stylesheet" href="~/css/chatRoom.min.css" asp-append-version="true" />
+}
+
+<div id="user-email" class="hidden">@User.Identity.Name</div>
+<div class="card mt-1">
+    <div class="row g-0">
+        <div class="col-12 col-lg-5 col-xl-3 border-right">
+
+            <div class="px-4 d-none d-md-block">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <input type="text" class="form-control my-3" placeholder="Search...">
+                    </div>
+                </div>
+            </div>
+
+            @foreach (var group in Model.Groups)
+            {
+                <a asp-area=""
+               asp-controller="Chat"
+               asp-action="Chat"
+               asp-route-chatGroupId="@group.Id" class="border-0 list-group-item list-group-item-action ml-2">
+                    @*<div id="chat-notifications-count" class="badge bg-success float-right">5</div>*@
+                    <div class="d-flex align-items-start">
+                        <vc:user-profile-picture picture-path="@group.OtherUserPicturePath" email="@group.OtherUserEmail"></vc:user-profile-picture>
+                        <div class="flex-grow-1 ml-3 mt-auto mb-auto">
+                            @group.OtherUserName
+                        </div>
+                    </div>
+                </a>
+            }
+
+            <hr class="d-block d-lg-none mt-1 mb-0">
+        </div>
+
+        <div class="col-12 col-lg-7 col-xl-9">
+            @if (Model.SelectedChatGroup != null)
+            {
+                <div class="py-2 px-4 border-bottom d-none d-lg-block">
+                    <div class="d-flex align-items-center py-1">
+                        <div class="position-relative">
+                            <vc:user-profile-picture picture-path="@Model.SelectedChatGroup.OtherUserPicturePath" email="@Model.SelectedChatGroup.OtherUserEmail"></vc:user-profile-picture>
+                        </div>
+                        <div class="flex-grow-1 pl-3">
+                            <strong>@Model.SelectedChatGroup.OtherUserName</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="position-relative">
+                    <div class="chat-messages p-4">
+
+                        @*Template*@
+                        <div id="template" class="pb-4 hidden">
+                            @*position (left or right)*@
+                            <div>
+                                <div id="sender-picture" class="mt-1 mr-2">
+                                    @*Sender picture*@
+                                </div>
+                            </div>
+                            <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                                <div id="sender-name" class="font-weight-bold mb-1"></div> @*"Вие" OR SenderName*@
+                                <p id="message" class="m-0"></p> @*messageText*@
+                                <div id="sending-time" class="send-time text-muted small text-nowrap mt-2"></div> @*TIME*@
+                            </div>
+                        </div>
+
+                        @foreach (var message in Model.Messages)
+                        {
+                            bool isSenderCurrentUser = message.SenderEmail == this.User.Identity.Name;
+
+                            <div class="chat-message-@(isSenderCurrentUser ? "right" : "left") pb-4">
+
+                                @if (!isSenderCurrentUser)
+                                {
+                                    <div class="mt-1 mr-2">
+                                        <vc:user-profile-picture picture-path="@message.SenderPicturePath" email="@message.SenderEmail"></vc:user-profile-picture>
+                                    </div>
+                                }
+
+                                <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                                    <div class="font-weight-bold mb-1">@(isSenderCurrentUser ? "Вие" : message.SenderName)</div>
+                                    <p class="m-0">@message.Text</p>
+                                    <div class="send-time text-muted small text-nowrap mt-2">@message.SendTime</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="flex-grow-0 py-3 px-4 border-top">
+                    <div class="input-group">
+                        <input id="messageInput" type="text" class="form-control" placeholder="Напишете вашето съобщение">
+                        <button id="sendButton" class="ml-1 btn btn-primary">Прати</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/moment.js/moment.min.js" asp-append-version="true"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
+<script src="~/js/Chat/signalR-chat.js" asp-append-version="true"></script>
+}

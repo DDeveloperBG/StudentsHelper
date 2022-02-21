@@ -21,7 +21,7 @@
     using StudentsHelper.Web.ViewModels.Consultations;
 
     [Authorize]
-    public class ConsultationsController : Controller
+    public class ConsultationsController : BaseController
     {
         private readonly IConsulationsService consulationsService;
         private readonly IStudentsService studentsService;

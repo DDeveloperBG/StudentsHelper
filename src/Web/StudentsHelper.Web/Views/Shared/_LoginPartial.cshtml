@@ -40,7 +40,8 @@
 
                 userRoleNameOnBG = "учител";
             }
-            else { userRoleNameOnBG = "админ"; }
+            else if(this.User.IsInRole(GlobalConstants.AdministratorRoleName)) { userRoleNameOnBG = "админ"; }
+            else { userRoleNameOnBG = "Възникна грешка!"; }
 
             <li id="user-role-display-li" class="mr-3 nav-item" style="border: 3px solid @roleBorderColor;">
                 <span class="nav-link p-0 text-center" style="color: @roleNameSpanColor;" @Html.Raw(additionalRoleSpanAttributes)>@userRoleNameOnBG</span>

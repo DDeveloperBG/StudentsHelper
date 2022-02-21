@@ -23,7 +23,7 @@
     using StudentsHelper.Web.ViewModels.Locations;
     using StudentsHelper.Web.ViewModels.Teachers;
 
-    public class TeachersController : Controller
+    public class TeachersController : BaseController
     {
         private readonly ITeachersService teachersService;
         private readonly IStudentsService studentsService;

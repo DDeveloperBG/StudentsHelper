@@ -7,7 +7,7 @@
 
     using StudentsHelper.Services.Data.LocationLoaders;
 
-    public class LocationsController : Controller
+    public class LocationsController : BaseController
     {
         private readonly Dictionary<string, ILocationLoader> locationLoaders;
 

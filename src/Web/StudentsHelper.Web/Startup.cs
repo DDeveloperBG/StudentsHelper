@@ -10,7 +10,6 @@
     using Hangfire.SqlServer;
 
     using IdentityModel;
-
     using Microsoft.AspNetCore.Authentication.OAuth;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -29,6 +28,7 @@
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Services.Data.Chat;
     using StudentsHelper.Services.Data.Consulations;
     using StudentsHelper.Services.Data.Location;
     using StudentsHelper.Services.Data.LocationLoaders;
@@ -45,6 +45,7 @@
     using StudentsHelper.Services.Payments.Models;
     using StudentsHelper.Services.Time;
     using StudentsHelper.Services.VideoChat;
+    using StudentsHelper.Web.Hubs;
     using StudentsHelper.Web.Infrastructure.Middlewares;
     using StudentsHelper.Web.ViewModels;
 
@@ -145,6 +146,8 @@
 
             services.AddSingleton(this.configuration);
 
+            services.AddSignalR();
+
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
@@ -155,6 +158,7 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
+            services.AddTransient<IChatService, ChatService>();
             services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<IMontlyPaymentsService, MontlyPaymentsService>();
             services.AddTransient<IMeetingsService, MeetingsService>();
@@ -240,6 +244,7 @@
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
+                        endpoints.MapHub<ChatHub>("/chatsocket");
                     });
         }
 

@@ -47,6 +47,7 @@
                 .Select(x => new TeacherDetails
                 {
                     Id = x.Id,
+                    ApplicationUserId = x.ApplicationUser.Id,
                     ApplicationUserEmail = x.ApplicationUser.Email,
                     ApplicationUserName = x.ApplicationUser.Name,
                     ApplicationUserPicturePath = x.ApplicationUser.PicturePath,
