@@ -13,8 +13,7 @@ function start() {
 
     connection.on("ReceiveMessage", displayMessage.bind(null, messagesHolder));
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const groupId = urlParams.get('chatGroupId');
+    const groupId = document.getElementById('group-name').textContent;
 
     $("#sendButton").click(function () {
         sendMessage();
