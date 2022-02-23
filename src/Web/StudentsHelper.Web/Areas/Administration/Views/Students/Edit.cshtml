@@ -1,0 +1,40 @@
+﻿@model StudentsHelper.Web.ViewModels.Administration.Students.StudentEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Ученик</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label>Снимка</label>
+                <input asp-for="ApplicationUserPicturePath" class="form-control" />
+                <span asp-validation-for="ApplicationUserPicturePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Име</label>
+                <input asp-for="ApplicationUserName" class="form-control" />
+                <span asp-validation-for="ApplicationUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Имейл</label>
+                <input asp-for="ApplicationUserEmail" class="form-control" />
+                <span asp-validation-for="ApplicationUserEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Запази" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">Обратно</a>
+</div>
+

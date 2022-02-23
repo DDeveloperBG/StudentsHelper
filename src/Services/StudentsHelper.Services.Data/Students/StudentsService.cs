@@ -38,6 +38,21 @@
                .SingleOrDefault();
         }
 
+        public T GetOneFromStudentId<T>(string studentId)
+        {
+            return this.studentsRepository.AllAsNoTracking()
+               .Where(x => x.Id == studentId)
+               .To<T>()
+               .SingleOrDefault();
+        }
+
+        public Student GetOneTracked(string id)
+        {
+            return this.studentsRepository.AllAsNoTracking()
+               .Where(x => x.Id == id)
+               .SingleOrDefault();
+        }
+
         public async Task DeleteStudentAsync(string userId)
         {
             await this.userManager.RemoveFromRoleAsync(new ApplicationUser { Id = userId }, GlobalConstants.StudentRoleName);
@@ -46,6 +61,19 @@
             this.studentsRepository.All().Where(x => x.ApplicationUserId == userId).SingleOrDefault().ApplicationUser = deletedUser;
 
             await this.studentsRepository.SaveChangesAsync();
+        }
+
+        public IQueryable<Student> GetAllAsNoTracking()
+        {
+            return this.studentsRepository
+                .AllAsNoTracking()
+                .Where(x => x.ApplicationUser.UserName != GlobalConstants.DeletedUserUsername);
+        }
+
+        public Task UpdateAsync(Student teacher)
+        {
+            this.studentsRepository.Update(teacher);
+            return this.studentsRepository.SaveChangesAsync();
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿@model StudentsHelper.Web.ViewModels.Administration.Students.StudentDetailsViewModel
+
+@{
+    ViewData["Title"] = "Детайли";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Ученик</h4>
+    <hr />
+    <table class="table table-striped">
+        <tbody>
+            <tr class="row">
+                <td>Снимка:</td>
+                <td style="width: fit-content;">
+                    <vc:user-profile-picture picture-path=@Model.ApplicationUserPicturePath email=@Model.ApplicationUserEmail>
+                    </vc:user-profile-picture>
+                </td>
+            </tr>
+            <tr class="row">
+                <td>Име:</td>
+                <td>@Model.ApplicationUserName</td>
+            </tr>
+            <tr class="row">
+                <td>Имейл:</td>
+                <td>@Model.ApplicationUserEmail</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="AllStudents" class="btn btn-primary">Обратно</a>
+</div>

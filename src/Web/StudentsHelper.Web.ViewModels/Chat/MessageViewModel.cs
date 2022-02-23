@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace StudentsHelper.Web.ViewModels.Chat
+﻿namespace StudentsHelper.Web.ViewModels.Chat
 {
+    using System;
+
     public class MessageViewModel
     {
         public string SenderPicturePath { get; set; }
