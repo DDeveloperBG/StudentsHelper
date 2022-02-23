@@ -71,5 +71,22 @@
         {
             return this.ViewComponent("StudentReview", new { teacherId, currentNumber });
         }
+
+        [Authorize]
+        public async Task<IActionResult> DeleteReviewAsync(int reviewId, string redirectUrl)
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            var userId = user.Id;
+            var isAdmin = this.User.IsInRole(GlobalConstants.AdministratorRoleName);
+
+            bool isSuccessful = await this.reviewsService.DeleteReviewAsync(userId, reviewId, isAdmin);
+
+            if (isSuccessful)
+            {
+                return this.Redirect(redirectUrl);
+            }
+
+            return this.Redirect(redirectUrl).WithDanger("Възникна грешка!");
+        }
     }
 }

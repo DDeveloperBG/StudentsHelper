@@ -7,6 +7,10 @@
 
     public class StudentReview : IMapFrom<Review>
     {
+        public int Id { get; set; }
+
+        public string StudentApplicationUserEmail { get; set; }
+
         public string StudentApplicationUserName { get; set; }
 
         public string StudentApplicationUserPicturePath { get; set; }

@@ -58,8 +58,7 @@
                 Text = input.Text,
             };
 
-            //await this.Clients.Group(groupId).ReceiveMessage(messageViewModel);
-            await this.Clients.All.ReceiveMessage(messageViewModel);
+            await this.Clients.Group(groupId).ReceiveMessage(messageViewModel);
         }
     }
 }

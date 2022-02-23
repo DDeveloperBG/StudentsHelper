@@ -102,6 +102,24 @@
                 .To<T>();
         }
 
+        public async Task<bool> DeleteReviewAsync(string userId, int reviewId, bool isAdmin)
+        {
+            var review = this.reviewsRepository
+                .All()
+                .Where(x => x.Id == reviewId)
+                .Where(x => x.Student.ApplicationUserId == userId || isAdmin)
+                .SingleOrDefault();
+
+            if (review == null)
+            {
+                return false;
+            }
+
+            this.reviewsRepository.Delete(review);
+            await this.reviewsRepository.SaveChangesAsync();
+            return true;
+        }
+
         private static int GetReviewsTypeCount(ICollection<Review> reviews, int type)
         {
             return reviews.Select(x => x.Rating).Where(x => x == type).Count();

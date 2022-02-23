@@ -35,7 +35,7 @@
                 <div class="row p-3">
                     <img src=@(review.StudentApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
                  class="img-fluid ml-5 rounded mt-auto mb-auto" style="width: 56px; height: 56px;" />
-                    <div class="container col-9 text-left m-0 ml-4">
+                    <div class="container col-7 text-left m-0 ml-4">
                         <h6 class="ml-1">@review.StudentApplicationUserName</h6>
                         <div class="row pl-3">
                             @{
@@ -56,6 +56,19 @@
                             <p class="comment m-0 p-0">@review.Comment</p>
                         }
                     </div>
+                    @if (this.User.Identity.Name == review.StudentApplicationUserEmail
+                        || this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                    {
+                        <div>
+                            <a 
+                                asp-area="" 
+                                asp-controller="Reviews" 
+                                asp-action="DeleteReview" 
+                                asp-route-reviewId="@review.Id"
+                                asp-route-redirectUrl=@($"{Context.Request.Path}{Context.Request.QueryString}")
+                                class="btn btn-danger">Изтрий</a>
+                        </div>
+                    }
                 </div>
             </div>
         }

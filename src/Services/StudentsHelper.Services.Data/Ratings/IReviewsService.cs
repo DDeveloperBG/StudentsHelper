@@ -18,5 +18,7 @@
         bool HasStudentReviewedTeacher(string studentId, string teacherId);
 
         IQueryable<T> GetAllReviewsForTeacher<T>(string teacherId);
+
+        Task<bool> DeleteReviewAsync(string userId, int reviewId, bool isAdmin);
     }
 }
