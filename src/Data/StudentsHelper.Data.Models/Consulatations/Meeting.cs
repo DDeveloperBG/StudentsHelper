@@ -9,7 +9,10 @@
         public Meeting()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.HasStarted = false;
         }
+
+        public bool HasStarted { get; set; }
 
         public int DurationInMinutes { get; set; }
 

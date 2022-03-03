@@ -69,6 +69,11 @@
 
         public Task UpdateConsultationStartTimeAsync(string consultationId, DateTime startTime)
         {
+            if (this.HasConsultationStarted(consultationId))
+            {
+                throw new Exception("Can't update time of started consultation!");
+            }
+
             var consultation = this.GetTrackedConsultation(consultationId);
 
             consultation.EndTime = startTime + consultation.Duration;
@@ -82,6 +87,15 @@
             return this.consultationsRepository
                 .All()
                 .Where(x => x.Id == consultationId)
+                .Single();
+        }
+
+        private bool HasConsultationStarted(string consultationId)
+        {
+            return this.consultationsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == consultationId)
+                .Select(x => x.Meeting.HasStarted)
                 .Single();
         }
     }

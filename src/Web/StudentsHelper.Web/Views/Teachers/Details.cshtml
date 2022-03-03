@@ -8,11 +8,12 @@
 
 @section Css
 {
-<link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/studentReview.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/studentReview.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
 }
 
-<div class="container m-lg-5 col-auto text-center" style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+<div class="container m-lg-5 col-auto text-center background-container">
     @if (this.User.IsInRole(GlobalConstants.StudentRoleName))
     {
         <div style="position: absolute;" class="m-3">
@@ -126,5 +127,5 @@
 <script src="~/js/Reviews/starsChoice.min.js" asp-append-version="true"></script>
 <script src="~/js/Reviews/showAddReviePage.min.js" asp-append-version="true"></script>
 		}
-<script src="~/js/Reviews/showNextReviews.js" asp-append-version="true"></script>
+<script src="~/js/Reviews/showNextReviews.min.js" asp-append-version="true"></script>
 }

@@ -65,6 +65,13 @@
                 }
             }
 
+            if (!meeting.HasStarted &&
+                meeting.TeacherLastActivity != null &&
+                meeting.StudentLastActivity != null)
+            {
+                meeting.HasStarted = true;
+            }
+
             return this.meetingsRepository.SaveChangesAsync();
         }
 

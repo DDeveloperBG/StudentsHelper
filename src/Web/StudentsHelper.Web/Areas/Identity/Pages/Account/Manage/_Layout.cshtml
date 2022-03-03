@@ -11,9 +11,10 @@
 
 @section Css {
     @await this.RenderSectionAsync("ManageCss", required: false)
+    <link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
 }
 
-<div style="min-height: 60vh; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+<div class="background-container" style="min-height: 60vh;">
     <div class="mt-5 p-4">
         <h2 class="text-center">Управлявайте акаунта си</h2>
         <div>

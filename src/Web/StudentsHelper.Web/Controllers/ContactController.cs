@@ -36,7 +36,7 @@
         {
             if (this.ModelState.IsValid)
             {
-                var result = this.RedirectToAction(nameof(HomeController.IndexAsync), "Home", new { area = string.Empty });
+                var result = this.RedirectToAction("Index", "Home", new { area = string.Empty });
 
                 try
                 {

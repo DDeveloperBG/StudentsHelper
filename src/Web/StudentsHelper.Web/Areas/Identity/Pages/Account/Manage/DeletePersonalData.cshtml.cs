@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
@@ -10,7 +11,6 @@
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
     using StudentsHelper.Data;
-    using StudentsHelper.Data.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
@@ -25,7 +25,6 @@
         private readonly ITeachersService teachersService;
         private readonly IStudentsService studentsService;
         private readonly ApplicationDbContext dbContext;
-        private readonly IDbQueryRunner dbQueryRunner;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
@@ -33,8 +32,7 @@
             ILogger<DeletePersonalDataModel> logger,
             ITeachersService teachersService,
             IStudentsService studentsService,
-            ApplicationDbContext dbContext,
-            IDbQueryRunner dbQueryRunner)
+            ApplicationDbContext dbContext)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -42,7 +40,6 @@
             this.teachersService = teachersService;
             this.studentsService = studentsService;
             this.dbContext = dbContext;
-            this.dbQueryRunner = dbQueryRunner;
         }
 
         [BindProperty]
@@ -98,9 +95,15 @@
                     await this.userManager.RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
                 }
 
-                await this.dbQueryRunner.RunQueryAsync(
-                    @"DELETE FROM [StudentsHelper].[dbo].[AspNetUserTokens] WHERE UserId = {0}",
-                    user.Id);
+                var userToken = this.dbContext
+                    .UserTokens
+                    .Where(x => x.UserId == user.Id)
+                    .SingleOrDefault();
+                if (userToken != null)
+                {
+                    this.dbContext.UserTokens.Remove(userToken);
+                    await this.dbContext.SaveChangesAsync();
+                }
 
                 var result = await this.userManager.DeleteAsync(user);
                 var userId = await this.userManager.GetUserIdAsync(user);

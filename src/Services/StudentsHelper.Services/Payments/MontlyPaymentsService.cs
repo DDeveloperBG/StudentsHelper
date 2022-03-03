@@ -39,11 +39,18 @@
             {
                 var monthSalary = Math.Abs(teacher.MonthSalary);
                 var websitePair = monthSalary * GlobalConstants.WebsiteMonthPercentageTax;
-                websiteSalary += websitePair;
                 var teacherPair = monthSalary - websitePair;
-                await this.paymentsService.PayConnectedAccountAsync(teacher.TeacherConnectedAccountId, teacherPair);
+                if (teacherPair > 1)
+                {
+                    websiteSalary += websitePair;
+                    await this.paymentsService.PayConnectedAccountAsync(teacher.TeacherConnectedAccountId, teacherPair);
+                    allPaidTransactions.AddRange(teacher.CurrentMonthTransactions);
+                }
+            }
 
-                allPaidTransactions.AddRange(teacher.CurrentMonthTransactions);
+            if (websiteSalary < 1)
+            {
+                return;
             }
 
             await this.studentsTransactionsService.SetAsPaidTransactionsAsync(allPaidTransactions);

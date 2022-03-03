@@ -98,5 +98,65 @@
     "inputFiles": [
       "wwwroot/css/chatRoom.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Auth/register.min.js",
+    "inputFiles": [
+      "wwwroot/js/Auth/register.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Auth/registerWithOtherProvider.min.js",
+    "inputFiles": [
+      "wwwroot/js/Auth/registerWithOtherProvider.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Chat/signalR-chat.min.js",
+    "inputFiles": [
+      "wwwroot/js/Chat/signalR-chat.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Consultation/bookConsultationDatetimeManagment.min.js",
+    "inputFiles": [
+      "wwwroot/js/Consultation/bookConsultationDatetimeManagment.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Consultation/consultationsDateToLocal.min.js",
+    "inputFiles": [
+      "wwwroot/js/Consultation/consultationsDateToLocal.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Popovers/activateAllPopovers.min.js",
+    "inputFiles": [
+      "wwwroot/js/Popovers/activateAllPopovers.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Home/home.min.js",
+    "inputFiles": [
+      "wwwroot/js/Home/home.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Locations/locations.min.js",
+    "inputFiles": [
+      "wwwroot/js/Locations/locations.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Locations/teacherProfileLocationLoader.min.js",
+    "inputFiles": [
+      "wwwroot/js/Locations/teacherProfileLocationLoader.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Reviews/showNextReviews.min.js",
+    "inputFiles": [
+      "wwwroot/js/Reviews/showNextReviews.js"
+    ]
   }
 ]

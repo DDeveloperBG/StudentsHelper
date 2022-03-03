@@ -6,6 +6,11 @@
     ViewData["Title"] = "Консултации";
 }
 
+@section Css
+{
+    <link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+}
+
 <div class="position-absolute">
     <a asp-area="" asp-controller="Consultations" asp-action="Calendar" class="btn">
         <img src="/img/calendar-icon.png" alt="Календар" class="img-fluid" style="width: 50px;">
@@ -14,7 +19,7 @@
 
 <h1 class="text-center mt-2 mb-4">@ViewData["Title"]</h1>
 
-<div style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+<div class="background-container">
     <table class="table text-center">
         <tr>
             <th scope="col" colspan="2">Учител</th>
@@ -53,5 +58,5 @@
 
 @section Scripts {
 <script src="~/moment.js/moment.min.js" asp-append-version="true"></script>
-<script src="~/js/Consultation/consultationsDateToLocal.js" asp-append-version="true"></script>
+<script src="~/js/Consultation/consultationsDateToLocal.min.js" asp-append-version="true"></script>
 }

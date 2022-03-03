@@ -10,7 +10,7 @@
 }
 
 <div id="user-email" class="hidden">@User.Identity.Name</div>
-<div id="group-name" class="hidden">@Model.SelectedChatGroup.Id</div>
+<div id="group-name" class="hidden">@Model.SelectedChatGroup?.Id</div>
 <div class="card mt-1">
     <div class="row g-0">
         <div class="col-12 col-lg-5 col-xl-3 border-right">
@@ -111,5 +111,5 @@
 @section Scripts {
 <script src="~/moment.js/moment.min.js" asp-append-version="true"></script>
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
-<script src="~/js/Chat/signalR-chat.js" asp-append-version="true"></script>
+<script src="~/js/Chat/signalR-chat.min.js" asp-append-version="true"></script>
 }

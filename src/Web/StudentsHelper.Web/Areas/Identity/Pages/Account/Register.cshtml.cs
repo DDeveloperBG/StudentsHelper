@@ -136,7 +136,7 @@
             [Required(ErrorMessage = ValidationConstants.RequiredError)]
             public string Role { get; set; }
 
-            [Display(Name = "Име")]
+            [Display(Name = "Име и фамилия")]
             [StringLength(
                 ValidationConstants.NameMaxLength,
                 MinimumLength = ValidationConstants.NameMinLength,

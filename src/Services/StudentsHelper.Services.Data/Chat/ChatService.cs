@@ -139,7 +139,7 @@
                 groupId = groupsViewModels.FirstOrDefault()?.Id;
             }
 
-            ICollection<MessageViewModel> groupMessages = null;
+            ICollection<MessageViewModel> groupMessages = new List<MessageViewModel>();
             ChatGroupViewModel selectedChatGroup = null;
 
             if (groupId != null)

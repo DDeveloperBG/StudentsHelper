@@ -7,6 +7,11 @@
     ViewData["Title"] = "Консултации";
 }
 
+@section Css
+{
+    <link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+}
+
 <div class="position-absolute">
     <a asp-area="" asp-controller="Consultations" asp-action="Calendar" class="btn">
         <img src="/img/calendar-icon.png" alt="Календар" class="img-fluid" style="width: 50px;">
@@ -15,7 +20,7 @@
 
 <h1 class="text-center mt-2 mb-4">@ViewData["Title"]</h1>
 
-<div style="box-shadow: 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 1%), 0 1px 3px 0 rgb(0 0 0 / 22%);">
+<div class="background-container">
     <table class="table text-center">
         <tr>
             <th scope="col" colspan="2">Ученик</th>
@@ -37,7 +42,9 @@
                     @*<img src=@(consultation.StudentPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded" style="width: 50px; height: 50px;" />*@
                 </td>
                 <td class="align-bottom"><p>@consultation.StudentName</p></td>
-                <td class="align-bottom"><p>@consultation.Reason</p></td>
+                <td class="align-bottom" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="@consultation.Reason">
+                    <p>@consultation.Reason.Trim().Substring(0, 7)...</p>
+                </td>
                 <td class="align-bottom"><p>@consultation.ConsultationDetails.SchoolSubjectName</p></td>
                 <td class="align-bottom"><p class="startTime">@consultation.ConsultationDetails.StartTime</p></td>
                 <td class="align-bottom"><p>@consultation.ConsultationDetails.Duration.ToString(@"hh\:mm")</p></td>
@@ -54,7 +61,12 @@
     </table>
 </div>
 
+@section BeforeBootstrapJsScripts{
+<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+}
+
 @section Scripts {
 <script src="~/moment.js/moment.min.js" asp-append-version="true"></script>
-<script src="~/js/Consultation/consultationsDateToLocal.js" asp-append-version="true"></script>
+<script src="~/js/Consultation/consultationsDateToLocal.min.js" asp-append-version="true"></script>
+<script src="~/js/Popovers/activateAllPopovers.min.js" asp-append-version="true"></script>
 }

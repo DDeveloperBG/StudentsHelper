@@ -154,6 +154,13 @@
                 return this.RedirectToPage("./Register").WithDanger("Настъпи грешка");
             }
 
+            this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
+
+            if (roleBytes == null)
+            {
+                return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl }).WithDanger("Нямате съществуващ профил.");
+            }
+
             if (this.TeacherModel == null || this.ModelState.IsValid)
             {
                 string profilePicUrl = info.Principal.FindFirstValue(JwtClaimTypes.Picture);
@@ -186,13 +193,6 @@
                     result = await this.userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        this.HttpContext.Session.TryGetValue(UserRoleKey, out byte[] roleBytes);
-
-                        if (roleBytes == null)
-                        {
-                            return this.RedirectToPage("./Register", new { ReturnUrl = returnUrl }).WithDanger("Нямате съществуващ профил.");
-                        }
-
                         var role = Encoding.UTF8.GetString(roleBytes);
 
                         if (role == GlobalConstants.TeacherRoleName)
