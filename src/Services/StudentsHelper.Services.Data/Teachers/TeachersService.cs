@@ -57,7 +57,7 @@
                     .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
         }
 
-        public IEnumerable<T> GetAllAsTracked<T>()
+        public IEnumerable<T> GetAllValidatedMappedAndTracked<T>()
         {
             return this.GetAll()
                 .Where(x => x.IsValidated && !x.IsRejected)

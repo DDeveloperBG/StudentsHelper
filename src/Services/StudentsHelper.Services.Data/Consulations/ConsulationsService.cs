@@ -71,7 +71,7 @@
         {
             if (this.HasConsultationStarted(consultationId))
             {
-                throw new Exception("Can't update time of started consultation!");
+                throw new ArgumentException("Can't update time of started consultation!");
             }
 
             var consultation = this.GetTrackedConsultation(consultationId);

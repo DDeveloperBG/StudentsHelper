@@ -19,7 +19,7 @@
         {
             return this.schoolRepository
                 .All()
-                .Where(x => x.PopulatedArea.Id == lastLocationId)
+                .Where(x => x.PopulatedAreaId == lastLocationId)
                 .Select(x => new Location { Id = x.Id, Name = x.Name })
                 .ToList();
         }

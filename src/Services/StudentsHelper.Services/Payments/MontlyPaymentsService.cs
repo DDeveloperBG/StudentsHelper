@@ -30,7 +30,7 @@
         public async Task PayMontlySalariesAsync()
         {
             var teachers = this.teachersService
-                .GetAllAsTracked<TeachersAndMonthTransactions>()
+                .GetAllValidatedMappedAndTracked<TeachersAndMonthTransactions>()
                 .Where(x => x.CurrentMonthTransactions.Any());
 
             var allPaidTransactions = new List<StudentTransaction>();

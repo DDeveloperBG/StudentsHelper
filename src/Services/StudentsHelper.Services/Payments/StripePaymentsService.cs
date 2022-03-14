@@ -49,7 +49,7 @@
             var session = await service.CreateAsync(options);
 
             var amountAfterTax = this.AmountAfterTaxes(amount);
-            await this.studentsTransactionsService.AddStudentTransaction(studentId, amountAfterTax, session.Id);
+            await this.studentsTransactionsService.AddStudentTransactionAsync(studentId, amountAfterTax, session.Id);
 
             return session.Url;
         }

@@ -8,7 +8,7 @@
 
     public interface IStudentsTransactionsService
     {
-        Task AddStudentTransaction(string studentId, decimal amount, string sessionId);
+        Task AddStudentTransactionAsync(string studentId, decimal amount, string sessionId);
 
         Task MarkPaymentAsCompletedAsync(string sessionId, DateTime now);
 

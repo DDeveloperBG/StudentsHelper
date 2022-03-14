@@ -16,6 +16,8 @@
 
         string GetChatGroupByUsers(params string[] usersIds);
 
+        ChatGroupViewModel GetChatGroupViewModel(string groupId, string userId);
+
         ICollection<ChatGroupViewModel> GetAllUserGroups(string userId);
 
         ICollection<MessageViewModel> GetGroupMessages(string groupId);

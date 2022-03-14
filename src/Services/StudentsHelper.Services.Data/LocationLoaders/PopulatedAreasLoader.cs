@@ -19,7 +19,7 @@
         {
             return this.populatedAreaRepository
                 .All()
-                .Where(x => x.Township.Id == lastLocationId)
+                .Where(x => x.TownshipId == lastLocationId)
                 .Select(x => new Location { Id = x.Id, Name = x.Name })
                 .ToList();
         }

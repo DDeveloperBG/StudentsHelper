@@ -19,7 +19,7 @@
         {
             return this.townshipRepository
                 .All()
-                .Where(x => x.Region.Id == lastLocationId)
+                .Where(x => x.RegionId == lastLocationId)
                 .Select(x => new Location { Id = x.Id, Name = x.Name })
                 .ToList();
         }

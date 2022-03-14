@@ -32,7 +32,8 @@
 
         public T GetOne<T>(string userId)
         {
-            return this.studentsRepository.AllAsNoTracking()
+            return this.studentsRepository
+               .AllAsNoTracking()
                .Where(x => x.ApplicationUserId == userId)
                .To<T>()
                .SingleOrDefault();
@@ -40,7 +41,8 @@
 
         public T GetOneFromStudentId<T>(string studentId)
         {
-            return this.studentsRepository.AllAsNoTracking()
+            return this.studentsRepository
+               .AllAsNoTracking()
                .Where(x => x.Id == studentId)
                .To<T>()
                .SingleOrDefault();

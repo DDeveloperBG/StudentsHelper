@@ -30,7 +30,7 @@
 
         IQueryable<Teacher> GetAll();
 
-        IEnumerable<T> GetAllAsTracked<T>();
+        IEnumerable<T> GetAllValidatedMappedAndTracked<T>();
 
         decimal? GetHourWage(string teacherId);
 
