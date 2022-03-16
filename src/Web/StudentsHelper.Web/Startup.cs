@@ -30,6 +30,7 @@
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Chat;
     using StudentsHelper.Services.Data.Consulations;
+    using StudentsHelper.Services.Data.Contact;
     using StudentsHelper.Services.Data.Location;
     using StudentsHelper.Services.Data.LocationLoaders;
     using StudentsHelper.Services.Data.Meetings;
@@ -158,6 +159,7 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
+            services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<ILocationService, LocationService>();
             services.AddTransient<IMontlyPaymentsService, MontlyPaymentsService>();

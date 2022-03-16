@@ -26,7 +26,7 @@
 
         public const string ProfilePicturesFolder = "ProfilePictures";
 
-        public const decimal WebsiteMonthPercentageTax = 0.05M; // 10%
+        public const decimal WebsiteMonthPercentageTax = 0.05M; // 5%
 
         public static string GetEmailConfirmationMessage(string confirmUrl) => $"<h1>Моля потвърдете акаунта си, като <a href='{HtmlEncoder.Default.Encode(confirmUrl)}'>кликнете тук</a>.";
     }
