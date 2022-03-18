@@ -57,15 +57,23 @@ Site guest (**visitor**)
 * Every consultation has an event for the end time and taxes the student based on the meeting duration.
 * Every month to collect monthly commissions from teachers monthly salaries.
 
-## Used Frameworks
+## Technologies Used
 
+* C#
 * ASP.Net 6
 * Entity Framework 6
+* MS SQL Server
+* Bootstrap 4
+* JavaScript
+* HTML5
+* CSS
 * Hangfire
 * SendGrid
 * Stripe
 * Videosdk.live
+* SignalR
 * Moment.js
+* FullCalendar
 
 ## Database Diagram
 **[URL](https://github.com/DDeveloperBG/StudentsHelperRepoGallery/blob/master/DatabaseDiagram.png)**
