@@ -21,7 +21,7 @@
         {
             <tr>
                 <td>
-                    <div class="mr-auto ml-auto" style="width: fit-content;">
+                    <div class="mr-auto ml-auto width-fit-content">
                         <vc:user-profile-picture picture-path=@item.ApplicationUserPicturePath email=@item.ApplicationUserEmail></vc:user-profile-picture>
                     </div>
                 </td>
@@ -35,8 +35,8 @@
                     @(item.IsRejected ? "Да" : "Не")
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-teacherId="@item.Id" class="btn btn-info">Детайли</a>
+                    <a asp-action="Edit" asp-route-teacherId="@item.Id" class="btn btn-warning">Редактиране</a>
                 </td>
             </tr>
         }

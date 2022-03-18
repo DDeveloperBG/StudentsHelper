@@ -52,7 +52,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             this.RequirePassword = await this.userManager.HasPasswordAsync(user);
@@ -64,7 +64,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             this.RequirePassword = await this.userManager.HasPasswordAsync(user);

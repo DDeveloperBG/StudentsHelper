@@ -68,7 +68,7 @@ function displayCalendar(events) {
                 dataType: "json",
                 error: () => {
                     info.revert();
-                    alert("Невалидни данни!");
+                    alert('Невалидни данни!');
                 },
             });
         },

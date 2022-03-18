@@ -13,7 +13,7 @@
         <tbody>
             <tr class="row">
                 <td>Снимка:</td>
-                <td style="width: fit-content;">
+                <td class="width-fit-content">
                     <vc:user-profile-picture picture-path=@Model.ApplicationUserPicturePath email=@Model.ApplicationUserEmail>
                     </vc:user-profile-picture>
                 </td>
@@ -49,6 +49,6 @@
     </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Edit" asp-route-teacherId="@Model.Id" class="btn btn-warning">Редактиране</a>
     <a asp-action="AllTeachers" class="btn btn-primary">Обратно</a>
 </div>

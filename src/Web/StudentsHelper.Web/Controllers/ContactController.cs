@@ -3,9 +3,9 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
+
     using StudentsHelper.Common;
-    using StudentsHelper.Data.Common.Repositories;
-    using StudentsHelper.Data.Models.Contact;
+    using StudentsHelper.Services.Data.Contact;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Web.Controllers;
     using StudentsHelper.Web.Infrastructure.Alerts;
@@ -14,14 +14,14 @@
     public class ContactController : BaseController
     {
         private readonly IEmailSender emailSender;
-        private readonly IRepository<ContactFormEntry> contactsRepository;
+        private readonly IContactService contactService;
 
         public ContactController(
             IEmailSender emailSender,
-            IRepository<ContactFormEntry> contactsRepository)
+            IContactService contactService)
         {
             this.emailSender = emailSender;
-            this.contactsRepository = contactsRepository;
+            this.contactService = contactService;
         }
 
         public IActionResult Index()
@@ -41,16 +41,8 @@
                 try
                 {
                     var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-                    var contactFormEntry = new ContactFormEntry
-                    {
-                        Name = model.Name,
-                        Email = model.Email,
-                        Title = model.Title,
-                        Content = model.Content,
-                        Ip = ip,
-                    };
-                    await this.contactsRepository.AddAsync(contactFormEntry);
-                    await this.contactsRepository.SaveChangesAsync();
+
+                    await this.contactService.SaveContactFormData(model, ip);
 
                     await this.emailSender.SendEmailAsync(
                         GlobalConstants.ContactEmail,
@@ -61,10 +53,10 @@
                 }
                 catch (System.Exception)
                 {
-                    return result.WithDanger("Не успяхме да изпратим съобщението ви");
+                    return result.WithDanger(GlobalConstants.ContactFormMessages.MessageNotSentMessage);
                 }
 
-                return result.WithSuccess("Съобщението ви бе изпратено успешно!");
+                return result.WithSuccess(GlobalConstants.ContactFormMessages.MessageSentSuccessfullyMessage);
             }
 
             return this.View(model);

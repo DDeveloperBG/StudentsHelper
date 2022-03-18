@@ -61,6 +61,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\Services\StudentsHelper.Services.BusinessLogic\StudentsHelper.Services.BusinessLogic.csproj" />
 		<ProjectReference Include="..\..\StudentsHelper.Common\StudentsHelper.Common.csproj" />
 		<ProjectReference Include="..\..\Data\StudentsHelper.Data.Models\StudentsHelper.Data.Models.csproj" />
 		<ProjectReference Include="..\..\Data\StudentsHelper.Data\StudentsHelper.Data.csproj" />

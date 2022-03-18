@@ -48,7 +48,7 @@
                 values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                 protocol: this.Request.Scheme);
 
-            string message = GlobalConstants.GetEmailConfirmationMessage(emailConfirmationUrl);
+            string message = GlobalConstants.EmailMessages.GetEmailConfirmationMessage(emailConfirmationUrl);
 
             await this.emailSender.SendEmailAsync(
                 email,

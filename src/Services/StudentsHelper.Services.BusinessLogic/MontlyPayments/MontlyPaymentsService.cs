@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Payments
+﻿namespace StudentsHelper.Services.BusinessLogic.MontlyPayments
 {
     using System;
     using System.Collections.Generic;
@@ -9,6 +9,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.Payments;
     using StudentsHelper.Web.ViewModels.Payments;
 
     public class MontlyPaymentsService : IMontlyPaymentsService

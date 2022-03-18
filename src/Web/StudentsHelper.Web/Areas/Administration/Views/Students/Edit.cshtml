@@ -1,7 +1,7 @@
 ﻿@model StudentsHelper.Web.ViewModels.Administration.Students.StudentEditViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редактиране";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -35,6 +35,6 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">Обратно</a>
+    <a asp-action="Details" asp-route-studentId="@Model.Id" class="btn btn-primary">Обратно</a>
 </div>
 

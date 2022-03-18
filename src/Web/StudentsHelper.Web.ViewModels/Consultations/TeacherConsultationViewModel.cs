@@ -5,7 +5,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Mapping;
 
-    public class TeacherConsultationsViewModel : IHaveCustomMappings
+    public class TeacherConsultationViewModel : IHaveCustomMappings
     {
         public ConsultationViewModel ConsultationDetails { get; set; }
 
@@ -19,7 +19,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Consultation, TeacherConsultationsViewModel>()
+            configuration.CreateMap<Consultation, TeacherConsultationViewModel>()
                 .ForMember(
                     x => x.ConsultationDetails,
                     opt => opt.MapFrom(src => src))

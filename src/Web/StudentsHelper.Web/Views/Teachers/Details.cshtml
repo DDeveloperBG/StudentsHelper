@@ -93,7 +93,7 @@
             </div>
         </div>
 
-        @if (!(bool)TempData["HasAlreadyReviewed"])
+        @if (!Model.HasUserReviewedTeacher)
         {
             <div class="row m-3">
                 <div>
@@ -122,7 +122,7 @@
 </div>
 
 @section Scripts {
-	@if (!(bool)TempData["HasAlreadyReviewed"])
+	@if (!Model.HasUserReviewedTeacher)
 		{
 <script src="~/js/Reviews/starsChoice.min.js" asp-append-version="true"></script>
 <script src="~/js/Reviews/showAddReviePage.min.js" asp-append-version="true"></script>

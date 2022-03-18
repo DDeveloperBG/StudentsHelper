@@ -1,5 +1,6 @@
 ﻿namespace StudentsHelper.Common
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -21,6 +22,12 @@
         // Other Constraints
         public const string RequiredError = "Полето {0} е задължително.";
 
+        public const string GeneralError = "Невалидни данни!";
+
+        public const string MeetingEndedMessage = "Събранието приключи.";
+
+        public const string IncorectUserRole = "Потребителят е в неправилна роля!";
+
         public const int PictureValidSize = 25 * 1024 * 1024; // 50 Megabytes
 
         public const int MinDepositAmount = 5;
@@ -31,7 +38,7 @@
 
         public const int MaxTeacherWage = 300;
 
-        public static readonly Dictionary<string, string> ValidExteinsionsForPictureToMime
+        public static readonly Dictionary<string, string> ValidExtensionsForPictureToMime
             = new Dictionary<string, string>
             {
                 { ".jpg", "image/jpeg" },
@@ -46,7 +53,14 @@
                 { ".bmp", "image/bmp" },
             };
 
-        public static readonly string[] ValidExteinsionsForPicture
-            = ValidExteinsionsForPictureToMime.Keys.ToArray();
+        public static readonly string[] ValidExtensionsForPicture
+            = ValidExtensionsForPictureToMime.Keys.ToArray();
+
+        public static class Consultation
+        {
+            public static readonly TimeSpan MinDuration = new TimeSpan(0, 10, 0);
+
+            public static readonly TimeSpan MaxDuration = new TimeSpan(5, 0, 0);
+        }
     }
 }

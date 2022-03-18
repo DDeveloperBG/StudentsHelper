@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Payments
+﻿namespace StudentsHelper.Services.BusinessLogic.MontlyPayments
 {
     using System.Threading.Tasks;
 
