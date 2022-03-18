@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,6 +8,7 @@
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+	
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>
@@ -22,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\StudentsHelper.Data\StudentsHelper.Data.csproj" />
-    <ProjectReference Include="..\StudentsHelper.Services.Data\StudentsHelper.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Web\StudentsHelper.Web.ViewModels\StudentsHelper.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

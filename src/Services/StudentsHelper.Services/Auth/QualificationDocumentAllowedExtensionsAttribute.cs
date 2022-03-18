@@ -5,7 +5,7 @@
     public class QualificationDocumentAllowedExtensionsAttribute : AllowedExtensionsAttribute
     {
         public QualificationDocumentAllowedExtensionsAttribute()
-            : base(ValidationConstants.ValidExteinsionsForPicture)
+            : base(ValidationConstants.ValidExtensionsForPicture)
         {
         }
     }

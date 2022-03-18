@@ -53,10 +53,10 @@
                 }
                 catch (System.Exception)
                 {
-                    return result.WithDanger("Не успяхме да изпратим съобщението ви");
+                    return result.WithDanger(GlobalConstants.ContactFormMessages.MessageNotSentMessage);
                 }
 
-                return result.WithSuccess("Съобщението ви бе изпратено успешно!");
+                return result.WithSuccess(GlobalConstants.ContactFormMessages.MessageSentSuccessfullyMessage);
             }
 
             return this.View(model);

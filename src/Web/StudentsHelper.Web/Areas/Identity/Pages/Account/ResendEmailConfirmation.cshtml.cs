@@ -44,7 +44,7 @@
             var user = await this.userManager.FindByEmailAsync(this.Input.Email);
             if (user == null)
             {
-                this.ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+                this.ModelState.AddModelError(string.Empty, GlobalConstants.EmailMessages.VerificationEmailIsSentMessage);
                 return this.Page();
             }
 
@@ -57,14 +57,14 @@
                 values: new { userId = userId, code = code },
                 protocol: this.Request.Scheme);
 
-            string message = GlobalConstants.GetEmailConfirmationMessage(callbackUrl);
+            string message = GlobalConstants.EmailMessages.GetEmailConfirmationMessage(callbackUrl);
 
             await this.emailSender.SendEmailAsync(
                 this.Input.Email,
                 GlobalConstants.ConfirmEmailTitle,
                 message);
 
-            this.ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            this.ModelState.AddModelError(string.Empty, GlobalConstants.EmailMessages.VerificationEmailIsSentMessage);
             return this.Page();
         }
 

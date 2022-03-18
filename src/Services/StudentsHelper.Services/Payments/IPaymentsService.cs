@@ -2,9 +2,11 @@
 {
     using System.Threading.Tasks;
 
+    using StudentsHelper.Services.Payments.Models;
+
     public interface IPaymentsService
     {
-        Task<string> CreateCheckoutSessionAsync(string studentId, string studentEmail, int amaount);
+        Task<CheckoutSessionData> CreateCheckoutSessionAsync(string studentEmail, int amount);
 
         Task<string> CreateTeacherExpressConnectedAccountAsync(string email, string teacherId, bool isInProduction);
 

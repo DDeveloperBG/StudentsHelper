@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Controllers
 {
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -10,10 +9,7 @@
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Services.Data.Students;
-    using StudentsHelper.Services.Data.StudentTransactions;
-    using StudentsHelper.Services.Data.Teachers;
-    using StudentsHelper.Services.Payments;
+    using StudentsHelper.Services.BusinessLogic.Balance;
     using StudentsHelper.Web.Controllers;
     using StudentsHelper.Web.Infrastructure.Alerts;
     using StudentsHelper.Web.ViewModels.Balance;
@@ -22,60 +18,42 @@
     [Area("Identity")]
     public class BalanceController : BaseController
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IPaymentsService paymentsService;
-        private readonly IStudentsService studentsService;
-        private readonly ITeachersService teachersService;
-        private readonly IStudentsTransactionsService studentsTransactionsService;
+        private readonly IBalanceBusinessLogicService balanceBusinessLogicService;
 
         public BalanceController(
             UserManager<ApplicationUser> userManager,
-            IPaymentsService paymentsService,
-            IStudentsService studentsService,
-            ITeachersService teachersService,
-            IStudentsTransactionsService studentsTransactionsService)
+            IBalanceBusinessLogicService balanceBusinessLogicService)
+            : base(userManager)
         {
-            this.userManager = userManager;
-            this.paymentsService = paymentsService;
-            this.studentsService = studentsService;
-            this.teachersService = teachersService;
-            this.studentsTransactionsService = studentsTransactionsService;
+            this.balanceBusinessLogicService = balanceBusinessLogicService;
         }
 
         public async Task<IActionResult> IndexAsync(string result = null)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
+            var user = await this.GetCurrentUserDataAsync();
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound();
             }
 
-            var viewModel = new BalanceViewModel();
+            bool userIsStudent = this.User.IsInRole(GlobalConstants.StudentRoleName);
+            bool userIsTeacher = this.User.IsInRole(GlobalConstants.TeacherRoleName);
 
-            if (this.User.IsInRole(GlobalConstants.StudentRoleName))
-            {
-                string studentId = this.studentsService.GetId(user.Id);
-                viewModel.BalanceAmount = this.studentsTransactionsService.GetStudentBalance(studentId);
-                viewModel.TransactionsInfo = this.studentsTransactionsService.GetStudentTransactions<TransactionViewModel>(studentId);
-            }
-            else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
-            {
-                string teacherId = this.teachersService.GetId(user.Id);
-                viewModel.TeacherHourWage = this.teachersService.GetHourWage(teacherId);
-                viewModel.BalanceAmount = this.studentsTransactionsService.GetTeacherBalance(teacherId);
-                viewModel.TransactionsInfo = this.studentsTransactionsService.GetTeacherTransactions<TransactionViewModel>(teacherId);
-            }
-
-            viewModel.TransactionsInfo = viewModel.TransactionsInfo.OrderByDescending(x => x.PaymentDate);
+            var viewModel = this
+                .balanceBusinessLogicService
+                .GetIndexPageViewModel(
+                    user.Id,
+                    userIsStudent,
+                    userIsTeacher);
 
             IActionResult responce = this.View(viewModel);
             if (result != null)
             {
-                this.HttpContext.Session.TryGetValue("returnUrl", out byte[] outputBytes);
-                this.HttpContext.Session.Remove("returnUrl");
+                this.HttpContext.Session.TryGetValue(GlobalConstants.ReturnUrlSessionValueKey, out byte[] outputBytes);
 
                 if (outputBytes != null)
                 {
+                    this.HttpContext.Session.Remove(GlobalConstants.ReturnUrlSessionValueKey);
                     var returnUrl = Encoding.UTF8.GetString(outputBytes);
 
                     if (returnUrl != null)
@@ -87,55 +65,60 @@
 
             switch (result)
             {
-                case "success": return responce.WithSuccess("Плащането бе успешно!");
-                case "canceled": return responce.WithDanger("Плащането бе отказано!");
+                case GlobalConstants.PaymentStatusMessages.Success: return responce.WithSuccess(GlobalConstants.PaymentMessages.SuccessfulPaymentMessage);
+                case GlobalConstants.PaymentStatusMessages.Canceled: return responce.WithDanger(GlobalConstants.PaymentMessages.FailedPaymentMessage);
                 default: return responce;
             }
         }
 
         [HttpPost]
+        [Authorize(Roles = GlobalConstants.StudentRoleName)]
         public async Task<IActionResult> DepositAsync(DepositInputModel depositInput)
         {
             if (!this.ModelState.IsValid)
             {
-                return (await this.IndexAsync()).WithDanger("Невалидни данни!");
+                return (await this.IndexAsync()).WithDanger(ValidationConstants.GeneralError);
             }
 
-            var user = await this.userManager.GetUserAsync(this.User);
+            var user = await this.GetCurrentUserDataAsync();
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
-            string studentId = this.studentsService.GetId(user.Id);
             string paymentUrl = await this
-                .paymentsService
-                .CreateCheckoutSessionAsync(
-                    studentId,
+                .balanceBusinessLogicService
+                .StudentDepositAsync(
+                    user.Id,
                     user.Email,
                     depositInput.DepositRequestMoneyAmount);
+
+            if (paymentUrl == null)
+            {
+                return (await this.IndexAsync()).WithDanger(ValidationConstants.GeneralError);
+            }
 
             return this.Redirect(paymentUrl);
         }
 
         [HttpPost]
+        [Authorize(Roles = GlobalConstants.TeacherRoleName)]
         public async Task<IActionResult> SetTeacherWageAsync(TeacherWageInputModel teacherWageInput)
         {
             if (!this.ModelState.IsValid)
             {
-                return (await this.IndexAsync()).WithDanger("Невалидни данни!");
+                return (await this.IndexAsync()).WithDanger(ValidationConstants.GeneralError);
             }
 
-            var user = await this.userManager.GetUserAsync(this.User);
+            var user = await this.GetCurrentUserDataAsync();
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
-            string teacherId = this.teachersService.GetId(user.Id);
-            await this.teachersService
-                .ChangeTeacherHourWageAsync(
-                    teacherId,
+            await this.balanceBusinessLogicService
+                .SetTeacherWageAsync(
+                    user.Id,
                     teacherWageInput.TeacherWage);
 
             return this.RedirectToAction("Index");

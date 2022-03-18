@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
-
+    using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Location;
     using StudentsHelper.Web.ViewModels.Locations;
@@ -34,7 +34,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             this.LoadInputModelData(user.Id);
@@ -47,13 +47,13 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             if (this.Input.SchoolId < 1)
             {
                 this.LoadInputModelData(user.Id);
-                this.StatusMessage = "Невалидни данни";
+                this.StatusMessage = GlobalConstants.SchoolMessages.FailSchoolUpdateMessage;
                 return this.Page();
             }
 
@@ -63,11 +63,11 @@
             }
             catch (System.Exception)
             {
-                this.StatusMessage = "Error: Неочаквана грешка при опит за промяна на училище.";
+                this.StatusMessage = GlobalConstants.SchoolMessages.FailSchoolUpdateMessage;
                 return this.RedirectToPage();
             }
 
-            this.StatusMessage = "Вашето училище бе актуализирано";
+            this.StatusMessage = GlobalConstants.SchoolMessages.SuccessSchoolUpdateMessage;
             return this.RedirectToPage();
         }
 

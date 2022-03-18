@@ -10,6 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.AspNetCore.WebUtilities;
+    using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
 
     public partial class EmailModel : PageModel
@@ -45,7 +46,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             await this.LoadAsync(user);
@@ -57,7 +58,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             if (!this.ModelState.IsValid)
@@ -79,10 +80,10 @@
                     protocol: this.Request.Scheme);
                 await this.emailSender.SendEmailAsync(
                     this.Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    GlobalConstants.EmailMessages.EmailConfirmationTitle,
+                    GlobalConstants.EmailMessages.GetEmailConfirmationMessage(HtmlEncoder.Default.Encode(callbackUrl)));
 
-                this.StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                this.StatusMessage = GlobalConstants.EmailMessages.VerificationEmailIsSentMessage;
                 return this.RedirectToPage();
             }
 
@@ -95,7 +96,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             if (!this.ModelState.IsValid)
@@ -115,10 +116,10 @@
                 protocol: this.Request.Scheme);
             await this.emailSender.SendEmailAsync(
                 email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                GlobalConstants.EmailMessages.EmailConfirmationTitle,
+                GlobalConstants.EmailMessages.GetEmailConfirmationMessage(HtmlEncoder.Default.Encode(callbackUrl)));
 
-            this.StatusMessage = "Verification email sent. Please check your email.";
+            this.StatusMessage = GlobalConstants.EmailMessages.VerificationEmailIsSentMessage;
             return this.RedirectToPage();
         }
 

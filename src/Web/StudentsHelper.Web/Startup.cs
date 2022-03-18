@@ -10,6 +10,7 @@
     using Hangfire.SqlServer;
 
     using IdentityModel;
+
     using Microsoft.AspNetCore.Authentication.OAuth;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -19,6 +20,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data;
     using StudentsHelper.Data.Common;
@@ -27,6 +29,11 @@
     using StudentsHelper.Data.Repositories;
     using StudentsHelper.Data.Seeding;
     using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.BusinessLogic.Balance;
+    using StudentsHelper.Services.BusinessLogic.Consultations;
+    using StudentsHelper.Services.BusinessLogic.MontlyPayments;
+    using StudentsHelper.Services.BusinessLogic.Students;
+    using StudentsHelper.Services.BusinessLogic.Teachers;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Chat;
     using StudentsHelper.Services.Data.Consulations;
@@ -190,6 +197,12 @@
                        this.configuration["Cloudinary:CloudName"],
                        this.configuration["Cloudinary:ApiKey"],
                        this.configuration["Cloudinary:ApiSecret"]));
+
+            services.AddTransient<IBalanceBusinessLogicService, BalanceBusinessLogicService>();
+            services.AddTransient<IConsultationsBusinessLogicService, ConsultationsBusinessLogicService>();
+            services.AddTransient<IAdministrationOfTeachersBusinessLogicService, AdministrationOfTeachersBusinessLogicService>();
+            services.AddTransient<ITeachersBusinessLogicService, TeachersBusinessLogicService>();
+            services.AddTransient<IAdministrationOfStudentsBusinessLogicService, AdministrationOfStudentsBusinessLogicService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

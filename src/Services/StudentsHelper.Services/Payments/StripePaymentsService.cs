@@ -8,26 +8,23 @@
 
     using Stripe;
     using Stripe.Checkout;
-    using StudentsHelper.Services.Data.StudentTransactions;
+
     using StudentsHelper.Services.Payments.Models;
 
     public class StripePaymentsService : IPaymentsService
     {
         private readonly IStripeClient client;
         private readonly IOptions<StripeOptions> options;
-        private readonly IStudentsTransactionsService studentsTransactionsService;
 
         public StripePaymentsService(
-            IOptions<StripeOptions> options,
-            IStudentsTransactionsService studentsTransactionsService)
+            IOptions<StripeOptions> options)
         {
             this.options = options;
             StripeConfiguration.ApiKey = this.options.Value.SecretKey;
             this.client = new StripeClient(this.options.Value.SecretKey);
-            this.studentsTransactionsService = studentsTransactionsService;
         }
 
-        public async Task<string> CreateCheckoutSessionAsync(string studentId, string studentEmail, int amount)
+        public async Task<CheckoutSessionData> CreateCheckoutSessionAsync(string studentEmail, int amount)
         {
             var options = new SessionCreateOptions
             {
@@ -47,11 +44,16 @@
 
             var service = new SessionService(this.client);
             var session = await service.CreateAsync(options);
-
             var amountAfterTax = this.AmountAfterTaxes(amount);
-            await this.studentsTransactionsService.AddStudentTransactionAsync(studentId, amountAfterTax, session.Id);
 
-            return session.Url;
+            var result = new CheckoutSessionData
+            {
+                Id = session.Id,
+                AmountAfterTax = amountAfterTax,
+                Url = session.Url,
+            };
+
+            return result;
         }
 
         public async Task<string> CreateTeacherExpressConnectedAccountAsync(string email, string teacherId, bool isInProduction)
@@ -97,6 +99,7 @@
                 ReturnUrl = this.options.Value.Domain,
                 Type = "account_onboarding",
             };
+
             var service = new AccountLinkService();
             var accountLink = await service.CreateAsync(options);
             return accountLink.Url;
@@ -123,6 +126,7 @@
                 Amount = (long)(Math.Round(amount, 2) * 100),
                 Currency = "BGN",
             };
+
             var service = new PayoutService();
             return service.CreateAsync(options);
         }

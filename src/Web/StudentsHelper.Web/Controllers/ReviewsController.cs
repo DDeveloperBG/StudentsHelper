@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Ratings;
@@ -36,7 +37,7 @@
 
             if (!this.ModelState.IsValid)
             {
-                return redirect.WithDanger("Невалидни данни.");
+                return redirect.WithDanger(ValidationConstants.GeneralError);
             }
 
             return this.View(input);
@@ -50,7 +51,7 @@
 
             if (!this.ModelState.IsValid)
             {
-                return redirect.WithDanger("Невалидни данни.");
+                return redirect.WithDanger(ValidationConstants.GeneralError);
             }
 
             var user = await this.userManager.GetUserAsync(this.User);
@@ -58,12 +59,12 @@
 
             if (this.reviewsService.HasStudentReviewedTeacher(studentId, input.TeacherId))
             {
-                return redirect.WithWarning("Вече сте оценили един път.");
+                return redirect.WithWarning(GlobalConstants.ReviewMessages.HasReviewedAlreadyMessage);
             }
 
             await this.reviewsService.AddReviewAsync(input.TeacherId, studentId, input.Rating, input.Comment);
 
-            return redirect.WithSuccess("Успешно дадохте оценка.");
+            return redirect.WithSuccess(GlobalConstants.ReviewMessages.SuccessfulReviewMessage);
         }
 
         [Authorize]
@@ -86,7 +87,7 @@
                 return this.Redirect(redirectUrl);
             }
 
-            return this.Redirect(redirectUrl).WithDanger("Възникна грешка!");
+            return this.Redirect(redirectUrl).WithDanger(GlobalConstants.GeneralMessages.TaskFailedMessage);
         }
     }
 }

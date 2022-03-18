@@ -13,19 +13,19 @@
         <form id="profile-form" class="mt-2 ml-4" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Област:</label>
-                <select asp-for="Input.RegionId" class="form-control" past-value=@Model.Input.RegionId></select>
+                <select asp-for="Input.RegionId" class="form-control" active-value=@Model.Input.RegionId></select>
             </div>
             <div class="form-group">
                 <label>Община:</label>
-                <select asp-for="Input.TownshipId" class="form-control" past-value=@Model.Input.TownshipId></select>
+                <select asp-for="Input.TownshipId" class="form-control" active-value=@Model.Input.TownshipId></select>
             </div>
             <div class="form-group">
                 <label>Населено място:</label>
-                <select asp-for="Input.PopulatedAreaId" class="form-control" past-value=@Model.Input.PopulatedAreaId></select>
+                <select asp-for="Input.PopulatedAreaId" class="form-control" active-value=@Model.Input.PopulatedAreaId></select>
             </div>
             <div class="form-group">
                 <label>Училище:</label>
-                <select asp-for="Input.SchoolId" class="form-control" past-value=@Model.Input.SchoolId></select>
+                <select asp-for="Input.SchoolId" class="form-control" active-value=@Model.Input.SchoolId></select>
             </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary">Запази</button>
         </form>

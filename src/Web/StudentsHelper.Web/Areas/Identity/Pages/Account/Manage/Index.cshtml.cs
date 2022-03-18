@@ -47,7 +47,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             await this.LoadAsync(user);
@@ -59,7 +59,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             if (user == null)
             {
-                return this.NotFound($"Не може да се зареди потребител с ID '{this.userManager.GetUserId(this.User)}'.");
+                return this.NotFound(GlobalConstants.GeneralMessages.UserNotFoundMessage);
             }
 
             if (!this.ModelState.IsValid)

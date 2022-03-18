@@ -15,7 +15,7 @@
 @if (this.User.IsInRole(GlobalConstants.StudentRoleName))
 {
     <div id="add-to-balance-container" class="mt-4 col-md-6">
-        <h5>Добави (цяло число)</h5>
+        <h5>Депозирай (цяло число)</h5>
         <form method="POST" asp-area="Identity" asp-controller="Balance" asp-action="Deposit">
             @{
                 var depositInput = new DepositInputModel();

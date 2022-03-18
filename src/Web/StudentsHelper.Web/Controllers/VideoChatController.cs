@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Consulations;
@@ -45,14 +46,14 @@
         {
             if (meetingId == null)
             {
-                return this.Redirect("/").WithDanger("Невалидни данни!");
+                return this.Redirect("/").WithDanger(ValidationConstants.GeneralError);
             }
 
             var userId = this.userManager.GetUserId(this.User);
 
             if (!this.consulationsService.IsConsultationActive(meetingId, userId, this.dateTimeProvider.GetUtcNow()))
             {
-                return this.Redirect("/").WithDanger("Невалидни данни!");
+                return this.Redirect("/").WithDanger(ValidationConstants.GeneralError);
             }
 
             // Important!
@@ -60,7 +61,7 @@
 
             if (!this.StudentHasEnoughMoneyToContinue(meetingId))
             {
-                return this.Redirect("/").WithInfo("Събранието приключи.");
+                return this.Redirect("/").WithInfo(ValidationConstants.MeetingEndedMessage);
             }
 
             return this.View();
@@ -81,7 +82,7 @@
             var userId = this.userManager.GetUserId(this.User);
             if (!this.consulationsService.IsConsultationActive(meetingId, userId, this.dateTimeProvider.GetUtcNow()))
             {
-                return this.Redirect("/").WithInfo("Събранието приключи.");
+                return this.Redirect("/").WithInfo(ValidationConstants.MeetingEndedMessage);
             }
 
             if (!this.StudentHasEnoughMoneyToContinue(meetingId))
@@ -106,7 +107,7 @@
             }
             else
             {
-                throw new System.Exception("User is in incorrect role!");
+                throw new System.Exception(ValidationConstants.IncorectUserRole);
             }
 
             var utcNow = this.dateTimeProvider.GetUtcNow();

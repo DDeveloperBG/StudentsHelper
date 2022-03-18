@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Services.Data.Tests
 {
-
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Mapping;
 

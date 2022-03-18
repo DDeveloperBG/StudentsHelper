@@ -10,6 +10,11 @@
     {
         private readonly IRepository<ContactFormEntry> contactsRepository;
 
+        public ContactService(IRepository<ContactFormEntry> contactsRepository)
+        {
+            this.contactsRepository = contactsRepository;
+        }
+
         public async Task SaveContactFormData(ContactInputModel model, string ip)
         {
             var contactFormEntry = new ContactFormEntry

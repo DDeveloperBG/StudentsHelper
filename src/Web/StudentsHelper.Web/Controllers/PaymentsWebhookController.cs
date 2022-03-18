@@ -53,7 +53,9 @@
 
                     if (session?.PaymentStatus == "paid")
                     {
-                        await this.studentsTransactionsService.MarkPaymentAsCompletedAsync(session.Id, this.dateTimeProvider.GetUtcNow());
+                        await this
+                            .studentsTransactionsService
+                            .MarkPaymentAsCompletedAsync(session.Id, this.dateTimeProvider.GetUtcNow());
                     }
                 }
 
