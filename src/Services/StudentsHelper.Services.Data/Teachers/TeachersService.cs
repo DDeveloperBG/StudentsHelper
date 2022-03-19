@@ -27,12 +27,11 @@
             this.userManager = userManager;
         }
 
-        public IEnumerable<T> GetAllNotConfirmed<T>()
+        public IQueryable<T> GetAllNotConfirmed<T>()
         {
             return this.GetAllAsNoTracking()
                 .Where(x => !x.IsValidated && !x.IsRejected)
-                .To<T>()
-                .ToList();
+                .To<T>();
         }
 
         public IEnumerable<T> GetAllRejected<T>()

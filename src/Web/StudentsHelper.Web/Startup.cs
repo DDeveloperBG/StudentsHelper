@@ -42,6 +42,7 @@
     using StudentsHelper.Services.Data.LocationLoaders;
     using StudentsHelper.Services.Data.Meetings;
     using StudentsHelper.Services.Data.Paging;
+    using StudentsHelper.Services.Data.Paging.NewPaging;
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Students;
@@ -177,6 +178,7 @@
             services.AddTransient<IStudentsService, StudentsService>();
             services.AddTransient<IReviewsService, ReviewsService>();
             services.AddTransient<IPagingService, PagingService>();
+            services.AddTransient<IReviewsPagingService, ReviewsPagingService>();
             services.AddTransient<ITeacherRegisterer, TeacherRegisterer>();
             services.AddTransient<IStudentRegisterer, StudentRegisterer>();
             services.AddTransient<IPaymentsService, StripePaymentsService>();

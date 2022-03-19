@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Data.Paging
+﻿namespace StudentsHelper.Services.Data.Paging.OldPaging.Models
 {
     using System.Collections.Generic;
 

@@ -9,7 +9,7 @@
 
     public interface IReviewsService
     {
-        IEnumerable<TeacherWithRating> GetTeachersRating(IQueryable<Teacher> teachers);
+        IQueryable<TeacherWithRating> GetTeachersRating(IQueryable<Teacher> teachers);
 
         TeacherDetails GetTeacherRating(string teacherId);
 

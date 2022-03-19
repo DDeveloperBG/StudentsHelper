@@ -42,7 +42,7 @@
                 {
                     var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
 
-                    await this.contactService.SaveContactFormData(model, ip);
+                    await this.contactService.SaveContactFormDataAsync(model, ip);
 
                     await this.emailSender.SendEmailAsync(
                         GlobalConstants.ContactEmail,

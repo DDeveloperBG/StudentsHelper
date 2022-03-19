@@ -1,4 +1,7 @@
-﻿@model IEnumerable<StudentsHelper.Web.ViewModels.Administration.Students.StudentForAllTeachersListViewModel>
+﻿@using StudentsHelper.Web.ViewModels.Paging
+@using StudentsHelper.Web.ViewModels.Administration.Students
+
+@model PagedResult<StudentForAllTeachersListViewModel>
 
 @{
     ViewData["Title"] = "Всички ученици";
@@ -15,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Results)
         {
             <tr>
                 <td>
@@ -32,5 +35,6 @@
                 </td>
             </tr>
         }
+        @await Html.PartialAsync("~/Views/Shared/PartialViews/_PagingNavigationPartial.cshtml", Model.PagingData)
     </tbody>
 </table>

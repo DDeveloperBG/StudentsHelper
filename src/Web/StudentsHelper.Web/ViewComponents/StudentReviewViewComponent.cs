@@ -11,12 +11,12 @@
     {
         private const int PagingSize = 4;
         private readonly IReviewsService reviewsService;
-        private readonly IPagingService pagingService;
+        private readonly IReviewsPagingService pagingService;
         private readonly ICloudStorageService cloudStorageService;
 
         public StudentReviewViewComponent(
             IReviewsService reviewsService,
-            IPagingService pagingService,
+            IReviewsPagingService pagingService,
             ICloudStorageService cloudStorageService)
         {
             this.reviewsService = reviewsService;

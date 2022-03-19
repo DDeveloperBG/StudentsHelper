@@ -24,7 +24,7 @@
             this.teachersService = teachersService;
         }
 
-        public IEnumerable<TeacherWithRating> GetTeachersRating(IQueryable<Teacher> teachers)
+        public IQueryable<TeacherWithRating> GetTeachersRating(IQueryable<Teacher> teachers)
         {
             return teachers
                 .Select(x => new TeacherWithRating
@@ -35,8 +35,7 @@
                     ApplicationUserName = x.ApplicationUser.Name,
                     ApplicationUserPicturePath = x.ApplicationUser.PicturePath,
                     AverageRating = x.Reviews.Count != 0 ? Math.Round(x.Reviews.Average(x => x.Rating), 2) : 0,
-                })
-                .ToList();
+                });
         }
 
         public TeacherDetails GetTeacherRating(string teacherId)

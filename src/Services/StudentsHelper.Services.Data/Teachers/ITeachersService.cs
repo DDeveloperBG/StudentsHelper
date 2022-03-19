@@ -14,7 +14,7 @@
 
         IEnumerable<T> GetAllRejected<T>();
 
-        IEnumerable<T> GetAllNotConfirmed<T>();
+        IQueryable<T> GetAllNotConfirmed<T>();
 
         string GetId(string userId);
 

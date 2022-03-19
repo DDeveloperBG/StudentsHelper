@@ -8,7 +8,7 @@
 
     public class PagingTests : BaseTest
     {
-        private PagingService pagingService;
+        private ReviewsPagingService pagingService;
 
         [Theory]
         [InlineData(1, 2)]
@@ -37,7 +37,7 @@
 
         public override void CleanWorkbench()
         {
-            this.pagingService = new PagingService();
+            this.pagingService = new ReviewsPagingService();
         }
     }
 }

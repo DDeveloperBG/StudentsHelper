@@ -4,16 +4,17 @@
     using System.Threading.Tasks;
 
     using StudentsHelper.Web.ViewModels.Administration.Teachers;
+    using StudentsHelper.Web.ViewModels.Paging;
 
     public interface IAdministrationOfTeachersBusinessLogicService
     {
-        IEnumerable<NotDetailedTeacherViewModel> GetAllToApproveViewModel();
+        PagedResult<NotDetailedTeacherViewModel> GetAllToApproveViewModel(int page);
 
         TeacherDetailsViewModel GetSetTeacherDataViewModel(string teacherId);
 
         Task SetTeacherDataAsync(TeacherExternalDataInputModel input, string email);
 
-        IEnumerable<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel();
+        PagedResult<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel(int page);
 
         TeacherDetailedViewModel GetDetailsViewModel(string teacherId);
 

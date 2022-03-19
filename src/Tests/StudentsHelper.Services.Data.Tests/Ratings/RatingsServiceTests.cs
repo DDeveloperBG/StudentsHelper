@@ -133,7 +133,7 @@
                 },
             };
 
-            var result = this.service.GetTeachersRating(teachers.AsQueryable());
+            var result = this.service.GetTeachersRating(teachers.AsQueryable()).ToList();
 
             foreach (var resultTeacher in result)
             {

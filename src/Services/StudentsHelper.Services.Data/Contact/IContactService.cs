@@ -6,6 +6,6 @@
 
     public interface IContactService
     {
-        Task SaveContactFormData(ContactInputModel model, string ip);
+        Task SaveContactFormDataAsync(ContactInputModel model, string ip);
     }
 }

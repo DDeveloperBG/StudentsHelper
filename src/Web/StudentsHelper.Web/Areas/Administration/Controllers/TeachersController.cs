@@ -19,9 +19,9 @@
             this.teachersBusinessLogicService = teachersBusinessLogicService;
         }
 
-        public IActionResult AllToApprove()
+        public IActionResult AllToApprove(int page = 1)
         {
-            var teachers = this.teachersBusinessLogicService.GetAllToApproveViewModel();
+            var teachers = this.teachersBusinessLogicService.GetAllToApproveViewModel(page);
 
             return this.View(teachers);
         }
@@ -57,9 +57,9 @@
             return this.RedirectToAction(nameof(this.AllToApprove)).WithSuccess(GlobalConstants.GeneralMessages.TaskSucceededMessage);
         }
 
-        public IActionResult AllTeachers()
+        public IActionResult AllTeachers(int page = 1)
         {
-            var teachers = this.teachersBusinessLogicService.GetAllTeachersViewModel();
+            var teachers = this.teachersBusinessLogicService.GetAllTeachersViewModel(page);
 
             return this.View(teachers);
         }

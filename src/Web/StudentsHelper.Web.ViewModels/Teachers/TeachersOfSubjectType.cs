@@ -1,10 +1,11 @@
 ﻿namespace StudentsHelper.Web.ViewModels.Teachers
 {
-    using System.Collections.Generic;
+    using StudentsHelper.Web.ViewModels.Paging;
 
     public class TeachersOfSubjectType<T>
+        where T : class
     {
-        public IEnumerable<T> Teachers { get; set; }
+        public PagedResult<T> Teachers { get; set; }
 
         public int SubjectId { get; set; }
 

@@ -15,7 +15,7 @@
             this.contactsRepository = contactsRepository;
         }
 
-        public async Task SaveContactFormData(ContactInputModel model, string ip)
+        public async Task SaveContactFormDataAsync(ContactInputModel model, string ip)
         {
             var contactFormEntry = new ContactFormEntry
             {

@@ -9,6 +9,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Location;
+    using StudentsHelper.Services.Data.Paging.NewPaging;
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.Ratings.Models;
     using StudentsHelper.Services.Data.Students;
@@ -26,6 +27,7 @@
         private readonly ICloudStorageService cloudStorageService;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILocationService locationService;
+        private readonly IPagingService pagingService;
 
         public TeachersBusinessLogicService(
             ITeachersService teachersService,
@@ -34,7 +36,8 @@
             IReviewsService reviewsService,
             ICloudStorageService cloudStorageService,
             IDateTimeProvider dateTimeProvider,
-            ILocationService locationService)
+            ILocationService locationService,
+            IPagingService pagingService)
         {
             this.teachersService = teachersService;
             this.studentsService = studentsService;
@@ -43,10 +46,12 @@
             this.cloudStorageService = cloudStorageService;
             this.dateTimeProvider = dateTimeProvider;
             this.locationService = locationService;
+            this.pagingService = pagingService;
         }
 
         public (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(
             int subjectId,
+            int page,
             LocationInputModel locationInputModel)
         {
             var subjectName = this.GetSubjectName(subjectId);
@@ -55,21 +60,24 @@
                 return (ValidationConstants.GeneralError, null);
             }
 
-            IEnumerable<TeacherWithRating> teachers;
+            IQueryable<TeacherWithRating> teachersAsQueryable;
             if (locationInputModel.RegionId > 0)
             {
-                teachers = this.GetTeachersOfSubjectTypeWithRatingInLocation(subjectId, locationInputModel);
+                teachersAsQueryable = this.GetTeachersOfSubjectTypeWithRatingInLocation(subjectId, locationInputModel);
             }
             else
             {
-                teachers = this.GetTeachersOfSubjectTypeWithRating(subjectId);
+                teachersAsQueryable = this.GetTeachersOfSubjectTypeWithRating(subjectId);
             }
 
-            this.ChangeTeachersIsActiveState(teachers, this.dateTimeProvider.GetUtcNow());
+            var teachers = this.pagingService.GetPaged(teachersAsQueryable, page, 10);
+            teachers.Results = this.OrderByDefaultCriteria(teachers.Results).ToList();
+
+            this.SetTeachersIsActiveState(teachers.Results, this.dateTimeProvider.GetUtcNow());
 
             var viewModel = new TeachersOfSubjectType<TeacherWithRating>
             {
-                Teachers = this.OrderByDefaultCriteria(teachers),
+                Teachers = teachers,
                 SubjectId = subjectId,
                 SubjectName = subjectName,
             };
@@ -107,7 +115,7 @@
                 .ThenBy(x => x.HourWage);
         }
 
-        private IEnumerable<TeacherWithRating> GetTeachersOfSubjectTypeWithRating(int subjectId)
+        private IQueryable<TeacherWithRating> GetTeachersOfSubjectTypeWithRating(int subjectId)
         {
             return this
                 .reviewsService
@@ -116,7 +124,7 @@
                     .GetAllOfType(subjectId));
         }
 
-        private IEnumerable<TeacherWithRating> GetTeachersOfSubjectTypeWithRatingInLocation(
+        private IQueryable<TeacherWithRating> GetTeachersOfSubjectTypeWithRatingInLocation(
             int subjectId,
             LocationInputModel locationInputModel)
         {
@@ -141,7 +149,7 @@
                 .SingleOrDefault();
         }
 
-        private void ChangeTeachersIsActiveState(IEnumerable<TeacherWithRating> teachers, DateTime utcNow)
+        private void SetTeachersIsActiveState(IEnumerable<TeacherWithRating> teachers, DateTime utcNow)
         {
             foreach (var teacher in teachers)
             {

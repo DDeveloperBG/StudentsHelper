@@ -12,6 +12,10 @@
     height: 2.4rem;
 }
 
+.pagination .page-link {
+    color: #0069da;
+}
+
 .active {
     background-color: #1AD057 !important;
 }

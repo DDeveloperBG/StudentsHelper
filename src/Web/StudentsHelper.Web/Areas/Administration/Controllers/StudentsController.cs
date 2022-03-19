@@ -19,11 +19,11 @@
             this.studentsBusinessLogicService = studentsBusinessLogicService;
         }
 
-        public IActionResult AllStudents()
+        public IActionResult AllStudents(int page = 1)
         {
             var students = this
                 .studentsBusinessLogicService
-                .GetAllStudentsViewModel();
+                .GetAllStudentsViewModel(page);
 
             return this.View(students);
         }

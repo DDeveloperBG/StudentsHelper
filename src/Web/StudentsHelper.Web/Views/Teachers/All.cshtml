@@ -45,7 +45,7 @@
         </form>
     </div>
     <div class="col-md-8 container mt-3">
-        @foreach (var item in Model.Teachers)
+        @foreach (var item in Model.Teachers.Results)
         {
             <div class="mb-2 p-2 row background-container" style="border-radius: 6px;">
                 <vc:user-profile-picture picture-path="@item.ApplicationUserPicturePath" is-active="@item.IsActive" email="@item.ApplicationUserEmail">
@@ -64,6 +64,7 @@
                 </a>
             </div>
         }
+        @await Html.PartialAsync("~/Views/Shared/PartialViews/_PagingNavigationPartial.cshtml", Model.Teachers.PagingData)
     </div>
 </div>
 

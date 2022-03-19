@@ -1,13 +1,13 @@
 ﻿namespace StudentsHelper.Services.BusinessLogic.Students
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using StudentsHelper.Web.ViewModels.Administration.Students;
+    using StudentsHelper.Web.ViewModels.Paging;
 
     public interface IAdministrationOfStudentsBusinessLogicService
     {
-        public IEnumerable<StudentForAllTeachersListViewModel> GetAllStudentsViewModel();
+        public PagedResult<StudentForAllTeachersListViewModel> GetAllStudentsViewModel(int page);
 
         public StudentDetailsViewModel GetDetailsViewModel(string studentId);
 

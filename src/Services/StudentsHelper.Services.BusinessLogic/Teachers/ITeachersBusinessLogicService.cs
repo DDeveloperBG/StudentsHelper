@@ -6,7 +6,7 @@
 
     public interface ITeachersBusinessLogicService
     {
-        (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(int subjectId, LocationInputModel locationInputModel);
+        (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(int subjectId, int page, LocationInputModel locationInputModel);
 
         TeacherDetails GetDetailsViewModel(string teacherId, string userId, bool isUserStudent);
     }

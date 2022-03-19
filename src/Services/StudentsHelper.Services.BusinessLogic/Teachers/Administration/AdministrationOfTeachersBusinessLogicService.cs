@@ -9,12 +9,14 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Services.Data.Paging.NewPaging;
     using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Subjects;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Web.ViewModels.Administration.Teachers;
+    using StudentsHelper.Web.ViewModels.Paging;
 
     public class AdministrationOfTeachersBusinessLogicService : IAdministrationOfTeachersBusinessLogicService
     {
@@ -22,6 +24,7 @@
         private readonly ISchoolSubjectsService schoolSubjectsService;
         private readonly ICloudStorageService cloudStorageService;
         private readonly IEmailSender emailSender;
+        private readonly IPagingService pagingService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public AdministrationOfTeachersBusinessLogicService(
@@ -29,27 +32,26 @@
             ISchoolSubjectsService schoolSubjectsService,
             ICloudStorageService cloudStorageService,
             IEmailSender emailSender,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IPagingService pagingService)
         {
             this.teachersService = teachersService;
             this.schoolSubjectsService = schoolSubjectsService;
             this.cloudStorageService = cloudStorageService;
             this.emailSender = emailSender;
             this.userManager = userManager;
+            this.pagingService = pagingService;
         }
 
-        public IEnumerable<NotDetailedTeacherViewModel> GetAllToApproveViewModel()
+        public PagedResult<NotDetailedTeacherViewModel> GetAllToApproveViewModel(int page)
         {
-            var teachers = this
+            var quearableTeachers = this
                 .teachersService
-                .GetAllNotConfirmed<NotDetailedTeacherViewModel>()
-                .Where(x =>
-                {
-                    GlobalVariables.TeachersConnectedAccountStatus.TryGetValue(x.ApplicationUserEmail, out bool status);
-                    return status;
-                });
+                .GetAllNotConfirmed<NotDetailedTeacherViewModel>();
 
-            foreach (var teacher in teachers)
+            var teachers = this.pagingService.GetPaged(quearableTeachers, page, 10);
+
+            foreach (var teacher in teachers.Results)
             {
                 teacher.ApplicationUserPicturePath
                     = this.cloudStorageService.GetImageUri(teacher.ApplicationUserPicturePath);
@@ -82,12 +84,16 @@
             await this.teachersService.RejectTeacherAsync(teacherId);
         }
 
-        public IEnumerable<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel()
+        public PagedResult<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel(int page)
         {
-            return this
+            var teachersAsIQuerable = this
                 .teachersService
                 .GetAllAsNoTracking()
-                .To<TeacherForAllTeachersListViewModel>().ToList();
+                .To<TeacherForAllTeachersListViewModel>();
+
+            var teachers = this.pagingService.GetPaged(teachersAsIQuerable, page, 10);
+
+            return teachers;
         }
 
         public TeacherDetailedViewModel GetDetailsViewModel(string teacherId)

@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Data.Paging
+﻿namespace StudentsHelper.Services.Data.Paging.OldPaging.Models
 {
     public abstract class PagedResultBase
     {

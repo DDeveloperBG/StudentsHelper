@@ -25,11 +25,11 @@
             this.teachersBusinessLogicService = teachersBusinessLogicService;
         }
 
-        public IActionResult All(int subjectId, LocationInputModel locationInputModel)
+        public IActionResult All(int subjectId, LocationInputModel locationInputModel, int page = 1)
         {
             var result = this
                 .teachersBusinessLogicService
-                .GetAllViewModel(subjectId, locationInputModel);
+                .GetAllViewModel(subjectId, page, locationInputModel);
 
             if (result.ErrorMessage != null)
             {

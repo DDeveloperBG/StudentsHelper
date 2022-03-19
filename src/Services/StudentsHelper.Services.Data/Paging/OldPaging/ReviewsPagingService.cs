@@ -2,7 +2,9 @@
 {
     using System.Linq;
 
-    public class PagingService : IPagingService
+    using StudentsHelper.Services.Data.Paging.OldPaging.Models;
+
+    public class ReviewsPagingService : IReviewsPagingService
     {
         public PagedResult<T> GetPaged<T>(IQueryable<T> query, int currentNumber, int pageSize)
             where T : class

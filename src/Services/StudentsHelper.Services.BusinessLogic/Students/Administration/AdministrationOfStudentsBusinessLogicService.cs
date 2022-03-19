@@ -1,37 +1,41 @@
 ﻿namespace StudentsHelper.Services.BusinessLogic.Students
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Services.Data.Paging.NewPaging;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Web.ViewModels.Administration.Students;
+    using StudentsHelper.Web.ViewModels.Paging;
 
     public class AdministrationOfStudentsBusinessLogicService : IAdministrationOfStudentsBusinessLogicService
     {
         private readonly IStudentsService studentsService;
+        private readonly IPagingService pagingService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public AdministrationOfStudentsBusinessLogicService(
             IStudentsService studentsService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IPagingService pagingService)
         {
             this.studentsService = studentsService;
             this.userManager = userManager;
+            this.pagingService = pagingService;
         }
 
-        public IEnumerable<StudentForAllTeachersListViewModel> GetAllStudentsViewModel()
+        public PagedResult<StudentForAllTeachersListViewModel> GetAllStudentsViewModel(int page)
         {
-            return this
+            var studentsAsIQuerable = this
                 .studentsService
                 .GetAllAsNoTracking()
-                .To<StudentForAllTeachersListViewModel>()
-                .ToList();
+                .To<StudentForAllTeachersListViewModel>();
+
+            return this.pagingService.GetPaged(studentsAsIQuerable, page, 10);
         }
 
         public StudentDetailsViewModel GetDetailsViewModel(string studentId)
