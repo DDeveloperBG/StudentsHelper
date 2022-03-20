@@ -75,7 +75,10 @@
 
             if (student.ApplicationUser.Email != studentData.ApplicationUserEmail)
             {
+                student.ApplicationUser.UserName = studentData.ApplicationUserEmail;
+                student.ApplicationUser.NormalizedUserName = studentData.ApplicationUserEmail.ToUpper();
                 student.ApplicationUser.Email = studentData.ApplicationUserEmail;
+                student.ApplicationUser.NormalizedEmail = studentData.ApplicationUserEmail.ToUpper();
             }
 
             if (student.ApplicationUser.PicturePath != studentData.ApplicationUserPicturePath)

@@ -11,6 +11,7 @@
     using Microsoft.Extensions.Logging;
     using StudentsHelper.Common;
     using StudentsHelper.Data;
+    using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
@@ -24,6 +25,8 @@
         private readonly ILogger<DeletePersonalDataModel> logger;
         private readonly ITeachersService teachersService;
         private readonly IStudentsService studentsService;
+        private readonly IRepository<ChatGroupUsers> chatGroupsRepository;
+        private readonly IRepository<Message> messagesRepository;
         private readonly ApplicationDbContext dbContext;
 
         public DeletePersonalDataModel(
@@ -32,7 +35,9 @@
             ILogger<DeletePersonalDataModel> logger,
             ITeachersService teachersService,
             IStudentsService studentsService,
-            ApplicationDbContext dbContext)
+            ApplicationDbContext dbContext,
+            IRepository<ChatGroupUsers> chatGroupsRepository,
+            IRepository<Message> messagesRepository)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -40,6 +45,8 @@
             this.teachersService = teachersService;
             this.studentsService = studentsService;
             this.dbContext = dbContext;
+            this.chatGroupsRepository = chatGroupsRepository;
+            this.messagesRepository = messagesRepository;
         }
 
         [BindProperty]
@@ -77,50 +84,106 @@
                 }
             }
 
+            await this.DeleteUser(user);
+
+            return this.Redirect("~/");
+        }
+
+        private async Task DeleteUser(ApplicationUser user)
+        {
             using (var transaction = this.dbContext.Database.BeginTransaction())
             {
-                if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+                try
                 {
-                    await this.studentsService.DeleteStudentAsync(user.Id);
-                }
-                else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
-                {
-                    await this.teachersService.DeleteTeacherAsync(user.Id);
-                }
+                    await this.DeleteUserMessagesAndChatGroupsAsync(user.Id);
 
-                var externalLogins = await this.userManager.GetLoginsAsync(user);
+                    await this.DeleteUserAsTeacherOrStudent(user.Id);
 
-                foreach (var item in externalLogins)
-                {
-                    await this.userManager.RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
+                    await this.DeleteUserExternalLogins(user);
+
+                    await this.DeleteUserTokens(user.Id);
+
+                    var result = await this.userManager.DeleteAsync(user);
+                    var userId = await this.userManager.GetUserIdAsync(user);
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
+                    }
+
+                    await this.signInManager.SignOutAsync();
                 }
-
-                var userToken = this.dbContext
-                    .UserTokens
-                    .Where(x => x.UserId == user.Id)
-                    .SingleOrDefault();
-                if (userToken != null)
-                {
-                    this.dbContext.UserTokens.Remove(userToken);
-                    await this.dbContext.SaveChangesAsync();
-                }
-
-                var result = await this.userManager.DeleteAsync(user);
-                var userId = await this.userManager.GetUserIdAsync(user);
-                if (!result.Succeeded)
+                catch (Exception)
                 {
                     await transaction.RollbackAsync();
-                    throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
+                    return;
                 }
-
-                await this.signInManager.SignOutAsync();
 
                 transaction.Commit();
             }
 
             this.logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
+        }
 
-            return this.Redirect("~/");
+        private async Task DeleteUserMessagesAndChatGroupsAsync(string userId)
+        {
+            var deletedUser = await this.userManager.FindByNameAsync(GlobalConstants.DeletedUserUsername);
+            var allUserMessages = this.messagesRepository
+                .All()
+                .Where(x => x.SenderId == userId)
+                .ToList();
+            foreach (var message in allUserMessages)
+            {
+                message.SenderId = deletedUser.Id;
+                message.Sender = deletedUser;
+            }
+
+            var allUserChatGroups = this.chatGroupsRepository
+                .All()
+                .Where(x => x.ApplicationUserId == userId)
+                .ToList();
+            foreach (var chatGroup in allUserChatGroups)
+            {
+                chatGroup.ApplicationUserId = deletedUser.Id;
+                chatGroup.ApplicationUser = deletedUser;
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task DeleteUserAsTeacherOrStudent(string userId)
+        {
+            if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+            {
+                await this.studentsService.DeleteStudentAsync(userId);
+            }
+            else if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
+            {
+                await this.teachersService.DeleteTeacherAsync(userId);
+            }
+        }
+
+        private async Task DeleteUserExternalLogins(ApplicationUser user)
+        {
+            var externalLogins = await this.userManager.GetLoginsAsync(user);
+
+            foreach (var item in externalLogins)
+            {
+                await this.userManager.RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
+            }
+        }
+
+        private async Task DeleteUserTokens(string userId)
+        {
+            var userToken = this.dbContext
+                    .UserTokens
+                    .Where(x => x.UserId == userId)
+                    .SingleOrDefault();
+
+            if (userToken != null)
+            {
+                this.dbContext.UserTokens.Remove(userToken);
+                await this.dbContext.SaveChangesAsync();
+            }
         }
 
         public class InputModel

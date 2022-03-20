@@ -135,6 +135,9 @@
             if (teacher.ApplicationUser.Email != teacherData.ApplicationUserEmail)
             {
                 teacher.ApplicationUser.Email = teacherData.ApplicationUserEmail;
+                teacher.ApplicationUser.NormalizedEmail = teacherData.ApplicationUserEmail.ToUpper();
+                teacher.ApplicationUser.UserName = teacherData.ApplicationUserEmail;
+                teacher.ApplicationUser.NormalizedUserName = teacherData.ApplicationUserEmail.ToUpper();
             }
 
             if (teacher.ApplicationUser.PicturePath != teacherData.ApplicationUserPicturePath)
