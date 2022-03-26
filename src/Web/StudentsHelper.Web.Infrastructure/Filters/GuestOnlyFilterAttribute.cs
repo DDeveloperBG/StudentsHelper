@@ -4,7 +4,7 @@
 
     using Microsoft.AspNetCore.Mvc.Filters;
 
-    public class GuestFilterAttribute : Attribute, IAuthorizationFilter
+    public class GuestOnlyFilterAttribute : Attribute, IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {

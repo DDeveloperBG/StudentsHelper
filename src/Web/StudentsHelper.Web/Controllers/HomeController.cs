@@ -1,5 +1,6 @@
 ﻿namespace StudentsHelper.Web.Controllers
 {
+    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
@@ -43,7 +44,7 @@
 
                 if (hourWage == null)
                 {
-                    return this.View(model).WithWarning("Не сте задали почасово заплащане на услугите си, за да го направите отидете в профила си и кликнете на баланс.");
+                    return this.View(model).WithWarning(GlobalConstants.TeacherMessages.NotSetHourWage);
                 }
             }
 
@@ -76,6 +77,15 @@
 
             return this.View(
                 new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet("robots.txt")]
+        [ResponseCache(Duration = 86400, Location = ResponseCacheLocation.Any)]
+        public IActionResult RobotsTxt()
+        {
+            string content = "User-agent: *" + Environment.NewLine + "Disallow:";
+
+            return this.Content(content);
         }
     }
 }

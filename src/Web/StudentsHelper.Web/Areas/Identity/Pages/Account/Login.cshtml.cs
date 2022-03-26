@@ -15,7 +15,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Web.Infrastructure.Filters;
 
-    [GuestFilter]
+    [GuestOnlyFilter]
     [AllowAnonymous]
 #pragma warning disable SA1649 // File name should match first type name
     public class LoginModel : PageModel

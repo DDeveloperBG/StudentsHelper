@@ -23,6 +23,8 @@
         [Column(TypeName = "DECIMAL(5, 2)")]
         public decimal? HourWage { get; set; }
 
+        public string Description { get; set; }
+
         [Required]
         [ForeignKey(nameof(ApplicationUser))]
         public string ApplicationUserId { get; set; }

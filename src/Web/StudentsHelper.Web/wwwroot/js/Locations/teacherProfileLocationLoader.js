@@ -1,6 +1,6 @@
 ﻿var isInitialLoad = null;
 
-window.addEventListener('load', async () => {
+window.addEventListener('load', async function () {
     const activeValueAttribute = 'active-value';
     const defaultLocationNames = {
         'Input.RegionId': 'Област',
@@ -28,7 +28,7 @@ window.addEventListener('load', async () => {
 
         hideNext(index + 1);
 
-        loadOptions(selects[index + 1], selects[index].value);
+        await loadOptions(selects[index + 1], selects[index].value);
     }
 
     function hideNext(currentIndex) {

@@ -9,6 +9,7 @@
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Data.Meetings;
+
     using Xunit;
 
     public class MeetingsServiceTests : BaseTest

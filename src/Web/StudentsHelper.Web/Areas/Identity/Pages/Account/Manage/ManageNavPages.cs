@@ -6,31 +6,35 @@
 
     public static class ManageNavPages
     {
-        public static string Index => "Index";
+        public static string Index => nameof(Index);
 
-        public static string Balance => "Balance";
+        public static string Balance => nameof(Balance);
 
-        public static string TeacherSchool => "TeacherSchool";
+        public static string TeacherSchool => nameof(TeacherSchool);
 
-        public static string Email => "Email";
+        public static string TeacherDescription => nameof(TeacherDescription);
 
-        public static string ChangePassword => "ChangePassword";
+        public static string Email => nameof(Email);
 
-        public static string DownloadPersonalData => "DownloadPersonalData";
+        public static string ChangePassword => nameof(ChangePassword);
 
-        public static string DeletePersonalData => "DeletePersonalData";
+        public static string DownloadPersonalData => nameof(DownloadPersonalData);
 
-        public static string ExternalLogins => "ExternalLogins";
+        public static string DeletePersonalData => nameof(DeletePersonalData);
 
-        public static string PersonalData => "PersonalData";
+        public static string ExternalLogins => nameof(ExternalLogins);
 
-        public static string TwoFactorAuthentication => "TwoFactorAuthentication";
+        public static string PersonalData => nameof(PersonalData);
+
+        public static string TwoFactorAuthentication => nameof(TwoFactorAuthentication);
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string BalanceNavClass(ViewContext viewContext) => PageNavClass(viewContext, Balance);
 
         public static string TeacherSchoolNavClass(ViewContext viewContext) => PageNavClass(viewContext, TeacherSchool);
+
+        public static string TeacherDescriptionNavClass(ViewContext viewContext) => PageNavClass(viewContext, TeacherDescription);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 

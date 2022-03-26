@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Auth
+﻿namespace StudentsHelper.Common.Attributes
 {
     using StudentsHelper.Common;
 

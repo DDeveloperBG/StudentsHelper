@@ -1,0 +1,19 @@
+﻿@using StudentsHelper.Web.ViewModels.Teachers
+@model TeacherDescriptionViewModel
+@{
+    ViewData["Title"] = "Описание";
+    ViewData["ParentLayout"] = "/Views/Shared/_Layout.cshtml";
+    ViewData["ActivePage"] = StudentsHelper.Web.Areas.Identity.Pages.Account.Manage.ManageNavPages.TeacherDescription;
+}
+
+<h5 class="mt-2 mb-3">Детайли за мен: (този текст ще се вижда от всички потребители, така както е в полето за текст)</h5>
+<form id="description-form" asp-controller="TeacherDescription" asp-action="UpdateDesciption">
+    <textarea asp-for="@Model.Description" id="description-textarea">@Model.Description</textarea>
+    <button type="submit" class="btn btn-primary mt-3">Запази</button>
+</form>
+
+@section Scripts {
+<script src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
+<script src="~/js/RichTextEditor/prepareEditor.min.js" asp-append-version="true"></script>
+<script src="~/js/WarnBeforeLeave/teacherDescriptionWarnBeforeLeave.min.js" asp-append-version="true"></script>
+}

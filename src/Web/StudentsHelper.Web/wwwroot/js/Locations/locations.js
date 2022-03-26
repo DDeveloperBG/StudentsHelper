@@ -12,7 +12,7 @@
     selects.slice(0, selects.length - 1).forEach((select, index) => select.addEventListener('change', loadOptionsForNext.bind(null, index)));
     loadOptions(selects[0], null);
 
-    async function loadOptionsForNext(index) {
+    function loadOptionsForNext(index) {
         if (index + 1 === selects.length) {
             return;
         }

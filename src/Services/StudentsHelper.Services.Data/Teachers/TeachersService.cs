@@ -181,5 +181,16 @@
             this.teachersRepository.Update(teacher);
             return this.teachersRepository.SaveChangesAsync();
         }
+
+        public Task UpdateDescription(string userId, string description)
+        {
+            var teacher = this.GetAll()
+                .Where(x => x.ApplicationUserId == userId)
+                .Single();
+
+            teacher.Description = description;
+
+            return this.teachersRepository.SaveChangesAsync();
+        }
     }
 }

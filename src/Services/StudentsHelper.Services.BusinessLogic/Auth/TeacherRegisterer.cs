@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Auth
+﻿namespace StudentsHelper.Services.BusinessLogic.Auth
 {
     using System;
     using System.Linq;
@@ -11,6 +11,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Payments;
+    using StudentsHelper.Web.ViewModels.Teachers;
 
     public class TeacherRegisterer : ITeacherRegisterer
     {

@@ -18,9 +18,10 @@
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.BusinessLogic.Auth;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Web.Infrastructure.Alerts;
+    using StudentsHelper.Web.ViewModels.Teachers;
 
     [AllowAnonymous]
 #pragma warning disable SA1649 // File name should match first type name

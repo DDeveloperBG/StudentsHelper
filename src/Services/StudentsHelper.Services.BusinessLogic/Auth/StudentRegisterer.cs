@@ -1,4 +1,4 @@
-﻿namespace StudentsHelper.Services.Auth
+﻿namespace StudentsHelper.Services.BusinessLogic.Auth
 {
     using System.Threading.Tasks;
 

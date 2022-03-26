@@ -43,5 +43,7 @@
         Task DeleteTeacherAsync(string userId);
 
         Task UpdateAsync(Teacher teacher);
+
+        Task UpdateDescription(string userId, string description);
     }
 }

@@ -8,9 +8,9 @@
 
 @section Css
 {
-    <link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/studentReview.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/studentReview.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
 }
 
 <div class="container m-lg-5 col-auto text-center background-container">
@@ -27,8 +27,7 @@
         </div>
 
         <div class="m-3" style="position: absolute; right: 0;">
-            <a
-            asp-area=""
+            <a asp-area=""
            asp-controller="Chat"
            asp-action="StartChat"
            asp-route-teacherUserId="@Model.ApplicationUserId">
@@ -41,6 +40,16 @@
              class="col-md-2 img-fluid m-lg-4 teacher-picture img-thumbnail p-lg-4" />
     </div>
     <div class="mb-lg-4"><h2>@Model.ApplicationUserName</h2></div>
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <hr />
+        <div>
+            <h5 class="font-weight-normal text-left">ЗА УЧИТЕЛЯ:</h5>
+            <p>
+                @Html.Raw(Model.Description)
+            </p>
+        </div>
+    }
     <hr />
     <div>
         <h5 class="font-weight-normal text-left mr-3">ОЦЕНКИ</h5>

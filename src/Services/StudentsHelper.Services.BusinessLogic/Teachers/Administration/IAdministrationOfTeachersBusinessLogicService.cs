@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Services.BusinessLogic.Teachers
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using StudentsHelper.Web.ViewModels.Administration.Teachers;

@@ -1,6 +1,5 @@
 ﻿namespace StudentsHelper.Services.BusinessLogic.Teachers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 

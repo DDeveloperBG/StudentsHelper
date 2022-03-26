@@ -17,10 +17,11 @@
 
     using StudentsHelper.Common;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.BusinessLogic.Auth;
     using StudentsHelper.Web.Infrastructure.Filters;
+    using StudentsHelper.Web.ViewModels.Teachers;
 
-    [GuestFilter]
+    [GuestOnlyFilter]
     [AllowAnonymous]
 #pragma warning disable SA1649 // File name should match first type name
     public class RegisterModel : PageModel

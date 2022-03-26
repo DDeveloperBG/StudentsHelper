@@ -1,10 +1,11 @@
-﻿namespace StudentsHelper.Services.Auth
+﻿namespace StudentsHelper.Web.ViewModels.Teachers
 {
     using System.ComponentModel.DataAnnotations;
 
     using Microsoft.AspNetCore.Http;
 
     using StudentsHelper.Common;
+    using StudentsHelper.Common.Attributes;
 
     public class TeacherInputModel
     {

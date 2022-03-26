@@ -33,18 +33,20 @@
     int counter = 0;
 }
 
-<div class="row schoolSubjects justify-content-center">
-    @foreach (var schoolSubject in Model.SchoolSubjects)
-    {
-        <div id=@schoolSubject.Id class="col-lg-4 col-sm-6 schoolSubjectItem">
-            <img src=@schoolSubject.IconPath class="img-fluid" style="width: 8rem;">
-            <h4 class="schoolSubjectName w-75 text-center">@schoolSubject.Name</h4>
-        </div>
+<cache>
+    <div class="row schoolSubjects justify-content-center">
+        @foreach (var schoolSubject in Model.SchoolSubjects)
+        {
+            <div id=@schoolSubject.Id class="col-lg-4 col-sm-6 schoolSubjectItem">
+                <img src=@schoolSubject.IconPath class="img-fluid" style="width: 8rem;">
+                <h4 class="schoolSubjectName w-75 text-center">@schoolSubject.Name</h4>
+            </div>
 
-        counter++;
-    }
-</div>
+            counter++;
+        }
+    </div>
+</cache>
 
 @section Scripts {
-   <script src="~/js/Home/home.min.js" asp-append-version="true"></script>
+<script src="~/js/Home/home.min.js" asp-append-version="true"></script>
 }

@@ -3,17 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using StudentsHelper.Common;
-    using StudentsHelper.Data.Common.Repositories;
-    using StudentsHelper.Data.Models;
     using StudentsHelper.Services.CloudStorage;
     using StudentsHelper.Services.Data.Location;
     using StudentsHelper.Services.Data.Paging.NewPaging;
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.Ratings.Models;
+    using StudentsHelper.Services.Data.SchoolSubjects;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.HtmlSanitizer;
+    using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Time;
     using StudentsHelper.Web.ViewModels.Locations;
     using StudentsHelper.Web.ViewModels.Teachers;
@@ -22,31 +24,34 @@
     {
         private readonly ITeachersService teachersService;
         private readonly IStudentsService studentsService;
-        private readonly IRepository<SchoolSubject> schoolSubjects;
+        private readonly ISchoolSubjectsService schoolSubjectsService;
         private readonly IReviewsService reviewsService;
         private readonly ICloudStorageService cloudStorageService;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ILocationService locationService;
         private readonly IPagingService pagingService;
+        private readonly IHtmlSanitizerService htmlSanitizerService;
 
         public TeachersBusinessLogicService(
             ITeachersService teachersService,
             IStudentsService studentsService,
-            IRepository<SchoolSubject> schoolSubjects,
+            ISchoolSubjectsService schoolSubjectsService,
             IReviewsService reviewsService,
             ICloudStorageService cloudStorageService,
             IDateTimeProvider dateTimeProvider,
             ILocationService locationService,
-            IPagingService pagingService)
+            IPagingService pagingService,
+            IHtmlSanitizerService htmlSanitizerService)
         {
             this.teachersService = teachersService;
             this.studentsService = studentsService;
-            this.schoolSubjects = schoolSubjects;
+            this.schoolSubjectsService = schoolSubjectsService;
             this.reviewsService = reviewsService;
             this.cloudStorageService = cloudStorageService;
             this.dateTimeProvider = dateTimeProvider;
             this.locationService = locationService;
             this.pagingService = pagingService;
+            this.htmlSanitizerService = htmlSanitizerService;
         }
 
         public (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(
@@ -54,7 +59,7 @@
             int page,
             LocationInputModel locationInputModel)
         {
-            var subjectName = this.GetSubjectName(subjectId);
+            var subjectName = this.schoolSubjectsService.GetSubjectName(subjectId);
             if (subjectName == null)
             {
                 return (ValidationConstants.GeneralError, null);
@@ -106,6 +111,28 @@
             return teacher;
         }
 
+        public Task UpdateDescription(string userId, string description)
+        {
+            var sanitizedDescription = this.htmlSanitizerService.SanitizeHtml(description);
+
+            return this.teachersService.UpdateDescription(userId, sanitizedDescription);
+        }
+
+        public TeacherDescriptionViewModel GetDescriptionViewModel(string userId)
+        {
+            return this
+                .teachersService
+                .GetAll()
+                .Where(x => x.ApplicationUserId == userId)
+                .To<TeacherDescriptionViewModel>()
+                .SingleOrDefault();
+        }
+
+        public string GetTeacherId(string userId)
+        {
+            return this.teachersService.GetId(userId);
+        }
+
         private IEnumerable<TeacherWithRating> OrderByDefaultCriteria(
            IEnumerable<TeacherWithRating> teachers)
         {
@@ -137,16 +164,6 @@
                             locationInputModel.TownshipId,
                             locationInputModel.PopulatedAreaId,
                             locationInputModel.SchoolId)));
-        }
-
-        private string GetSubjectName(int subjectId)
-        {
-            return this
-                .schoolSubjects
-                .AllAsNoTracking()
-                .Where(x => x.Id == subjectId)
-                .Select(x => x.Name)
-                .SingleOrDefault();
         }
 
         private void SetTeachersIsActiveState(IEnumerable<TeacherWithRating> teachers, DateTime utcNow)

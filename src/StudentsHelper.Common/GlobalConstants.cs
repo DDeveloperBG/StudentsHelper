@@ -51,6 +51,8 @@
         public static class TeacherMessages
         {
             public const string TeacherNotFoundMessage = "Учителя не бе намерен!";
+
+            public const string NotSetHourWage = "Не сте задали почасово заплащане на услугите си, за да го направите отидете в профила си и кликнете на баланс.";
         }
 
         public static class SchoolMessages

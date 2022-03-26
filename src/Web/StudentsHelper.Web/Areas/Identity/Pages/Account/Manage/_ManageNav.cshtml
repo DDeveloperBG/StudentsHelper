@@ -16,7 +16,13 @@
     @if (this.User.IsInRole(GlobalConstants.TeacherRoleName))
     {
         <li>
-            <a class="nav-link profile-nav-a @ManageNavPages.TeacherSchoolNavClass(ViewContext)" id="profile"
+            <a class="nav-link profile-nav-a @ManageNavPages.TeacherDescriptionNavClass(ViewContext)" id="description"
+                asp-area="Identity"
+                asp-controller="TeacherDescription"
+                asp-action="Index">Описание</a>
+        </li>
+        <li>
+            <a class="nav-link profile-nav-a @ManageNavPages.TeacherSchoolNavClass(ViewContext)" id="school"
                 asp-area="Identity" asp-page="/Account/Manage/TeacherSchool">Училище</a>
         </li>
     }

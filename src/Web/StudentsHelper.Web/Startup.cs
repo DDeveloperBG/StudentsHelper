@@ -28,7 +28,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Data.Repositories;
     using StudentsHelper.Data.Seeding;
-    using StudentsHelper.Services.Auth;
+    using StudentsHelper.Services.BusinessLogic.Auth;
     using StudentsHelper.Services.BusinessLogic.Balance;
     using StudentsHelper.Services.BusinessLogic.Consultations;
     using StudentsHelper.Services.BusinessLogic.MontlyPayments;
@@ -48,6 +48,7 @@
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.HtmlSanitizer;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
     using StudentsHelper.Services.Payments;
@@ -167,6 +168,7 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
+            services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<ILocationService, LocationService>();

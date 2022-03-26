@@ -170,5 +170,17 @@
     "inputFiles": [
       "wwwroot/css/style-rules.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/RichTextEditor/prepareEditor.min.js",
+    "inputFiles": [
+      "wwwroot/js/RichTextEditor/prepareEditor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/WarnBeforeLeave/teacherDescriptionWarnBeforeLeave.min.js",
+    "inputFiles": [
+      "wwwroot/js/WarnBeforeLeave/teacherDescriptionWarnBeforeLeave.js"
+    ]
   }
 ]

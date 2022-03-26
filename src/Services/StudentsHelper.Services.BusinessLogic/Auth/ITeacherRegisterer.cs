@@ -1,8 +1,9 @@
-﻿namespace StudentsHelper.Services.Auth
+﻿namespace StudentsHelper.Services.BusinessLogic.Auth
 {
     using System.Threading.Tasks;
 
     using StudentsHelper.Data.Models;
+    using StudentsHelper.Web.ViewModels.Teachers;
 
     public interface ITeacherRegisterer
     {

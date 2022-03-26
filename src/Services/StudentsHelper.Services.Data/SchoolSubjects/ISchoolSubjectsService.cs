@@ -6,10 +6,12 @@
 
     public interface ISchoolSubjectsService
     {
-        IEnumerable<T> GetAll<T>();
+        public IEnumerable<T> GetAll<T>();
 
         public IEnumerable<SchoolSubject> GetAllRaw();
 
         public IEnumerable<int> GetTeacherSubjectsIds(string teacherId);
+
+        public string GetSubjectName(int subjectId);
     }
 }

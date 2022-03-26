@@ -53,6 +53,10 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "library": "tinymce@6.0.1",
+      "destination": "wwwroot/lib/tinymce/"
     }
   ]
 }

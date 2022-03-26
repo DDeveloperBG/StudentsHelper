@@ -34,5 +34,15 @@
                 .Select(x => x.Id)
                 .ToList();
         }
+
+        public string GetSubjectName(int subjectId)
+        {
+            return this
+                .schoolSubjectsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == subjectId)
+                .Select(x => x.Name)
+                .SingleOrDefault();
+        }
     }
 }

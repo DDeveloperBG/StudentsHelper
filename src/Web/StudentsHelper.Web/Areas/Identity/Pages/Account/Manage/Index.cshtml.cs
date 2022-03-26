@@ -1,18 +1,16 @@
 ﻿namespace StudentsHelper.Web.Areas.Identity.Pages.Account.Manage
 {
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using StudentsHelper.Common;
     using StudentsHelper.Data.Common.Repositories;
     using StudentsHelper.Data.Models;
-    using StudentsHelper.Services.Auth;
     using StudentsHelper.Services.CloudStorage;
+    using StudentsHelper.Web.ViewModels.User;
 
     public partial class IndexModel : PageModel
     {
@@ -40,7 +38,7 @@
         public string StatusMessage { get; set; }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public UserProfileInfoModel Input { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -113,31 +111,11 @@
 
             this.ProfilePictureUrl = profilePicUrl;
 
-            this.Input = new InputModel
+            this.Input = new UserProfileInfoModel
             {
                 PhoneNumber = phoneNumber,
                 Name = user.Name,
             };
-        }
-
-        public class InputModel
-        {
-            [DataType(DataType.Upload)]
-            [MaxFileSize(ValidationConstants.PictureValidSize)]
-            [QualificationDocumentAllowedExtensionsAttribute]
-            public IFormFile ProfilePicture { get; set; }
-
-            [Display(Name = "Име")]
-            [StringLength(
-                ValidationConstants.NameMaxLength,
-                MinimumLength = ValidationConstants.NameMinLength,
-                ErrorMessage = "Името може да бъде най - малко {2} и максимум {1} символа дълго.")]
-            [Required(ErrorMessage = ValidationConstants.RequiredError)]
-            public string Name { get; set; }
-
-            [Phone]
-            [Display(Name = "Телефонен номер")]
-            public string PhoneNumber { get; set; }
         }
     }
 }
