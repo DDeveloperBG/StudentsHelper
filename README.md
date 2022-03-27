@@ -74,6 +74,8 @@ Site guest (**visitor**)
 * SignalR
 * Moment.js
 * FullCalendar
+* TinyMCE
+* HtmlSanitizer
 
 ## Database Diagram
 **[URL](https://github.com/DDeveloperBG/StudentsHelperRepoGallery/blob/master/DatabaseDiagram.png)**
