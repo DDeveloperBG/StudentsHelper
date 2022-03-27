@@ -32,6 +32,7 @@
     using StudentsHelper.Services.BusinessLogic.Balance;
     using StudentsHelper.Services.BusinessLogic.Consultations;
     using StudentsHelper.Services.BusinessLogic.MontlyPayments;
+    using StudentsHelper.Services.BusinessLogic.ProfilePicturesValidator;
     using StudentsHelper.Services.BusinessLogic.Students;
     using StudentsHelper.Services.BusinessLogic.Teachers;
     using StudentsHelper.Services.CloudStorage;
@@ -48,6 +49,7 @@
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
+    using StudentsHelper.Services.FaceValidation;
     using StudentsHelper.Services.HtmlSanitizer;
     using StudentsHelper.Services.Mapping;
     using StudentsHelper.Services.Messaging;
@@ -168,6 +170,7 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
+            services.AddTransient<IProfilePicturesValidator, ProfilePicturesValidator>();
             services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChatService, ChatService>();
@@ -201,6 +204,10 @@
                        this.configuration["Cloudinary:CloudName"],
                        this.configuration["Cloudinary:ApiKey"],
                        this.configuration["Cloudinary:ApiSecret"]));
+            services.AddTransient<IFaceValidation>(_
+              => new FaceValidation(
+                      this.configuration["FaceValidator:EndPoint"],
+                      this.configuration["FaceValidator:Key"]));
 
             services.AddTransient<IBalanceBusinessLogicService, BalanceBusinessLogicService>();
             services.AddTransient<IConsultationsBusinessLogicService, ConsultationsBusinessLogicService>();
@@ -274,6 +281,12 @@
                     "PayMontlySalaries",
                     x => x.PayMontlySalariesAsync(),
                     Cron.Monthly);
+
+            recurringJobManager
+                .AddOrUpdate<IProfilePicturesValidator>(
+                    "ProfilePicturesValidator",
+                    x => x.ValidateProfilePicturesAsync(),
+                    Cron.MinuteInterval(10));
         }
 
         private class HangfireAuthorizationFilter : IDashboardAuthorizationFilter

@@ -76,6 +76,8 @@ Site guest (**visitor**)
 * FullCalendar
 * TinyMCE
 * HtmlSanitizer
+* Azure Cognitive Services
+* Azure Face Recognition API
 
 ## Database Diagram
 **[URL](https://github.com/DDeveloperBG/StudentsHelperRepoGallery/blob/master/DatabaseDiagram.png)**

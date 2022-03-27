@@ -11,6 +11,8 @@ namespace StudentsHelper.Data.Models
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
+        private string picturePath;
+
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid().ToString();
@@ -19,7 +21,21 @@ namespace StudentsHelper.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
-        public string PicturePath { get; set; }
+        /// <summary>
+        /// Gets or Sets PicturePath.
+        /// Important: On set IsPictureValidated value is set to false.
+        /// </summary>
+        public string PicturePath
+        {
+            get => this.picturePath;
+            set
+            {
+                this.picturePath = value;
+                this.IsPictureValidated = false;
+            }
+        }
+
+        public bool IsPictureValidated { get; set; }
 
         [Required]
         public string Name { get; set; }
