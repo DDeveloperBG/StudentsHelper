@@ -182,5 +182,11 @@
     "inputFiles": [
       "wwwroot/js/WarnBeforeLeave/teacherDescriptionWarnBeforeLeave.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/allTeachers.min.css",
+    "inputFiles": [
+      "wwwroot/css/allTeachers.css"
+    ]
   }
 ]

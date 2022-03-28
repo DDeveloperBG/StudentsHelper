@@ -1,15 +1,47 @@
-﻿@using StudentsHelper.Common
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@using StudentsHelper.Common
+@using StudentsHelper.Services.BusinessLogic.QueryStringUpdater
 @using StudentsHelper.Web.ViewModels.Teachers
+@inject IQueryStringUpdatingService queryStringUpdater
 
 @model TeachersOfSubjectType<StudentsHelper.Services.Data.Ratings.Models.TeacherWithRating>
 
 @{
     ViewData["Title"] = $"Учители по {Model.SubjectName}";
+
+    const string sortImgName = "sort.png";
+    const string ascendingSortImgName = "ascending-sort.png";
+    const string descendingSortImgName = "descending-sort.png";
+
+    string currentSortBy = Context.Request.Query["sortBy"].FirstOrDefault();
+    bool isAscending = bool.Parse(Context.Request.Query["isAscending"].FirstOrDefault() ?? "true");
+
+    string currentUrl = Context.Request.GetDisplayUrl();
+
+    Func<string, bool, string> getUpdatedQueryString = (newSortBy, isAscending)
+        => queryStringUpdater.UpdateSortByParameter(
+            currentUrl,
+            newSortBy,
+            isAscending);
+
+    Func<string, (string OrderImg, bool IsAscending)> getOrderByTypeInfo = (type) =>
+    {
+        bool isAscendingForCurrent = true;
+        string orderImg = sortImgName;
+        if (currentSortBy == type)
+        {
+            isAscendingForCurrent = !isAscending;
+            orderImg = isAscendingForCurrent ? ascendingSortImgName : descendingSortImgName;
+        }
+
+        return (orderImg, isAscendingForCurrent);
+    };
 }
 
 @section Css
 {
-    <link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/allTeachers.min.css" asp-append-version="true" />
 }
 
 <h1 class="mt-3 text-center">@ViewData["Title"]</h1>
@@ -45,6 +77,35 @@
         </form>
     </div>
     <div class="col-md-8 container mt-3">
+        <div class="background-container mb-2 pt-1 row">
+            @{
+                var nameSortTypeInfo = getOrderByTypeInfo("name");
+            }
+            <a href="@getUpdatedQueryString("name", nameSortTypeInfo.IsAscending)" class="col-5 mt-auto mb-auto ml-2 text-decoration-none">
+                <h5 class="light-header">
+                    Име и фамилия 
+                    <img src="~/img/sort/@(nameSortTypeInfo.OrderImg)" class="sort-img" />
+                </h5>
+            </a>
+            @{
+                var hourWageSortTypeInfo = getOrderByTypeInfo("hourWage");
+            }
+            <a href="@getUpdatedQueryString("hourWage", hourWageSortTypeInfo.IsAscending)" class="col-2 ml-5 text-center mt-auto mb-auto text-decoration-none">
+                <h5 class="light-header">
+                    Лв./час 
+                    <img src="~/img/sort/@(hourWageSortTypeInfo.OrderImg)" class="sort-img" />
+                </h5>
+            </a>
+            @{
+                var ratingSortTypeInfo = getOrderByTypeInfo("rating");
+            }
+            <a href="@getUpdatedQueryString("rating", ratingSortTypeInfo.IsAscending)" class="col-3 text-center mt-auto mb-auto text-decoration-none">
+                <h5 id="rating-header" class="light-header">
+                    Рейтинг 
+                    <img src="~/img/sort/@(ratingSortTypeInfo.OrderImg)" class="sort-img" />
+                </h5>
+            </a>
+        </div>
         @foreach (var item in Model.Teachers.Results)
         {
             <div class="mb-2 p-2 row background-container" style="border-radius: 6px;">
@@ -54,7 +115,7 @@
                     @item.ApplicationUserName
                 </p>
                 <p class="col-2 m-auto">
-                    @item.HourWage лв/час
+                    @item.HourWage лв./час
                 </p>
                 <p class="col-1 m-auto pr-0">
                     @item.AverageRating <img class="mb-1" src="~/img/star.png">

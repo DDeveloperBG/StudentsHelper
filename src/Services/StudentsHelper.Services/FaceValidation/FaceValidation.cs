@@ -27,7 +27,7 @@
             detectedFaces = await this.faceClient.Face.DetectWithStreamAsync(
                 imageStream,
                 detectionModel: DetectionModel.Detection03,
-                recognitionModel: "recognition_04");
+                recognitionModel: RecognitionModel.Recognition04);
 
             return detectedFaces.Count > 0;
         }

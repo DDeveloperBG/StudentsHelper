@@ -25,11 +25,16 @@
             this.teachersBusinessLogicService = teachersBusinessLogicService;
         }
 
-        public IActionResult All(int subjectId, LocationInputModel locationInputModel, int page = 1)
+        public IActionResult All(
+            int subjectId,
+            LocationInputModel locationInputModel,
+            int page = 1,
+            string sortBy = "default",
+            bool? isAscending = null)
         {
             var result = this
                 .teachersBusinessLogicService
-                .GetAllViewModel(subjectId, page, locationInputModel);
+                .GetAllViewModel(subjectId, page, locationInputModel, sortBy, isAscending);
 
             if (result.ErrorMessage != null)
             {

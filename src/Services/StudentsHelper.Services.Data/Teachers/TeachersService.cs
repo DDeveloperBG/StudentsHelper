@@ -45,8 +45,9 @@
         public IQueryable<Teacher> GetAllOfType(int subjectId)
         {
             return this.GetAllAsNoTracking()
+                .Where(x => x.IsValidated && !x.IsRejected && x.HourWage != null)
                 .Where(x => x.Subjects
-                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
+                    .Any(x => x.Id == subjectId));
         }
 
         public IQueryable<Teacher> GetAllOfType(int subjectId, IQueryable<Teacher> teachers)

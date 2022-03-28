@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http.Extensions
-@using StudentsHelper.Services.Data.Paging.NewPaging
+@using StudentsHelper.Services.BusinessLogic.QueryStringUpdater
 @using StudentsHelper.Web.ViewModels.Paging
-@inject IPagingService pagingService
+@inject IQueryStringUpdatingService queryStringUpdater
 
 @model PagingData
 
@@ -17,13 +17,9 @@
 
     string currentUrl = Context.Request.GetDisplayUrl();
 
-    var queryString = Context.Request.QueryString.Value;
-    var splitedQueryString = queryString.Split(new char[] { '&', '?' }, StringSplitOptions.RemoveEmptyEntries);
     Func<int, string> getUpdatedQueryString = (newPage)
-        => pagingService.UpdateQueryString(
+        => queryStringUpdater.UpdatePageParameter(
             currentUrl,
-            queryString,
-            splitedQueryString,
             newPage);
 
     <nav class="mt-4">

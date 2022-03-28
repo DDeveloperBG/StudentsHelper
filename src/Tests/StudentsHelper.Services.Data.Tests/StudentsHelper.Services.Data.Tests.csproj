@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\StudentsHelper.Data\StudentsHelper.Data.csproj" />
+    <ProjectReference Include="..\..\Services\StudentsHelper.Services.BusinessLogic\StudentsHelper.Services.BusinessLogic.csproj" />
     <ProjectReference Include="..\..\Services\StudentsHelper.Services.Data\StudentsHelper.Services.Data.csproj" />
   </ItemGroup>
 

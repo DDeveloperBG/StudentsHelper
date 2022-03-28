@@ -8,7 +8,12 @@
 
     public interface ITeachersBusinessLogicService
     {
-        (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(int subjectId, int page, LocationInputModel locationInputModel);
+        (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(
+            int subjectId,
+            int page,
+            LocationInputModel locationInputModel,
+            string sortBy,
+            bool? isAscending);
 
         TeacherDetails GetDetailsViewModel(string teacherId, string userId, bool isUserStudent);
 

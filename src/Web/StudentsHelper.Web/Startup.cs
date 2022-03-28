@@ -33,6 +33,7 @@
     using StudentsHelper.Services.BusinessLogic.Consultations;
     using StudentsHelper.Services.BusinessLogic.MontlyPayments;
     using StudentsHelper.Services.BusinessLogic.ProfilePicturesValidator;
+    using StudentsHelper.Services.BusinessLogic.QueryStringUpdater;
     using StudentsHelper.Services.BusinessLogic.Students;
     using StudentsHelper.Services.BusinessLogic.Teachers;
     using StudentsHelper.Services.CloudStorage;
@@ -170,6 +171,7 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
+            services.AddTransient<IQueryStringUpdatingService, QueryStringUpdatingService>();
             services.AddTransient<IProfilePicturesValidator, ProfilePicturesValidator>();
             services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
             services.AddTransient<IContactService, ContactService>();

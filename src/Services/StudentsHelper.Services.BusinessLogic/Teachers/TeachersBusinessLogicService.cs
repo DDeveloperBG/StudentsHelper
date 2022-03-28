@@ -57,7 +57,9 @@
         public (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(
             int subjectId,
             int page,
-            LocationInputModel locationInputModel)
+            LocationInputModel locationInputModel,
+            string sortBy,
+            bool? isAscending)
         {
             var subjectName = this.schoolSubjectsService.GetSubjectName(subjectId);
             if (subjectName == null)
@@ -75,8 +77,8 @@
                 teachersAsQueryable = this.GetTeachersOfSubjectTypeWithRating(subjectId);
             }
 
+            teachersAsQueryable = this.OrderByCriteria(teachersAsQueryable.ToList().AsQueryable(), sortBy, isAscending ?? true);
             var teachers = this.pagingService.GetPaged(teachersAsQueryable, page, 10);
-            teachers.Results = this.OrderByDefaultCriteria(teachers.Results).ToList();
 
             this.SetTeachersIsActiveState(teachers.Results, this.dateTimeProvider.GetUtcNow());
 
@@ -133,8 +135,43 @@
             return this.teachersService.GetId(userId);
         }
 
-        private IEnumerable<TeacherWithRating> OrderByDefaultCriteria(
-           IEnumerable<TeacherWithRating> teachers)
+        private static bool IsTeacherActive(DateTime utcNow, DateTime lastTimeActive)
+        {
+            if (lastTimeActive == default(DateTime))
+            {
+                return false;
+            }
+
+            return (utcNow - lastTimeActive).TotalMinutes < 2;
+        }
+
+        private IQueryable<TeacherWithRating> OrderByCriteria(
+            IQueryable<TeacherWithRating> teachers,
+            string sortBy,
+            bool isAscending)
+        {
+            if (isAscending)
+            {
+                switch (sortBy)
+                {
+                    case "name": return teachers.OrderBy(x => x.ApplicationUserName);
+                    case "hourWage": return teachers.OrderBy(x => x.HourWage);
+                    case "rating": return teachers.OrderBy(x => x.AverageRating);
+                }
+            }
+
+            switch (sortBy)
+            {
+                case "name": return teachers.OrderByDescending(x => x.ApplicationUserName);
+                case "hourWage": return teachers.OrderByDescending(x => x.HourWage);
+                case "rating": return teachers.OrderByDescending(x => x.AverageRating);
+            }
+
+            return this.OrderByDefaultCriteria(teachers);
+        }
+
+        private IQueryable<TeacherWithRating> OrderByDefaultCriteria(
+            IQueryable<TeacherWithRating> teachers)
         {
             return teachers
                 .OrderByDescending(x => x.IsActive)
@@ -173,19 +210,7 @@
                 GlobalVariables.UsersActivityDictionary
                     .TryGetValue(teacher.ApplicationUserEmail, out DateTime lastTimeActive);
 
-                teacher.IsActive = this.IsTeacherActive(utcNow, lastTimeActive);
-            }
-        }
-
-        private bool IsTeacherActive(DateTime utcNow, DateTime lastTimeActive)
-        {
-            if (lastTimeActive == default(DateTime))
-            {
-                return false;
-            }
-            else
-            {
-                return (utcNow - lastTimeActive).TotalMinutes < 2;
+                teacher.IsActive = IsTeacherActive(utcNow, lastTimeActive);
             }
         }
     }
