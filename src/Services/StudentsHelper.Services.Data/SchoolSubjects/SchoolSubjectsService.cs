@@ -9,9 +9,9 @@
 
     public class SchoolSubjectsService : ISchoolSubjectsService
     {
-        private readonly IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository;
+        private readonly IRepository<SchoolSubject> schoolSubjectsRepository;
 
-        public SchoolSubjectsService(IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository)
+        public SchoolSubjectsService(IRepository<SchoolSubject> schoolSubjectsRepository)
         {
             this.schoolSubjectsRepository = schoolSubjectsRepository;
         }

@@ -77,7 +77,7 @@
                 teachersAsQueryable = this.GetTeachersOfSubjectTypeWithRating(subjectId);
             }
 
-            teachersAsQueryable = this.OrderByCriteria(teachersAsQueryable.ToList().AsQueryable(), sortBy, isAscending ?? true);
+            teachersAsQueryable = this.OrderByCriteria(teachersAsQueryable, sortBy, isAscending ?? true);
             var teachers = this.pagingService.GetPaged(teachersAsQueryable, page, 10);
 
             this.SetTeachersIsActiveState(teachers.Results, this.dateTimeProvider.GetUtcNow());
@@ -174,8 +174,7 @@
             IQueryable<TeacherWithRating> teachers)
         {
             return teachers
-                .OrderByDescending(x => x.IsActive)
-                .ThenByDescending(x => x.AverageRating)
+                .OrderByDescending(x => x.AverageRating)
                 .ThenBy(x => x.HourWage);
         }
 
@@ -183,9 +182,9 @@
         {
             return this
                 .reviewsService
-                .GetTeachersRating(this
-                    .teachersService
-                    .GetAllOfType(subjectId));
+                .GetTeachersRating(
+                    this.teachersService
+                        .GetAllOfType(subjectId));
         }
 
         private IQueryable<TeacherWithRating> GetTeachersOfSubjectTypeWithRatingInLocation(

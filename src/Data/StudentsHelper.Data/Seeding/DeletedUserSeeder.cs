@@ -16,9 +16,9 @@
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            var usersRepository = serviceProvider.GetRequiredService<IDeletableEntityRepository<ApplicationUser>>();
+            var usersRepository = serviceProvider.GetRequiredService<IRepository<ApplicationUser>>();
 
-            if (usersRepository.AllAsNoTrackingWithDeleted().Any(x => x.UserName == GlobalConstants.DeletedUserUsername))
+            if (usersRepository.AllAsNoTracking().Any(x => x.UserName == GlobalConstants.DeletedUserUsername))
             {
                 return;
             }

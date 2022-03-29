@@ -86,7 +86,7 @@
         {
             this.schoolSubjects = new List<SchoolSubject>();
 
-            var repository = GetMockedClasses.MockIDeletableEntityRepository(this.schoolSubjects);
+            var repository = GetMockedClasses.MockIRepository(this.schoolSubjects);
 
             this.schoolSubjectsService = new SchoolSubjectsService(repository.Object);
         }

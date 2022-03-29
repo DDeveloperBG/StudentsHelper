@@ -5,7 +5,7 @@
 
     using StudentsHelper.Data.Common.Models;
 
-    public class SchoolSubject : BaseDeletableModel<int>
+    public class SchoolSubject : BaseModel<int>
     {
         public SchoolSubject()
         {

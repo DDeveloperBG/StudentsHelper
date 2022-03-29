@@ -445,7 +445,7 @@
 
             this.schoolSubjects = new List<SchoolSubject>();
 
-            var schoolSubjectsRepository = GetMockedClasses.MockIDeletableEntityRepository(this.schoolSubjects);
+            var schoolSubjectsRepository = GetMockedClasses.MockIRepository(this.schoolSubjects);
 
             var deletedUser = new ApplicationUser
             {

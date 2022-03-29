@@ -14,12 +14,12 @@
     public class TeachersService : ITeachersService
     {
         private readonly IDeletableEntityRepository<Teacher> teachersRepository;
-        private readonly IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository;
+        private readonly IRepository<SchoolSubject> schoolSubjectsRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
         public TeachersService(
             IDeletableEntityRepository<Teacher> teachersRepository,
-            IDeletableEntityRepository<SchoolSubject> schoolSubjectsRepository,
+            IRepository<SchoolSubject> schoolSubjectsRepository,
             UserManager<ApplicationUser> userManager)
         {
             this.teachersRepository = teachersRepository;

@@ -1,5 +1,4 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace StudentsHelper.Data.Models
+﻿namespace StudentsHelper.Data.Models
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +8,7 @@ namespace StudentsHelper.Data.Models
 
     using StudentsHelper.Data.Common.Models;
 
-    public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
+    public class ApplicationUser : IdentityUser, IAuditInfo
     {
         private string picturePath;
 
