@@ -12,6 +12,7 @@
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.Ratings.Models;
     using StudentsHelper.Services.Data.SchoolSubjects;
+    using StudentsHelper.Services.Data.StudentFavouriteTeachers;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.Teachers;
     using StudentsHelper.Services.HtmlSanitizer;
@@ -31,6 +32,7 @@
         private readonly ILocationService locationService;
         private readonly IPagingService pagingService;
         private readonly IHtmlSanitizerService htmlSanitizerService;
+        private readonly IStudentFavouriteTeachersService studentFavouriteTeachersService;
 
         public TeachersBusinessLogicService(
             ITeachersService teachersService,
@@ -41,7 +43,8 @@
             IDateTimeProvider dateTimeProvider,
             ILocationService locationService,
             IPagingService pagingService,
-            IHtmlSanitizerService htmlSanitizerService)
+            IHtmlSanitizerService htmlSanitizerService,
+            IStudentFavouriteTeachersService studentFavouriteTeachersService)
         {
             this.teachersService = teachersService;
             this.studentsService = studentsService;
@@ -52,6 +55,7 @@
             this.locationService = locationService;
             this.pagingService = pagingService;
             this.htmlSanitizerService = htmlSanitizerService;
+            this.studentFavouriteTeachersService = studentFavouriteTeachersService;
         }
 
         public (string ErrorMessage, TeachersOfSubjectType<TeacherWithRating> ViewModel) GetAllViewModel(
@@ -100,10 +104,12 @@
 
             if (isUserStudent)
             {
-                var studentId = this.studentsService.GetId(userId);
-                var hasAlreadyReviewed = this.reviewsService.HasStudentReviewedTeacher(studentId, teacherId);
+                string studentId = this.studentsService.GetId(userId);
+                bool hasAlreadyReviewed = this.reviewsService.HasStudentReviewedTeacher(studentId, teacherId);
+                bool isFavourite = this.studentFavouriteTeachersService.IsTeacherFavouriteToStudent(studentId, teacherId);
 
                 teacher.HasUserReviewedTeacher = hasAlreadyReviewed;
+                teacher.IsFavourite = isFavourite;
             }
             else
             {
@@ -120,13 +126,13 @@
             return this.teachersService.UpdateDescription(userId, sanitizedDescription);
         }
 
-        public TeacherDescriptionViewModel GetDescriptionViewModel(string userId)
+        public TeacherDescriptionInputModel GetDescriptionViewModel(string userId)
         {
             return this
                 .teachersService
                 .GetAll()
                 .Where(x => x.ApplicationUserId == userId)
-                .To<TeacherDescriptionViewModel>()
+                .To<TeacherDescriptionInputModel>()
                 .SingleOrDefault();
         }
 

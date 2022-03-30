@@ -2,9 +2,10 @@
 @using StudentsHelper.Common
 @using StudentsHelper.Services.BusinessLogic.QueryStringUpdater
 @using StudentsHelper.Web.ViewModels.Teachers
+@using StudentsHelper.Services.Data.Ratings.Models
 @inject IQueryStringUpdatingService queryStringUpdater
 
-@model TeachersOfSubjectType<StudentsHelper.Services.Data.Ratings.Models.TeacherWithRating>
+@model TeachersOfSubjectType<TeacherWithRating>
 
 @{
     ViewData["Title"] = $"Учители по {Model.SubjectName}";
@@ -78,10 +79,11 @@
     </div>
     <div class="col-md-8 container mt-3">
         <div class="background-container mb-2 pt-1 row">
+            <div class="col-1 mr-2"></div>
             @{
                 var nameSortTypeInfo = getOrderByTypeInfo("name");
             }
-            <a href="@getUpdatedQueryString("name", nameSortTypeInfo.IsAscending)" class="col-5 mt-auto mb-auto ml-2 text-decoration-none">
+            <a href="@getUpdatedQueryString("name", nameSortTypeInfo.IsAscending)" class="col-4 mb-auto ml-4 mt-auto text-decoration-none">
                 <h5 class="light-header">
                     Име и фамилия 
                     <img src="~/img/sort/@(nameSortTypeInfo.OrderImg)" class="sort-img" />
@@ -90,7 +92,7 @@
             @{
                 var hourWageSortTypeInfo = getOrderByTypeInfo("hourWage");
             }
-            <a href="@getUpdatedQueryString("hourWage", hourWageSortTypeInfo.IsAscending)" class="col-2 ml-5 text-center mt-auto mb-auto text-decoration-none">
+            <a href="@getUpdatedQueryString("hourWage", hourWageSortTypeInfo.IsAscending)" class="col-2 mb-auto ml-4 mt-auto text-center text-decoration-none">
                 <h5 class="light-header">
                     Лв./час 
                     <img src="~/img/sort/@(hourWageSortTypeInfo.OrderImg)" class="sort-img" />

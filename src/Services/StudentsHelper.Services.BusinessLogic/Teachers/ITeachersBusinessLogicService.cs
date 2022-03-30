@@ -19,7 +19,7 @@
 
         Task UpdateDescription(string userId, string description);
 
-        TeacherDescriptionViewModel GetDescriptionViewModel(string userId);
+        TeacherDescriptionInputModel GetDescriptionViewModel(string userId);
 
         string GetTeacherId(string userId);
     }

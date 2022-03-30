@@ -1,6 +1,7 @@
 ﻿@using StudentsHelper.Common
 @using StudentsHelper.Web.ViewModels.Reviews
-@model StudentsHelper.Services.Data.Ratings.Models.TeacherDetails
+@using StudentsHelper.Services.Data.Ratings.Models
+@model TeacherDetails
 
 @{
     ViewData["Title"] = Model.ApplicationUserName;
@@ -31,8 +32,25 @@
            asp-controller="Chat"
            asp-action="StartChat"
            asp-route-teacherUserId="@Model.ApplicationUserId">
-                <img id="chat-img" src="/img/chat-icon.png" alt="Chat" style="width: 60px;">
+                <img id="chat-img" src="/img/chat-icon.png" alt="Chat">
             </a>
+        </div>
+
+        <div class="m-1" style="position: absolute; right: 0; top: 66px;">
+            <form asp-area="Favourite"
+                    asp-controller="FavouriteTeachers"
+                    asp-action="AddOrRemove"
+                    asp-route-teacherUserId="@Model.ApplicationUserId"
+                    asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">
+                <button id="heart-img-btn" type="submit" class="btn">
+                    @{
+                        const string fullHeartImgName = "heart.png";
+                        const string emptyHeartImgName = "empty-heart.png";
+                        string currentHeartImg = Model.IsFavourite ? fullHeartImgName : emptyHeartImgName;
+                    }
+                    <img id="heart-img" src="/img/favourite/@(currentHeartImg)" alt="Favourite">
+                </button>
+            </form>
         </div>
     }
     <div>
@@ -44,7 +62,6 @@
     {
         <hr />
         <div>
-            <h5 class="font-weight-normal text-left">ЗА УЧИТЕЛЯ:</h5>
             <p>
                 @Html.Raw(Model.Description)
             </p>

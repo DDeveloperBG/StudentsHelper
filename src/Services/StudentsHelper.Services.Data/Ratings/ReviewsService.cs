@@ -1,7 +1,6 @@
 ﻿namespace StudentsHelper.Services.Data.Ratings
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -43,25 +42,7 @@
             return this.teachersService
                 .GetAllAsNoTracking()
                 .Where(x => x.Id == teacherId)
-                .Select(x => new TeacherDetails
-                {
-                    Id = x.Id,
-                    Description = x.Description,
-                    ApplicationUserId = x.ApplicationUser.Id,
-                    ApplicationUserEmail = x.ApplicationUser.Email,
-                    ApplicationUserName = x.ApplicationUser.Name,
-                    ApplicationUserPicturePath = x.ApplicationUser.PicturePath,
-                    HourWage = x.HourWage,
-                    RatingRangesCount = new int[]
-                    {
-                        GetReviewsTypeCount(x.Reviews, 1),
-                        GetReviewsTypeCount(x.Reviews, 2),
-                        GetReviewsTypeCount(x.Reviews, 3),
-                        GetReviewsTypeCount(x.Reviews, 4),
-                        GetReviewsTypeCount(x.Reviews, 5),
-                    },
-                    AverageRating = x.Reviews.Count != 0 ? Math.Round(x.Reviews.Average(x => x.Rating), 2) : 0,
-                })
+                .To<TeacherDetails>()
                 .SingleOrDefault();
         }
 
@@ -118,11 +99,6 @@
             this.reviewsRepository.Delete(review);
             await this.reviewsRepository.SaveChangesAsync();
             return true;
-        }
-
-        private static int GetReviewsTypeCount(ICollection<Review> reviews, int type)
-        {
-            return reviews.Select(x => x.Rating).Where(x => x == type).Count();
         }
     }
 }

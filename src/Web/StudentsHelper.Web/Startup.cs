@@ -34,6 +34,7 @@
     using StudentsHelper.Services.BusinessLogic.MontlyPayments;
     using StudentsHelper.Services.BusinessLogic.ProfilePicturesValidator;
     using StudentsHelper.Services.BusinessLogic.QueryStringUpdater;
+    using StudentsHelper.Services.BusinessLogic.StudentFavouriteTeachers;
     using StudentsHelper.Services.BusinessLogic.Students;
     using StudentsHelper.Services.BusinessLogic.Teachers;
     using StudentsHelper.Services.CloudStorage;
@@ -47,6 +48,7 @@
     using StudentsHelper.Services.Data.Paging.NewPaging;
     using StudentsHelper.Services.Data.Ratings;
     using StudentsHelper.Services.Data.SchoolSubjects;
+    using StudentsHelper.Services.Data.StudentFavouriteTeachers;
     using StudentsHelper.Services.Data.Students;
     using StudentsHelper.Services.Data.StudentTransactions;
     using StudentsHelper.Services.Data.Teachers;
@@ -171,6 +173,7 @@
             services.AddTransient<TownshipsLoader>();
             services.AddTransient<PopulatedAreasLoader>();
             services.AddTransient<SchoolsLoader>();
+            services.AddTransient<IStudentFavouriteTeachersService, StudentFavouriteTeachersService>();
             services.AddTransient<IQueryStringUpdatingService, QueryStringUpdatingService>();
             services.AddTransient<IProfilePicturesValidator, ProfilePicturesValidator>();
             services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
@@ -216,6 +219,7 @@
             services.AddTransient<IAdministrationOfTeachersBusinessLogicService, AdministrationOfTeachersBusinessLogicService>();
             services.AddTransient<ITeachersBusinessLogicService, TeachersBusinessLogicService>();
             services.AddTransient<IAdministrationOfStudentsBusinessLogicService, AdministrationOfStudentsBusinessLogicService>();
+            services.AddTransient<IStudentFavouriteTeachersBusinessLogicService, StudentFavouriteTeachersBusinessLogicService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

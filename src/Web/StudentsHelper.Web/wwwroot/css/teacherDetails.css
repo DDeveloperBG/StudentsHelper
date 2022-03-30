@@ -3,9 +3,26 @@
     border: 1px solid #d0d0d0;
 }
 
-#chat-img:hover {
-    transform: scale(0.94);
+#chat-img {
+    width: 60px;
 }
+
+    #chat-img:hover {
+        transform: scale(0.94);
+    }
+
+#heart-img-btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+#heart-img {
+    width: 60px;
+}
+
+    #heart-img:hover {
+        transform: scale(0.94);
+    }
 
 .star {
     height: 20px;
@@ -21,7 +38,7 @@
 .paging-nav-img {
     width: 15px;
     height: 15px;
-    background-size: 100% 100%!important;
+    background-size: 100% 100% !important;
 }
 
 .paging-nav-img-holder {

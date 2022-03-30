@@ -6,6 +6,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using StudentsHelper.Data.Common.Models;
+    using StudentsHelper.Data.Models.Favourite;
 
     public class Student : BaseDeletableModel<string>
     {
@@ -14,6 +15,7 @@
             this.Id = Guid.NewGuid().ToString();
             this.Reviews = new HashSet<Review>();
             this.Transactions = new HashSet<StudentTransaction>();
+            this.StudentFavouriteTeachers = new HashSet<StudentFavouriteTeacher>();
         }
 
         [Required]
@@ -25,5 +27,7 @@
         public ICollection<Review> Reviews { get; set; }
 
         public ICollection<StudentTransaction> Transactions { get; set; }
+
+        public ICollection<StudentFavouriteTeacher> StudentFavouriteTeachers { get; set; }
     }
 }

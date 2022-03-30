@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Http.Extensions
+@using StudentsHelper.Common
+@using StudentsHelper.Services.BusinessLogic.QueryStringUpdater
+@using StudentsHelper.Web.ViewModels.StudentFavouriteTeacher
+@using StudentsHelper.Web.ViewModels.Teachers
+
+@model AllStudentFavouriteTeachersViewModel
+
+@section Css
+{
+<link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/allTeachers.min.css" asp-append-version="true" />
+}
+
+<h1 class="mt-3 text-center">Любими учители</h1>
+
+<div class="row">
+    <div class="col-md-8 container mt-3">
+        <div class="background-container mb-2 pt-1 row">
+            <div class="col-1 mr-5"></div>
+            <div class="col-5 mt-auto mb-auto ml-2 text-decoration-none">
+                <h5 class="light-header">
+                    Име и фамилия
+                </h5>
+            </div>
+        </div>
+        @foreach (var item in Model.Teachers.Results)
+        {
+            <div class="mb-2 p-2 row background-container" style="border-radius: 6px;">
+                <vc:user-profile-picture picture-path="@item.ApplicationUserPicturePath" email="@item.ApplicationUserEmail">
+                </vc:user-profile-picture>
+                <p class="col-6 m-auto">
+                    @item.ApplicationUserName
+                </p>
+                <div class="col-1">
+                    <form asp-area="Favourite"
+                      asp-controller="FavouriteTeachers"
+                      asp-action="AddOrRemove"
+                      asp-route-teacherUserId="@item.ApplicationUserId"
+                      asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">
+                        <button id="heart-img-btn" type="submit" class="btn">
+                            <img id="heart-img" src="/img/favourite/heart.png" alt="Favourite">
+                        </button>
+                    </form>
+                </div>
+                <a asp-area="" asp-controller="Teachers" asp-action="Details" asp-route-teacherId="@item.Id" class="col-2 m-auto btn btn-info">
+                    Детайли
+                </a>
+            </div>
+        }
+        @await Html.PartialAsync("~/Views/Shared/PartialViews/_PagingNavigationPartial.cshtml", Model.Teachers.PagingData)
+    </div>
+</div>

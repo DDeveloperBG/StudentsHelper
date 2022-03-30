@@ -37,7 +37,8 @@
                     string parameterKey,
                     string newValue)
         {
-            string queryString = fullUrl.Substring(fullUrl.IndexOf('?'));
+            int queryStringStartIndex = fullUrl.IndexOf('?');
+            string queryString = queryStringStartIndex != -1 ? fullUrl.Substring(queryStringStartIndex) : string.Empty;
             if (!string.IsNullOrEmpty(queryString))
             {
                 fullUrl = fullUrl.Replace(queryString, string.Empty);

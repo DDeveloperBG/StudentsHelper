@@ -5,7 +5,7 @@
     using StudentsHelper.Data.Models;
     using StudentsHelper.Services.Mapping;
 
-    public class TeacherDescriptionViewModel : IMapFrom<Teacher>
+    public class TeacherDescriptionInputModel : IMapFrom<Teacher>
     {
         [MaxLength(
             1000,

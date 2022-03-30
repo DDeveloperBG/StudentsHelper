@@ -12,6 +12,7 @@
     using StudentsHelper.Data.Common.Models;
     using StudentsHelper.Data.Models;
     using StudentsHelper.Data.Models.Contact;
+    using StudentsHelper.Data.Models.Favourite;
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -54,6 +55,8 @@
         public DbSet<ChatGroupUsers> ChatGroupUsers { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<StudentFavouriteTeacher> StudentsFavouriteTeachers { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
