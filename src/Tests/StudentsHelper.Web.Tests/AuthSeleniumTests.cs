@@ -139,10 +139,8 @@
             // Finish registration
             this.browser.FindElement(By.Id("register-submit")).Click();
 
-            // Throws error because of stripe fails in local enviroment
-            Assert.Equal($"{this.server.RootUri}{RegisterPagePath}", this.browser.Url);
-            var errorTitleEl = this.browser.FindElement(By.CssSelector(".error-title"));
-            Assert.Equal("Woops!\r\nSomething went wrong :(", errorTitleEl.Text);
+            const string stripeUrl = "https://connect.stripe.com/express/onboarding/";
+            Assert.Contains(stripeUrl, this.browser.Url);
         }
 
         public void Dispose()
@@ -178,6 +176,10 @@
         private void SetValueOfSelectElement(string name, string value)
         {
             var el = this.browser.FindElement(By.CssSelector($"select[name='{name}'"));
+
+            WebDriverWait w = new WebDriverWait(this.browser, TimeSpan.FromSeconds(1));
+            w.Until(x => el.FindElement(By.CssSelector("option")));
+
             var selectEl = new SelectElement(el);
             selectEl.SelectByValue(value);
 

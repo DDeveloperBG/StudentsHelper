@@ -1,4 +1,15 @@
-﻿window.addEventListener('load', () => {
+﻿document.addEventListener('load', runEngine);
+
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+function engine() {
     var profilePicEl = document.getElementById('navbar-profile-pic');
     if (profilePicEl != null) profilePicEl.addEventListener('click', showProfilePic);
 
@@ -14,4 +25,4 @@
     function refreshUserStatus() {
         fetch('/?userStatusUpdate=true');
     }
-});
+}

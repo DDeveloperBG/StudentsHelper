@@ -1,4 +1,5 @@
-﻿window.addEventListener('load', engine);
+﻿window.addEventListener('load', runEngine);
+
 var hiddenClassName = 'hidden';
 var clickEventName = 'click';
 var chooseOptionEventName = 'change';
@@ -9,6 +10,15 @@ var defaultLocationNames = {
     populatedAreas: 'Населено място',
     "TeacherModel.SchoolId": 'Училище',
 };
+
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
 function engine() {
     const partsController = ((currentPartId = 1) => {

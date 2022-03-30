@@ -1,6 +1,15 @@
-﻿window.addEventListener('load', prepareNavigation);
+﻿document.addEventListener('load', runEngine);
 
-function prepareNavigation() {
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+function engine() {
     const pagingSize = 4;
     const allRatingsCount = Number(document.getElementById('allRatingsCount').textContent);
     document.getElementById('to-start').addEventListener('click', toStart);

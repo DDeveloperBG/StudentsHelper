@@ -1,4 +1,4 @@
-﻿window.addEventListener('load', engine);
+﻿window.addEventListener('load', runEngine);
 var hiddenClassName = 'hidden';
 var clickEventName = 'click';
 var chooseOptionEventName = 'change';
@@ -9,6 +9,15 @@ var defaultLocationNames = {
     populatedAreas: 'Населено място',
     "Input.TeacherModel.SchoolId": 'Училище',
 };
+
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
 function engine() {
     const partsController = ((currentPartId = 1) => {
@@ -87,7 +96,7 @@ function activateSecondPart(e) {
     const roleInput = document.getElementById('Input_Role');
     role = e.target.getAttribute('userRole');
 
-    if (role != null){
+    if (role != null) {
         roleInput.value = role;
     }
 
@@ -144,7 +153,7 @@ function activateThirdPart() {
         }
 
         fetch(`/Locations/Get?selectName=${select.name}&lastSelectedId=${lastSelectedId}`)
-            .then(async(res) => await res.json())
+            .then(async (res) => await res.json())
             .then(showOptions);
 
         function showOptions(options) {

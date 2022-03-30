@@ -1,6 +1,15 @@
-﻿document.addEventListener('DOMContentLoaded', start);
+﻿document.addEventListener('load', runEngine);
 
-function start() {
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+function engine() {
     changeInitialTimesToMessages();
 
     const messagesHolder = document.querySelector('.chat-messages');

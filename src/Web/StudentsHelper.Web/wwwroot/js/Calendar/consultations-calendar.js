@@ -1,6 +1,15 @@
-﻿document.addEventListener('DOMContentLoaded', getUserEvents);
+﻿document.addEventListener('load', runEngine);
 
-function getUserEvents() {
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+function engine() {
     $.ajax({
         url: '/Consultations/GetCalendarConsultations',
         type: "GET",

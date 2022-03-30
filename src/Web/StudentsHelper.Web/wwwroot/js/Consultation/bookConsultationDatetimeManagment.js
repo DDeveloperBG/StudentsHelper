@@ -1,4 +1,15 @@
-﻿window.addEventListener('load', () => {
+﻿document.addEventListener('load', runEngine);
+
+function runEngine() {
+    try {
+        engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+function engine() {
     const format = 'yyyy-MM-DDTHH:mm';
     const startTimeInput = document.getElementById('startTimeInput');
     const timeNowFormatted = moment().format(format);
@@ -17,4 +28,4 @@
 
         return inputFields.every(x => $(x).valid());
     }
-});
+}

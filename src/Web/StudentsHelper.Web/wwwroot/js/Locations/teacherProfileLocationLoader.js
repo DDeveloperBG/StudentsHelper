@@ -1,6 +1,17 @@
 ﻿var isInitialLoad = null;
 
-window.addEventListener('load', async function () {
+document.addEventListener('load', runEngine);
+
+async function runEngine() {
+    try {
+        await engine();
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+async function engine() {
     const activeValueAttribute = 'active-value';
     const defaultLocationNames = {
         'Input.RegionId': 'Област',
@@ -79,4 +90,4 @@ window.addEventListener('load', async function () {
             }
         }
     }
-});
+}
