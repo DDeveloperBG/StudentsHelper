@@ -6,7 +6,7 @@
 
     public interface IPagingService
     {
-        PagedResult<T> GetPaged<T>(IQueryable<T> query, int currentNumber, int pageSize)
+        PagedResultModel<T> GetPaged<T>(IQueryable<T> query, int currentNumber, int pageSize)
              where T : class;
     }
 }

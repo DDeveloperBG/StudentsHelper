@@ -22,15 +22,15 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/videoChat.min.mjs",
-    "inputFiles": [
-      "wwwroot/js/videoChat.mjs"
-    ]
-  },
-  {
     "outputFileName": "wwwroot/css/homePage.min.css",
     "inputFiles": [
       "wwwroot/css/homePage.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/videoChat.min.js",
+    "inputFiles": [
+      "wwwroot/js/videoChat.js"
     ]
   },
   {
@@ -187,6 +187,12 @@
     "outputFileName": "wwwroot/css/allTeachers.min.css",
     "inputFiles": [
       "wwwroot/css/allTeachers.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/QR/qrcode.min.js",
+    "inputFiles": [
+      "wwwroot/js/QR/qrcode.js"
     ]
   }
 ]

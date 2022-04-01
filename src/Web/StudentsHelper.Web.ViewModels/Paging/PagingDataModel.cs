@@ -1,6 +1,6 @@
 ﻿namespace StudentsHelper.Web.ViewModels.Paging
 {
-    public class PagingData
+    public class PagingDataModel
     {
         public int CurrentPage { get; set; }
 

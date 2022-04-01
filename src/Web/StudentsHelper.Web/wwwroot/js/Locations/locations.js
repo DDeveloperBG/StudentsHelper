@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runGetLocations);
 
-function runEngine() {
+function runGetLocations() {
     try {
-        engine();
+        getLocations();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function getLocations() {
     const defaultLocationNames = {
         regionId: 'Област',
         townshipId: 'Община',

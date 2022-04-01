@@ -48,6 +48,6 @@
                 </a>
             </div>
         }
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/_PagingNavigationPartial.cshtml", Model.Teachers.PagingData)
+        <vc:paging-navigation paging-data=@(Model.Teachers.PagingData)></vc:paging-navigation>
     </div>
 </div>

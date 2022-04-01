@@ -28,7 +28,7 @@
             this.pagingService = pagingService;
         }
 
-        public PagedResult<StudentForAllTeachersListViewModel> GetAllStudentsViewModel(int page)
+        public PagedResultModel<StudentForAllTeachersListViewModel> GetAllStudentsViewModel(int page)
         {
             var studentsAsIQuerable = this
                 .studentsService

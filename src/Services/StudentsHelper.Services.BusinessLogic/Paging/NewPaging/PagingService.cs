@@ -7,11 +7,11 @@
 
     public class PagingService : IPagingService
     {
-        public PagedResult<T> GetPaged<T>(IQueryable<T> query, int currentPage, int pageSize)
+        public PagedResultModel<T> GetPaged<T>(IQueryable<T> query, int currentPage, int pageSize)
             where T : class
         {
             var collection = query.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
-            var pagingData = new PagingData
+            var pagingData = new PagingDataModel
             {
                 CurrentPage = currentPage,
                 PageSize = pageSize,
@@ -19,7 +19,7 @@
                 CurrentPageCollectionCount = collection.Count,
             };
 
-            return new PagedResult<T>(collection, pagingData);
+            return new PagedResultModel<T>(collection, pagingData);
         }
     }
 }

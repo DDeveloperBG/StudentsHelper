@@ -1,26 +1,24 @@
-﻿window.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runRegisterWithOtherProviderEngine);
 
-var hiddenClassName = 'hidden';
-var clickEventName = 'click';
-var chooseOptionEventName = 'change';
-var role = null;
-var defaultLocationNames = {
-    regions: 'Област',
-    townships: 'Община',
-    populatedAreas: 'Населено място',
-    "TeacherModel.SchoolId": 'Училище',
-};
-
-function runEngine() {
+function runRegisterWithOtherProviderEngine() {
     try {
-        engine();
+        registerWithOtherProviderEngine();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function registerWithOtherProviderEngine() {
+    let hiddenClassName = 'hidden';
+    let clickEventName = 'click';
+    let chooseOptionEventName = 'change';
+    let defaultLocationNames = {
+        regions: 'Област',
+        townships: 'Община',
+        populatedAreas: 'Населено място',
+        "TeacherModel.SchoolId": 'Училище',
+    };
     const partsController = ((currentPartId = 1) => {
         const methodsActivatingParts = [null, activateFirstPart, activateSecondPart];
         const getCurrentPart = () => document.getElementById(`part-${currentPartId}`);
@@ -61,84 +59,84 @@ function engine() {
     document.getElementById('continue').addEventListener(clickEventName, partsController.showNextPart);
 
     document.getElementById('register-submit').addEventListener(clickEventName, registerUser.bind(null, partsController));
-}
 
-function isValidCurrentPart(currentPart) {
-    const inputFields = Array.from(currentPart.querySelectorAll('[name]'));
+    function isValidCurrentPart(currentPart) {
+        const inputFields = Array.from(currentPart.querySelectorAll('[name]'));
 
-    return inputFields.every(x => $(x).valid());
-}
-
-function registerUser(partsController, e) {
-    if (!isValidCurrentPart(partsController.getCurrentPart())) { e.preventDefault(); return; }
-}
-
-function activateFirstPart() {
-    if (Array.from(document.getElementById('SchoolId').parentNode.classList).some(x => x == hiddenClassName)) {
-        document.getElementById('continue').classList.add(hiddenClassName);
-    } else {
-        document.getElementById('continue').classList.remove(hiddenClassName);
+        return inputFields.every(x => $(x).valid());
     }
 
-    document.getElementById('past-part').classList.add(hiddenClassName);
-    document.getElementById('register-submit').classList.add(hiddenClassName);
-    const getSelect = (name) => document.querySelector(`select[name="${name}"]`);
-    const selects = [getSelect('regions'), getSelect('townships'), getSelect('populatedAreas'), document.getElementById('SchoolId')];
+    function registerUser(partsController, e) {
+        if (!isValidCurrentPart(partsController.getCurrentPart())) { e.preventDefault(); return; }
+    }
 
-    selects.slice(0, selects.length).forEach((select, index) => select.addEventListener(chooseOptionEventName, loadOptionsForNext.bind(null, index)));
-    loadOptions(selects[0], null);
-
-    async function loadOptionsForNext(index) {
-        if (index + 1 === selects.length) {
+    function activateFirstPart() {
+        if (Array.from(document.getElementById('SchoolId').parentNode.classList).some(x => x == hiddenClassName)) {
+            document.getElementById('continue').classList.add(hiddenClassName);
+        } else {
             document.getElementById('continue').classList.remove(hiddenClassName);
-            return;
         }
 
-        document.getElementById('continue').classList.add(hiddenClassName);
+        document.getElementById('past-part').classList.add(hiddenClassName);
+        document.getElementById('register-submit').classList.add(hiddenClassName);
+        const getSelect = (name) => document.querySelector(`select[name="${name}"]`);
+        const selects = [getSelect('regions'), getSelect('townships'), getSelect('populatedAreas'), document.getElementById('SchoolId')];
 
-        for (let i = index + 1; i < selects.length; i++) {
-            selects[i].parentNode.classList.add(hiddenClassName);
+        selects.slice(0, selects.length).forEach((select, index) => select.addEventListener(chooseOptionEventName, loadOptionsForNext.bind(null, index)));
+        loadOptions(selects[0], null);
+
+        async function loadOptionsForNext(index) {
+            if (index + 1 === selects.length) {
+                document.getElementById('continue').classList.remove(hiddenClassName);
+                return;
+            }
+
+            document.getElementById('continue').classList.add(hiddenClassName);
+
+            for (let i = index + 1; i < selects.length; i++) {
+                selects[i].parentNode.classList.add(hiddenClassName);
+            }
+
+            loadOptions(selects[index + 1], selects[index].value);
         }
 
-        loadOptions(selects[index + 1], selects[index].value);
-    }
+        function loadOptions(select, lastSelectedId) {
+            if (select.children.length > 0 && lastSelectedId == null) {
+                return;
+            }
 
-    function loadOptions(select, lastSelectedId) {
-        if (select.children.length > 0 && lastSelectedId == null) {
-            return;
-        }
+            fetch(`/Locations/Get?selectName=${select.name}&lastSelectedId=${lastSelectedId}`)
+                .then(async (res) => await res.json())
+                .then(showOptions);
 
-        fetch(`/Locations/Get?selectName=${select.name}&lastSelectedId=${lastSelectedId}`)
-            .then(async(res) => await res.json())
-            .then(showOptions);
+            function showOptions(options) {
+                const container = new DocumentFragment();
 
-        function showOptions(options) {
-            const container = new DocumentFragment();
+                let defaultOption = defaultLocationNames[select.name];
 
-            let defaultOption = defaultLocationNames[select.name];
+                container.appendChild(createOption({ id: 0, name: defaultOption }));
 
-            container.appendChild(createOption({ id: 0, name: defaultOption }));
+                options.forEach(option => {
+                    container.appendChild(createOption(option));
+                });
 
-            options.forEach(option => {
-                container.appendChild(createOption(option));
-            });
+                select.innerHTML = '';
+                select.appendChild(container);
+                select.parentNode.classList.remove(hiddenClassName);
 
-            select.innerHTML = '';
-            select.appendChild(container);
-            select.parentNode.classList.remove(hiddenClassName);
-
-            function createOption(option) {
-                let optionEl = document.createElement('option');
-                optionEl.value = option.id;
-                optionEl.textContent = option.name;
-                return optionEl;
+                function createOption(option) {
+                    let optionEl = document.createElement('option');
+                    optionEl.value = option.id;
+                    optionEl.textContent = option.name;
+                    return optionEl;
+                }
             }
         }
     }
-}
 
-function activateSecondPart() {
-    document.getElementById('past-part').classList.remove(hiddenClassName);
-    document.getElementById('register-submit').classList.remove(hiddenClassName);
-    document.getElementById('continue').classList.add(hiddenClassName);
+    function activateSecondPart() {
+        document.getElementById('past-part').classList.remove(hiddenClassName);
+        document.getElementById('register-submit').classList.remove(hiddenClassName);
+        document.getElementById('continue').classList.add(hiddenClassName);
+    }
 }

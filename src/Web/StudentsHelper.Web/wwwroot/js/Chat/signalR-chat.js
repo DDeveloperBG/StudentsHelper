@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runSignalRChatCode);
 
-function runEngine() {
+function runSignalRChatCode() {
     try {
-        engine();
+        signalRChatCode();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function signalRChatCode() {
     changeInitialTimesToMessages();
 
     const messagesHolder = document.querySelector('.chat-messages');

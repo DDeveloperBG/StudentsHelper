@@ -2,7 +2,7 @@
 @using StudentsHelper.Web.ViewModels.Administration.Teachers
 @using StudentsHelper.Web.ViewModels.Paging
 
-@model PagedResult<NotDetailedTeacherViewModel>
+@model PagedResultModel<NotDetailedTeacherViewModel>
 
 @{
     ViewData["Title"] = "Учители за одобряване";
@@ -27,6 +27,6 @@
         </div>
     }
     <div class="ml-5">
-        @await Html.PartialAsync("~/Views/Shared/PartialViews/_PagingNavigationPartial.cshtml", Model.PagingData)
+        <vc:paging-navigation paging-data=@(Model.PagingData)></vc:paging-navigation>
     </div>
 </div>

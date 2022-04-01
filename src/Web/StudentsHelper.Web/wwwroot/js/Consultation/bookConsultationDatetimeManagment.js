@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runBookConsultationDatetimeManagment);
 
-function runEngine() {
+function runBookConsultationDatetimeManagment() {
     try {
-        engine();
+        bookConsultationDatetimeManagment();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function bookConsultationDatetimeManagment() {
     const format = 'yyyy-MM-DDTHH:mm';
     const startTimeInput = document.getElementById('startTimeInput');
     const timeNowFormatted = moment().format(format);

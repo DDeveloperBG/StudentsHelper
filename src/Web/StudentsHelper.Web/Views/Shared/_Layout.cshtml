@@ -12,123 +12,27 @@
     <meta name="author" content="Daniel Yordanov">
     <meta name="description" content=@Html.Raw("\"" + GlobalConstants.SiteDescription + "\"")>
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
-    <partial name="_Favicons" />
+    <partial name="_FaviconsPartial" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/style-rules.min.css" asp-append-version="true" />
     @await this.RenderSectionAsync("Css", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow">
-            <div class="container">
-                <a asp-area="" asp-controller="Home" asp-action="Index">
-                    <img id="app-icon" src="/img/logo.png" alt="@GlobalConstants.SystemName">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item mr-3">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
-                        </li>
-                        @{
-                            string action = string.Empty;
-                            if (this.User.IsInRole(GlobalConstants.StudentRoleName) || this.User.IsInRole(GlobalConstants.TeacherRoleName))
-                            {
-                                if (this.User.IsInRole(GlobalConstants.StudentRoleName))
-                                {
-                                    action = "StudentConsultations";
-                                }
-                                else
-                                {
-                                    action = "TeacherConsultations";
-                                }
 
-                                <li class="nav-item mr-3">
-                                    <a class="nav-link" asp-area="" asp-controller="Consultations" asp-action="@action">Консултации</a>
-                                </li>
-
-                                <li class="nav-item mr-3">
-                                    <a class="nav-link" asp-area="" asp-controller="Chat" asp-action="Chat">Чат</a>
-                                </li>
-
-                                <li class="nav-item mr-3">
-                                    <a class="nav-link" asp-area="Favourite" asp-controller="FavouriteTeachers" asp-action="Index">Любими учители</a>
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <partial name="_LayoutHeaderPartial" />
 
     @await this.RenderSectionAsync("GuestMainPageHeader", required: false)
 
     <div id="pageBody" class="container">
-        <partial name="_AlertMessages" />
+        <partial name="_AlertMessagesPartial" />
         <main role="main" class="pb-3">
             @this.RenderBody()
         </main>
         <partial name="_CookieConsentPartial" />
     </div>
 
-    <footer class="border-top footer">
-        <div class="container footerContent">
-            <div class="row justify-content-center">
-                <div class="col-lg-5 col-md-12">
-                    <p><img src="/img/logo.png" class="img-fluid" width="55" alt=""></p>
-                    <p id="footerSiteDescription" class="w-75">@GlobalConstants.SiteDescription</p>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h5>Полезни връзки</h5>
-                    <ul class="links">
-                        @if (!this.User.Identity.IsAuthenticated)
-                        {
-                            <li><a asp-area="Identity" asp-page="/Account/Login">Вход</a></li>
-                            <li><a asp-area="Identity" asp-page="/Account/Register">Регистрация</a></li>
-                        }
-
-                        <li><a asp-area="" asp-controller="Contact" asp-action="Index">Контакти</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h5>Свържете се с нас</h5>
-                    <ul class="contacts">
-                        <li>
-                            <a asp-area="" asp-controller="Contact" asp-action="Index">
-                                <svg id="mailIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M5.001 8.538v7.098S4.911 16.963 6.324 17h11.482S19 16.837 19 15.6V8.537l-6.763 4.339h-.42L5 8.538z" />
-                                    <path d="M5.06 7.453S5.14 6.026 6.43 6h11.041s1.397.174 1.424 1.453l-6.8 4.402h-.197L5.06 7.453z" />
-                                </svg>@GlobalConstants.ContactEmail
-                            </a>
-                        </li>
-                    </ul>
-                    <div>
-                        <ul id="social-media">
-                            <li><div>Последвайте ни в</div></li>
-                            <li><a href="https://www.facebook.com/Students-Helper-109858771554319"><img src="/img/facebook.png" alt="Facebook"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <ul id="additional_links">
-                        <li><a asp-area="" asp-controller="Home" asp-action="Terms">Общи условия</a></li>
-                        <li><a class="w-50" asp-area="" asp-controller="Home" asp-action="Privacy">Политика за поверителност</a></li>
-                    </ul>
-                </div>
-                <div id="copy" class="container col-md-4">
-                    &copy; @DateTime.Now.Year - @GlobalConstants.SystemName
-                </div>
-            </div>
-        </div>
-    </footer>
+    <partial name="_LayoutFooterPartial" />
 
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>

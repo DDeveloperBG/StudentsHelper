@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', consultationsDateToLocal);
 
-function runEngine() {
+function runConsultationsDateToLocal() {
     try {
-        engine();
+        consultationsDateToLocal();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function consultationsDateToLocal() {
     Array.from(document.getElementsByClassName('startTime')).forEach(pElement => {
         pElement.textContent
             = new moment(moment.utc(pElement.textContent).toDate()).format('HH:mm - L');

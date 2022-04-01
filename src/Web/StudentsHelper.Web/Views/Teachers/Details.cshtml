@@ -17,41 +17,7 @@
 <div class="container m-lg-5 col-auto text-center background-container">
     @if (this.User.IsInRole(GlobalConstants.StudentRoleName))
     {
-        <div style="position: absolute;" class="m-3">
-            <h5>@Model.HourWage лв/час</h5>
-            <a asp-area=""
-           asp-controller="Consultations"
-           asp-action="BookConsultation"
-           asp-route-teacherId="@Model.Id"
-           asp-route-returnUrl=@($"{Context.Request.Path}{Context.Request.QueryString}")
-           style="font-weight: 600;" class="btn btn-warning p-1">Резервирай час</a>
-        </div>
-
-        <div class="m-3" style="position: absolute; right: 0;">
-            <a asp-area=""
-           asp-controller="Chat"
-           asp-action="StartChat"
-           asp-route-teacherUserId="@Model.ApplicationUserId">
-                <img id="chat-img" src="/img/chat-icon.png" alt="Chat">
-            </a>
-        </div>
-
-        <div class="m-1" style="position: absolute; right: 0; top: 66px;">
-            <form asp-area="Favourite"
-                    asp-controller="FavouriteTeachers"
-                    asp-action="AddOrRemove"
-                    asp-route-teacherUserId="@Model.ApplicationUserId"
-                    asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")">
-                <button id="heart-img-btn" type="submit" class="btn">
-                    @{
-                        const string fullHeartImgName = "heart.png";
-                        const string emptyHeartImgName = "empty-heart.png";
-                        string currentHeartImg = Model.IsFavourite ? fullHeartImgName : emptyHeartImgName;
-                    }
-                    <img id="heart-img" src="/img/favourite/@(currentHeartImg)" alt="Favourite">
-                </button>
-            </form>
-        </div>
+        @await Html.PartialAsync("_StudentOptionsInTeacherDetailsPartial", Model)
     }
     <div>
         <img id="teacher-profile-picture" src=@(Model.ApplicationUserPicturePath ?? GlobalConstants.NoProfilePicturePath)
@@ -68,83 +34,7 @@
         </div>
     }
     <hr />
-    <div>
-        <h5 class="font-weight-normal text-left mr-3">ОЦЕНКИ</h5>
-        <div class="justify-content-center row">
-            <div class="col-md-3 mt-3 mb-auto mr-3">
-                <h1 class="display-4">@Model.AverageRating</h1>
-                <div class="row justify-content-center">
-                    @{
-                        int fullStarsCount = (int)Math.Floor(Model.AverageRating);
-                        for (int i = 0; i < fullStarsCount; i++)
-                        {
-                            <img class="star mb-1 mr-1" src="~/img/star.png">
-                        }
-
-                        int numberAfterFloatingPoint = (int)(Model.AverageRating * 10) % 10;
-                        byte notFullStar = 0;
-                        if (numberAfterFloatingPoint != 0)
-                        {
-                            notFullStar++;
-
-                            <div class="star" style="background: url('/img/empty_star.png') no-repeat left;">
-                                <div class="star mb-1 mr-1"
-                                 style="background: url('/img/star.png') no-repeat left; width: @(numberAfterFloatingPoint * 10)%;"></div>
-                            </div>
-                        }
-
-                        int emptyStarsCount = Model.RatingRangesCount.Count - fullStarsCount - notFullStar;
-                        for (int i = 0; i < emptyStarsCount; i++)
-                        {
-                            <img class="star mb-1 mr-1" src="~/img/empty_star.png">
-                        }
-                    }
-                </div>
-                <p><img class="mb-1" src="~/img/small_person_icon.png"> @Model.RatingsCount</p>
-            </div>
-            <div id="rating-statistic" class="col-md-6 jumbotron jumbotron-fluid p-4">
-
-                @for (int i = Model.RatingRangesCount.Count - 1; i >= 0; i--)
-                {
-                    <div class="row mb-1">
-                        <span class="mr-2" style="font-size: 13px;">@(i+1)</span>
-                        @if (Model.RatingsCount > 0)
-                        {
-                            <div style="
-                                background-color: @ColorConstants.RatingRangesColors[i];
-                                width: @(Model.RatingRangesPercentage[i] > 90 ? 90 : Model.RatingRangesPercentage[i])%;"></div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-
-        @if (!Model.HasUserReviewedTeacher)
-        {
-            <div class="row m-3">
-                <div>
-                    <h5 class="font-weight-normal text-left">ОЦЕНЕТЕ УЧИТЕЛЯ</h5>
-                    <p class="font-weight-normal text-left">Покажете на другите, мнението си:</p>
-                </div>
-
-                <form id="reviewForm" class="col-lg-6 col-sm-8" asp-area="" asp-controller="Reviews" asp-action="ShowAddReview" method="get">
-                    <input type="hidden" name="teacherId" value=@Model.Id />
-                    <div class="form-group mt-4 mb-4">
-                        <div id="stars" class="d-flex flex-row">
-                            <img id="star-not-selected" class="small-star mr-2 hidden" src="~/img/not-filled-review.png">
-                            <img id="star-selected" class="small-star mr-2 hidden" src="~/img/filled-review.png">
-                        </div>
-                        <input id="rating" type="hidden" name="rating" class="form-control" />
-                    </div>
-                </form>
-            </div>
-        }
-        <hr />
-
-        <div id="reviews-container">
-            <vc:student-review teacher-id="@Model.Id" current-number=0></vc:student-review>
-        </div>
-    </div>
+    @await Html.PartialAsync("_TeacherReviewsPartial", Model)
 </div>
 
 @section Scripts {

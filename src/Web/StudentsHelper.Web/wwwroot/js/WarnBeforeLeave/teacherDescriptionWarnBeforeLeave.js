@@ -1,18 +1,17 @@
-﻿var formSubmitting = false;
-var initValue = null;
+﻿window.addEventListener('DOMContentLoaded', runTeacherDescriptionWarnBeforeLeave);
 
-document.addEventListener('load', runEngine);
-
-function runEngine() {
+function runTeacherDescriptionWarnBeforeLeave() {
     try {
-        engine();
+        teacherDescriptionWarnBeforeLeave();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function teacherDescriptionWarnBeforeLeave() {
+    let formSubmitting = false;
+    let initValue = null;
     document.getElementById('description-form').addEventListener('click', function () { formSubmitting = true; });
     initValue = document.getElementById('description-textarea').value;
 

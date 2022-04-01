@@ -1,14 +1,14 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runActivateAllPopovers);
 
-function runEngine() {
+function runActivateAllPopovers() {
     try {
-        engine();
+        activateAllPopovers();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function activateAllPopovers() {
     $('[data-toggle="popover"]').popover();
 }

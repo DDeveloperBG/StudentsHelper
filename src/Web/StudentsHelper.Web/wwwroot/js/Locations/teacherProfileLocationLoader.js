@@ -1,17 +1,16 @@
-﻿var isInitialLoad = null;
+﻿window.addEventListener('DOMContentLoaded', runTeacherProfileLocationLoader);
 
-document.addEventListener('load', runEngine);
-
-async function runEngine() {
+async function runTeacherProfileLocationLoader() {
     try {
-        await engine();
+        await teacherProfileLocationLoader();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-async function engine() {
+async function teacherProfileLocationLoader() {
+    let isInitialLoad = null;
     const activeValueAttribute = 'active-value';
     const defaultLocationNames = {
         'Input.RegionId': 'Област',

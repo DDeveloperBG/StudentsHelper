@@ -4,6 +4,6 @@
 
     public class AllStudentFavouriteTeachersViewModel
     {
-        public PagedResult<StudentFavouriteTeacherViewModel> Teachers { get; set; }
+        public PagedResultModel<StudentFavouriteTeacherViewModel> Teachers { get; set; }
     }
 }

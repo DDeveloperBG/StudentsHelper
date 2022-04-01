@@ -7,7 +7,7 @@
 
     public interface IAdministrationOfStudentsBusinessLogicService
     {
-        public PagedResult<StudentForAllTeachersListViewModel> GetAllStudentsViewModel(int page);
+        public PagedResultModel<StudentForAllTeachersListViewModel> GetAllStudentsViewModel(int page);
 
         public StudentDetailsViewModel GetDetailsViewModel(string studentId);
 

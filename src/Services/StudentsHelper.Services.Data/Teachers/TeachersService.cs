@@ -46,15 +46,14 @@
         {
             return this.GetAllAsNoTracking()
                 .Where(x => x.IsValidated && !x.IsRejected && x.HourWage != null)
-                .Where(x => x.Subjects
-                    .Any(x => x.Id == subjectId));
+                .Where(x => x.Subjects.Any(x => x.Id == subjectId));
         }
 
         public IQueryable<Teacher> GetAllOfType(int subjectId, IQueryable<Teacher> teachers)
         {
             return teachers
-                .Where(x => x.Subjects
-                    .Any(x => x.Id == subjectId) && x.IsValidated && !x.IsRejected && x.HourWage != null);
+                .Where(x => x.IsValidated && !x.IsRejected && x.HourWage != null)
+                .Where(x => x.Subjects.Any(x => x.Id == subjectId));
         }
 
         public IEnumerable<T> GetAllValidatedMappedAndTracked<T>()

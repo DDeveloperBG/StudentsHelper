@@ -1,6 +1,9 @@
 ﻿@using StudentsHelper.Common
-@inject StudentsHelper.Services.Time.IDateTimeProvider timeProvider
-@model IEnumerable<StudentsHelper.Web.ViewModels.Consultations.StudentConsultationViewModel>
+@using StudentsHelper.Services.Time
+@using StudentsHelper.Web.ViewModels.Consultations
+
+@inject IDateTimeProvider timeProvider
+@model IEnumerable<StudentConsultationViewModel>
 
 @{
     ViewData["Title"] = "Консултации";
@@ -37,7 +40,6 @@
             <tr>
                 <td>
                     <vc:user-profile-picture picture-path="@consultation.TeacherPicturePath" email="@consultation.TeacherEmail"></vc:user-profile-picture>
-                    @*<img src=@(consultation.TeacherPicturePath ?? GlobalConstants.NoProfilePicturePath) class="img-fluid ml-3 rounded" style="width: 50px; height: 50px;" />*@
                 </td>
                 <td class="align-bottom"><p>@consultation.TeacherName</p></td>
                 <td class="align-bottom"><p>@consultation.ConsultationDetails.SchoolSubjectName</p></td>

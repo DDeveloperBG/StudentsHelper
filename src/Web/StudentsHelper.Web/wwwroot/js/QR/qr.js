@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runDisplayQrCode);
 
-function runEngine() {
+function runDisplayQrCode() {
     try {
-        engine();
+        displayQrCode();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function displayQrCode() {
     const uri = document.getElementById("qrCodeData").getAttribute('data-url');
     new QRCode(document.getElementById("qrCode"),
         {

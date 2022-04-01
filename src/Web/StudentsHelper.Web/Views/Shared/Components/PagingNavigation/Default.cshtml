@@ -1,0 +1,45 @@
+﻿@using StudentsHelper.Web.ViewModels.Paging
+
+@model PagingNavigationViewModel
+
+<nav class="mt-4">
+    <ul class="pagination">
+        <li class="mr-4">
+            <p class="mt-2 text-center">
+                @(Model.FromItem) -
+                @(Model.ToItem) от
+                @(Model.AllItemsCount)
+            </p>
+        </li>
+
+        <li class="page-item @(Model.CurrentPageNumber == 1 ? "disabled" : string.Empty)">
+            <a class="page-link" href="@Model.FirstPageUrl" aria-label="Първи">
+                <span aria-hidden="true">Първи</span>
+            </a>
+        </li>
+
+        @foreach (var pageData in Model.PagesBefore)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@pageData.PageUrl">@(pageData.PageNumber)</a>
+            </li>
+        }
+
+        <li class="page-item active">
+            <a class="page-link">@Model.CurrentPageNumber</a>
+        </li>
+
+        @foreach (var pageData in Model.PagesAfter)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@pageData.PageUrl">@(pageData.PageNumber)</a>
+            </li>
+        }
+
+        <li class="page-item @(Model.ToItem == Model.AllItemsCount ? "disabled" : string.Empty)">
+            <a class="page-link" href="@Model.LastPageUrl" aria-label="Последен">
+                <span aria-hidden="true">Последен</span>
+            </a>
+        </li>
+    </ul>
+</nav>

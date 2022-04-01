@@ -16,8 +16,13 @@
     color: #0069da;
 }
 
-.active {
+.nav-link.profile-nav-a.active {
     background-color: #1AD057 !important;
+}
+
+.page-item.active .page-link {
+    background-color: #1AD057;
+    border-color: #55CA36;
 }
 
 .profile-nav-a:not(.active) {
@@ -39,6 +44,34 @@
         background-color: #3A3B3C;
         cursor: pointer;
     }
+
+.profile-picture-img {
+    width: 50px;
+    height: 50px;
+}
+
+.profile-status-background {
+    position: absolute;
+    top: 31px;
+    left: 47px;
+    background-color: white;
+    border-radius: 13px;
+    padding: 2px;
+}
+
+.profile-status-icon {
+    width: 13px;
+    height: 13px;
+    border-radius: 13px;
+}
+
+.profile-status-active {
+    background-color: #55CA36;
+}
+
+.profile-status-notActive {
+    background-color: #D6D7DC;
+}
 
 /*darker = #1A275E*/
 /*lighter = #202F72*/

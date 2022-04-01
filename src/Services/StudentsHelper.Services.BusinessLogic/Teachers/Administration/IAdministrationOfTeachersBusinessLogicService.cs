@@ -7,13 +7,13 @@
 
     public interface IAdministrationOfTeachersBusinessLogicService
     {
-        PagedResult<NotDetailedTeacherViewModel> GetAllToApproveViewModel(int page);
+        PagedResultModel<NotDetailedTeacherViewModel> GetAllToApproveViewModel(int page);
 
         TeacherDetailsViewModel GetSetTeacherDataViewModel(string teacherId);
 
         Task SetTeacherDataAsync(TeacherExternalDataInputModel input, string email);
 
-        PagedResult<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel(int page);
+        PagedResultModel<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel(int page);
 
         TeacherDetailedViewModel GetDetailsViewModel(string teacherId);
 

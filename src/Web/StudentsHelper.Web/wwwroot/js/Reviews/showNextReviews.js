@@ -1,17 +1,21 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runShowNextReviews);
 
-function runEngine() {
+function runShowNextReviews() {
     try {
-        engine();
+        showNextReviews();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function showNextReviews() {
     const pagingSize = 4;
-    const allRatingsCount = Number(document.getElementById('allRatingsCount').textContent);
+    const allRatingsCountEl = document.getElementById('allRatingsCount');
+    if (allRatingsCountEl == null) {
+        return;
+    }
+    const allRatingsCount = Number(allRatingsCountEl.textContent);
     document.getElementById('to-start').addEventListener('click', toStart);
     document.getElementById('previous').addEventListener('click', previous);
     document.getElementById('next').addEventListener('click', next);

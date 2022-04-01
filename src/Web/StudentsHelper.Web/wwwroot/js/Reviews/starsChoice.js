@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runStarsChoice);
 
-function runEngine() {
+function runStarsChoice() {
     try {
-        engine();
+        starsChoice();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function starsChoice() {
     let notSelectedStar = document.getElementById('star-not-selected');
     notSelectedStar.classList.remove('hidden');
     let notSelectedStarSrc = remove(notSelectedStar).src;

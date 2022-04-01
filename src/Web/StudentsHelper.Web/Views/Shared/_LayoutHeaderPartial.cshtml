@@ -1,0 +1,49 @@
+﻿@using StudentsHelper.Common
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow">
+        <div class="container">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <img id="app-icon" src="/img/logo.png" alt="@GlobalConstants.SystemName">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <partial name="_LoginPartial" />
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item mr-3">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
+                    </li>
+                    @{
+                        string action = string.Empty;
+                        if (this.User.IsInRole(GlobalConstants.StudentRoleName) || this.User.IsInRole(GlobalConstants.TeacherRoleName))
+                        {
+                            if (this.User.IsInRole(GlobalConstants.StudentRoleName))
+                            {
+                                action = "StudentConsultations";
+                            }
+                            else
+                            {
+                                action = "TeacherConsultations";
+                            }
+
+                            <li class="nav-item mr-3">
+                                <a class="nav-link" asp-area="" asp-controller="Consultations" asp-action="@action">Консултации</a>
+                            </li>
+
+                            <li class="nav-item mr-3">
+                                <a class="nav-link" asp-area="" asp-controller="Chat" asp-action="Chat">Чат</a>
+                            </li>
+
+                            <li class="nav-item mr-3">
+                                <a class="nav-link" asp-area="Favourite" asp-controller="FavouriteTeachers" asp-action="Index">Любими учители</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

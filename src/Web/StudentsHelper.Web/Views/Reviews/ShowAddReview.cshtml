@@ -1,11 +1,13 @@
-﻿@model StudentsHelper.Web.ViewModels.Reviews.ReviewInputModel
+﻿@using StudentsHelper.Web.ViewModels.Reviews
+@model ReviewInputModel
 
 @section Css
 {
 <link rel="stylesheet" href="~/css/teacherDetails.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
 }
 
-<div class="m-5" style="box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px;">
+<div class="m-5 light-background">
     <div class="p-4">
         <h5 class="font-weight-normal text-left">ОЦЕНЕТЕ УЧИТЕЛЯ</h5>
         <p class="font-weight-normal text-left">Покажете на другите, мнението си:</p>

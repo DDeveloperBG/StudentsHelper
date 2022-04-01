@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runSiteBaseOperations);
 
-function runEngine() {
+function runSiteBaseOperations() {
     try {
-        engine();
+        siteBaseOperations();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function siteBaseOperations() {
     var profilePicEl = document.getElementById('navbar-profile-pic');
     if (profilePicEl != null) profilePicEl.addEventListener('click', showProfilePic);
 

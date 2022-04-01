@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runDisplayConsultationsCalendar);
 
-function runEngine() {
+function runDisplayConsultationsCalendar() {
     try {
-        engine();
+        displayConsultationsCalendar();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function displayConsultationsCalendar() {
     $.ajax({
         url: '/Consultations/GetCalendarConsultations',
         type: "GET",
@@ -34,55 +34,55 @@ function engine() {
             displayCalendar(events);
         }
     });
-}
 
-function displayCalendar(events) {
-    let calendarEl = document.getElementById('calendar');
+    function displayCalendar(events) {
+        let calendarEl = document.getElementById('calendar');
 
-    let calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'bg',
-        initialView: 'dayGridMonth',
-        editable: true,
-        eventDurationEditable: false,
-        contentHeight: "auto",
-        dayMaxEvents: true,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'timeGridDay,timeGridWeek,dayGridMonth',
-        },
-        eventMouseEnter: function (info) {
-            let jqueryEl = $(info.el);
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'bg',
+            initialView: 'dayGridMonth',
+            editable: true,
+            eventDurationEditable: false,
+            contentHeight: "auto",
+            dayMaxEvents: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridDay,timeGridWeek,dayGridMonth',
+            },
+            eventMouseEnter: function (info) {
+                let jqueryEl = $(info.el);
 
-            if (!jqueryEl.hasClass('hasTooltip')) {
-                jqueryEl.tooltip({ title: info.event.extendedProps.description, placement: "top" });
-                jqueryEl.addClass('hasTooltip');
-            }
+                if (!jqueryEl.hasClass('hasTooltip')) {
+                    jqueryEl.tooltip({ title: info.event.extendedProps.description, placement: "top" });
+                    jqueryEl.addClass('hasTooltip');
+                }
 
-            jqueryEl.triggerHandler('mouseover');
-        },
-        eventDrop: function (info) {
-            if (!confirm("Сигурни ли сте относно тази промяна?")) {
-                info.revert();
-                return;
-            }
-
-            let start = new moment(info.event.start).utc().format('yyyy-MM-DDTHH:mm');
-
-            $.ajax({
-                type: "POST",
-                url: '/Consultations/ChangeConsultationStartTime',
-                data: JSON.stringify({ consultationId: info.event.id, startTime: start }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                error: () => {
+                jqueryEl.triggerHandler('mouseover');
+            },
+            eventDrop: function (info) {
+                if (!confirm("Сигурни ли сте относно тази промяна?")) {
                     info.revert();
-                    alert('Невалидни данни!');
-                },
-            });
-        },
-        events,
-    });
+                    return;
+                }
 
-    calendar.render();
+                let start = new moment(info.event.start).utc().format('yyyy-MM-DDTHH:mm');
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Consultations/ChangeConsultationStartTime',
+                    data: JSON.stringify({ consultationId: info.event.id, startTime: start }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    error: () => {
+                        info.revert();
+                        alert('Невалидни данни!');
+                    },
+                });
+            },
+            events,
+        });
+
+        calendar.render();
+    }
 }

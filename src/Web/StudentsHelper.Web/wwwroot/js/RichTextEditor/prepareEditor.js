@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runPrepareEditor);
 
-async function runEngine() {
+async function runPrepareEditor() {
     try {
-        await engine();
+        await prepareEditor();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-async function engine() {
+async function prepareEditor() {
     await tinymce.init({ selector: '#description-textarea' });
     $('.tox-statusbar__branding').remove();
 }

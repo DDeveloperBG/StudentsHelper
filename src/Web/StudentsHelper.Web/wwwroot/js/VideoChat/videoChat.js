@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runVideoChat);
 
-function runEngine() {
+function runVideoChat() {
     try {
-        engine();
+        videoChat();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function videoChat() {
     const urlParams = new URLSearchParams(window.location.search);
     const meetingId = urlParams.get('meetingId');
 

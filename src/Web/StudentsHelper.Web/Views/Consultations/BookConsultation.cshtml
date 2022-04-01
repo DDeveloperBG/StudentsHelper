@@ -6,7 +6,12 @@
     ViewData["Title"] = "Резервирай консултация";
 }
 
-<div class="m-5" style="box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px;">
+@section Css 
+{
+<link rel="stylesheet" href="~/css/notMinifiable.css" asp-append-version="true" />
+}
+
+<div class="m-5 light-background">
     <div class="p-4">
         <h5 class="font-weight-normal text-left">Резервирайте консултация</h5>
         <form method="post" class="col-6">
@@ -35,7 +40,6 @@
         </form>
     </div>
 </div>
-
 
 @section Scripts {
 <script src="~/moment.js/moment.min.js" asp-append-version="true"></script>

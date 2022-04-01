@@ -42,7 +42,7 @@
             this.pagingService = pagingService;
         }
 
-        public PagedResult<NotDetailedTeacherViewModel> GetAllToApproveViewModel(int page)
+        public PagedResultModel<NotDetailedTeacherViewModel> GetAllToApproveViewModel(int page)
         {
             var quearableTeachers = this
                 .teachersService
@@ -83,7 +83,7 @@
             await this.teachersService.RejectTeacherAsync(teacherId);
         }
 
-        public PagedResult<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel(int page)
+        public PagedResultModel<TeacherForAllTeachersListViewModel> GetAllTeachersViewModel(int page)
         {
             var teachersAsIQuerable = this
                 .teachersService

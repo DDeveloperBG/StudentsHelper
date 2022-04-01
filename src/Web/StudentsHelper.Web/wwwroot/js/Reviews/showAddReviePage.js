@@ -1,15 +1,15 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runShowAddReviePage);
 
-function runEngine() {
+function runShowAddReviePage() {
     try {
-        engine();
+        showAddReviePage();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function showAddReviePage() {
     let stars = Array.from(document.getElementsByClassName('small-star'));
     stars.forEach(x => {
         x.addEventListener('click', () => {

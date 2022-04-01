@@ -1,21 +1,21 @@
-﻿document.addEventListener('load', runEngine);
+﻿window.addEventListener('DOMContentLoaded', runHomePageCode);
 
-function runEngine() {
+function runHomePageCode() {
     try {
-        engine();
+        homePageCode();
     }
     catch (error) {
         console.error(error);
     }
 }
 
-function engine() {
+function homePageCode() {
     var schoolSubjectElements = Array.from(document.getElementsByClassName('schoolSubjectItem'));
 
     schoolSubjectElements.forEach(x => x.addEventListener('click', searchSchoolSubject));
-}
 
-function searchSchoolSubject(e) {
-    let subjectId = e.currentTarget.id;
-    window.location.href = `/Teachers/All?subjectId=${subjectId}`;
+    function searchSchoolSubject(e) {
+        let subjectId = e.currentTarget.id;
+        window.location.href = `/Teachers/All?subjectId=${subjectId}`;
+    }
 }
